@@ -146,7 +146,7 @@ function Email() {
 			}
 		},
 		onSuccess: (data) => {
-			navigation("/user/signup/personal-information");
+			navigation("/user/signup/personal-information", {state: {email}});
 			toast.success("Verified!", {
 				description: (
 					<p>{data.message || "You have been verified successfully."}</p>
