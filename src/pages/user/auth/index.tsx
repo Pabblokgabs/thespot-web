@@ -7,12 +7,13 @@ import { EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Btn } from "@/components";
 
 function Email() {
 	const navigation = useNavigate();
 
 	const [form] = Form.useForm();
-	const [showVerification, setShowVerification] = useState(false);
+	const [showVerification, setShowVerification] = useState(true);
 	const [email, setEmail] = useState("");
 	const [countdown, setCountdown] = useState(30);
 	const [isCountingDown, setIsCountingDown] = useState(false);
@@ -71,11 +72,6 @@ function Email() {
 			setToken(data.token);
 			setShowVerification(true);
 			setIsCountingDown(true);
-			toast.success("Success", {
-				description: (
-					<p>{data.message || "Something went wrong please try againg"}</p>
-				),
-			});
 		},
 	});
 
@@ -109,7 +105,11 @@ function Email() {
 		alert("Logged in with Google");
 	};
 
-	const { isPending: isVerifying, mutate: verifyCodeMutate } = useMutation({
+	const {
+		isPending: isVerifying,
+		mutate: verifyCodeMutate,
+		data: verifyingData,
+	} = useMutation({
 		mutationFn: async ({
 			email,
 			code,
@@ -145,13 +145,8 @@ function Email() {
 				throw error;
 			}
 		},
-		onSuccess: (data) => {
-			navigation("/user/signup/personal-information", {state: {email}});
-			toast.success("Verified!", {
-				description: (
-					<p>{data.message || "You have been verified successfully."}</p>
-				),
-			});
+		onSuccess: () => {
+			navigation("/user/signup/personal-information", { state: { email } });
 		},
 	});
 
@@ -167,6 +162,9 @@ function Email() {
 
 	return (
 		<div className="min-h-screen flex flex-col bg-gray-50">
+			{(isVerifying || isPending) && (
+				<div className="absolute top-0 left-0 h-full w-full z-10" />
+			)}
 			<div className="py-5 flex-1 h-full px-[20px] md:px-[50px] xl:px-[100px] overflow-x-hidden flex-col items-center justify-center flex overflow-y-auto">
 				<div className="text-center mb-4">
 					<div className="flex items-center justify-center gap-2.5">
@@ -211,15 +209,13 @@ function Email() {
 									/>
 								</Form.Item>
 
-								<Button
+								<Btn
+									isAnimation
 									loading={isVerifying}
-									type="primary"
-									size="large"
-									htmlType="submit"
-									className="w-full whitespace-nowrap cursor-pointer"
-								>
-									{isPending ? "Loading..." : "next"}
-								</Button>
+									type="submit"
+									className="w-full text-white"
+									text={isPending ? "Loading..." : "next"}
+								/>
 							</Form>
 
 							<div className="flex flex-row items-center gap-2.5">
@@ -263,6 +259,13 @@ function Email() {
 									className="ml-1 p-0 h-auto whitespace-nowrap cursor-pointer"
 								/>
 							</p>
+							<p
+								className={`text-sm ${
+									verifyingData?.success ? "text-green-400" : "text-red-400"
+								}`}
+							>
+								{verifyingData?.message}
+							</p>
 							<div className="flex justify-center gap-2 mb-6">
 								{code.map((value, index) => (
 									<Input
@@ -278,15 +281,12 @@ function Email() {
 									/>
 								))}
 							</div>
-							<Button
+							<Btn
 								loading={isVerifying}
-								type="primary"
-								size="large"
 								onClick={handleVerifyEmail}
-								className="w-full whitespace-nowrap cursor-pointer"
-							>
-								{isVerifying ? "Verifying..." : "Verify Email"}
-							</Button>
+								className="w-full text-white"
+								text={isVerifying ? "Verifying..." : "Verify Email"}
+							/>
 							<div className="text-sm text-gray-600">
 								Didn't receive the code?{" "}
 								{isCountingDown ? (

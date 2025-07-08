@@ -74,14 +74,11 @@ const PersonalInfo: React.FC = () => {
 			return data;
 		},
 		onSuccess: () => {
-			toast.success("Registration successful", {
-				description: <p>Welcome aboard!</p>,
-			});
-
 			form.resetFields();
 			setPreferences([]);
 			setFileList([]);
 		},
+
 		onError: (error) => {
 			toast.error("Registration failed", {
 				description: <p>{error.message}</p>,
@@ -126,6 +123,9 @@ const PersonalInfo: React.FC = () => {
 
 	return (
 		<div className="min-h-screen flex flex-col bg-gray-50">
+			{isRegistering  && (
+				<div className="absolute top-0 left-0 h-full w-full z-10" />
+			)}
 			<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
 				<div className="w-full max-w-lg">
 					<div className="text-center mb-8">
@@ -410,7 +410,12 @@ const PersonalInfo: React.FC = () => {
 							</Form.Item>
 
 							<Form.Item>
-								<Btn isAnimation className="w-full text-white" type="submit">
+								<Btn
+									isAnimation
+									loading={isRegistering}
+									className="w-full text-white"
+									type="submit"
+								>
 									{isRegistering ? "Loading..." : "Create Account"}
 								</Btn>
 							</Form.Item>

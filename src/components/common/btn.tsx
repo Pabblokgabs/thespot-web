@@ -1,4 +1,5 @@
 import React, { useState, MouseEvent } from "react";
+import { ClipLoader } from "react-spinners";
 
 interface CustomButtonProps {
 	text?: string;
@@ -12,6 +13,8 @@ interface CustomButtonProps {
 	borderRadius?: string;
 	children?: React.ReactNode;
 	borderColor?: string;
+	loading?: boolean;
+	loadingColor?: string;
 }
 
 const Btn: React.FC<CustomButtonProps> = ({
@@ -26,6 +29,8 @@ const Btn: React.FC<CustomButtonProps> = ({
 	borderRadius = "rounded-md",
 	children,
 	borderColor = "border-transparent",
+	loading = false,
+	loadingColor = "white",
 }) => {
 	const [pos, setPos] = useState({ x: 0, y: 0 });
 	const [isHovering, setIsHovering] = useState(false);
@@ -45,6 +50,7 @@ const Btn: React.FC<CustomButtonProps> = ({
 
 	return (
 		<button
+			disabled={loading}
 			type={type}
 			onClick={onClick}
 			onMouseMove={isAnimation ? handleMouseMove : undefined}
@@ -56,13 +62,22 @@ const Btn: React.FC<CustomButtonProps> = ({
 				...animationStyle,
 			}}
 			className={`
-				bg-indigo-600
+				bg-blue-600
 				${borderRadius}
 				${borderColor}
 				relative overflow-hidden cursor-pointer py-[8px] !rounded-button whitespace-nowrap
 				${className}
+				flex items-center justify-center
 			`}
 		>
+			{loading && (
+				<ClipLoader
+					size={18}
+					loading={loading}
+					color={loadingColor}
+					className="mr-2"
+				/>
+			)}{" "}
 			{children ? children : text}
 		</button>
 	);

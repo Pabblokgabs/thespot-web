@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, Form, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 function OwnerEmail() {
 	const navigation = useNavigate();
@@ -17,13 +19,12 @@ function OwnerEmail() {
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [code, setCode] = useState(["", "", "", "", "", ""]);
 	const otpRefs = useRef<any[]>([]);
+	const [token, setToken] = useState<string>("");
 
-	// Initialize refs array
 	useEffect(() => {
 		otpRefs.current = otpRefs.current.slice(0, 6);
 	}, []);
 
-	// Handle countdown timer
 	useEffect(() => {
 		let timer: NodeJS.Timeout;
 		if (isCountingDown && countdown > 0) {
@@ -41,7 +42,6 @@ function OwnerEmail() {
 		setIsCountingDown(true);
 	};
 
-	// Handle change in code and Auto focus next input
 	const handleOtpChange = (index: number, value: string) => {
 		if (value.length <= 1) {
 			const newOtpValues = [...code];
@@ -53,6 +53,7 @@ function OwnerEmail() {
 			}
 		}
 	};
+
 	const handleOtpKeyDown = (
 		index: number,
 		e: React.KeyboardEvent<HTMLInputElement>
@@ -62,24 +63,104 @@ function OwnerEmail() {
 		}
 	};
 
+	const { isPending: isEmailPending, mutate: emailMutate } = useMutation({
+		mutationFn: async (email) => {
+			try {
+				const res = await fetch("", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email }),
+				});
+
+				const data = await res.json();
+				if (!res.ok || !data.success) {
+					throw new Error(data.message || "Something went wrong");
+				}
+
+				return data;
+			} catch (error: any) {
+				toast.error("Something went wrong", {
+					description: <p>{error?.message || "Please try again later"}</p>,
+				});
+				throw error;
+			}
+		},
+		onSuccess: (data) => {
+			setToken(data.token);
+			setShowVerification(true);
+			setIsCountingDown(true);
+		},
+	});
+
 	const handleSubmit = (values: any) => {
 		setEmail(values.email);
-		setIsCountingDown(true);
-		setShowVerification(true);
+		emailMutate(values.email);
 	};
 
 	const handleGoogleSignIn = () => {
 		alert("Logged in with Google");
 	};
 
+	const {
+		isPending: isVerifyPending,
+		mutate: verifyMutate,
+		data: verifyingData,
+	} = useMutation({
+		mutationFn: async ({
+			email,
+			code,
+			token,
+		}: {
+			email: string;
+			code: string;
+			token: string;
+		}) => {
+			try {
+				const res = await fetch("", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email, code, token }),
+				});
+
+				const data = await res.json();
+
+				if (!res.ok || !data.success) {
+					throw new Error(data.message || "Verification failed");
+				}
+
+				return data;
+			} catch (error: any) {
+				toast.error("Verification error", {
+					description: <p>{error?.message || "Please try again later"}</p>,
+				});
+				throw error;
+			}
+		},
+		onSuccess: () => {
+			navigation("/owner/signup/personal-information", { state: { email } });
+		},
+	});
+
 	const handleVerifyEmail = () => {
-		// Here would be the verification logic
-		alert("Email verified successfully!");
-		navigation("/owner/signup/personal-information");
+		const fullCode = code.join("");
+
+		verifyMutate({
+			email,
+			token,
+			code: fullCode,
+		});
 	};
 
 	return (
 		<div className="min-h-screen flex flex-col bg-gray-50">
+			{(isVerifyPending || isEmailPending) && (
+				<div className="absolute top-0 left-0 h-full w-full z-10" />
+			)}
+
 			<div className="py-5 flex-1 h-full px-[20px] md:px-[50px] xl:px-[100px] overflow-x-hidden flex-col items-center justify-center flex overflow-y-auto">
 				<div className="text-center mb-4">
 					<div className="flex items-center justify-center gap-2.5">
@@ -124,7 +205,13 @@ function OwnerEmail() {
 									/>
 								</Form.Item>
 
-								<Btn isAnimation type="submit" text="Next" width="100%" />
+								<Btn
+									loading={isEmailPending}
+									isAnimation
+									type="submit"
+									text={isEmailPending ? "Loading..." : "Next"}
+									className="text-white w-full"
+								/>
 							</Form>
 
 							<div className="flex flex-row items-center gap-2.5">
@@ -168,6 +255,13 @@ function OwnerEmail() {
 									className="ml-1 p-0 h-auto whitespace-nowrap cursor-pointer"
 								/>
 							</p>
+							<p
+								className={`text-sm ${
+									verifyingData?.success ? "text-green-400" : "text-red-400"
+								}`}
+							>
+								{verifyingData?.message}
+							</p>
 							<div className="flex justify-center gap-2 mb-6">
 								{code.map((value, index) => (
 									<Input
@@ -183,14 +277,12 @@ function OwnerEmail() {
 									/>
 								))}
 							</div>
-							<Button
-								type="primary"
-								size="large"
+							<Btn
+								loading={isVerifyPending}
 								onClick={handleVerifyEmail}
-								className="w-full h-12 bg-blue-600 hover:bg-blue-700 mb-4 !rounded-button whitespace-nowrap cursor-pointer"
-							>
-								Verify Email
-							</Button>
+								className="w-full text-white"
+								text={isVerifyPending ? "Verifying..." : "Verify"}
+							/>
 							<div className="text-sm text-gray-600">
 								Didn't receive the code?{" "}
 								{isCountingDown ? (

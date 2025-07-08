@@ -6,14 +6,53 @@ import { FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 function Login() {
 	const navigation = useNavigate();
 	const [form] = Form.useForm();
 
+	const { isPending, mutate } = useMutation({
+		mutationFn: async (formData: any) => {
+			try {
+				const res = await fetch("http://localhost:5000/api/v1/login", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: formData,
+				});
+
+				const data = await res.json();
+
+				if (!res.ok || !data.success) {
+					throw new Error(data?.message || "Sonething went wrong");
+				}
+
+				return data;
+			} catch (error: any) {
+				toast.error("Something went wrong", {
+					description: <p>{error?.message || "Please try again later"}</p>,
+				});
+				throw error;
+			}
+		},
+
+		onSuccess: (data) => {
+			form.resetFields();
+
+			if (data.user.role === "owner") {
+				navigation(`/owner/dashboard/${data.user._id}`);
+			} else {
+				navigation("/");
+			}
+		},
+	});
+
 	const handleSubmit = (values: any) => {
 		console.log(values);
-		form.resetFields();
+		mutate(values);
 	};
 
 	const handleGoogleSignIn = () => {
@@ -22,6 +61,9 @@ function Login() {
 
 	return (
 		<div className="min-h-screen flex flex-col bg-gray-50">
+			{isPending  && (
+				<div className="absolute top-0 left-0 h-full w-full z-10" />
+			)}
 			<div className="py-5 flex-1 h-full px-[20px] md:px-[50px] xl:px-[100px] overflow-x-hidden flex-col items-center justify-center flex overflow-y-auto">
 				<div className="text-center mb-4">
 					<div className="flex items-center justify-center gap-2.5">
@@ -94,7 +136,13 @@ function Login() {
 							</Link>
 						</p>
 
-						<Btn isAnimation type="submit" text="Submit" width="100%" />
+						<Btn
+							loading={isPending}
+							isAnimation
+							type="submit"
+							text={isPending ? "Loading..." : "Submit"}
+							className="text-white w-full"
+						/>
 					</Form>
 
 					<div className="flex flex-row items-center gap-2.5">

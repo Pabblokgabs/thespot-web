@@ -1,29 +1,31 @@
-import React, { useState } from "react";
-import {
-	Button,
-	Input,
-	DatePicker,
-	Form,
-	Progress,
-	UploadFile,
-	Select,
-} from "antd";
+import React, { useEffect, useState } from "react";
+import { Input, Form, Progress, UploadFile, Space, Tooltip } from "antd";
 import {
 	EyeInvisibleOutlined,
 	EyeTwoTone,
 	CloseCircleFilled,
+	InfoCircleOutlined,
 } from "@ant-design/icons";
 import { FaCheck } from "react-icons/fa";
-import { gender } from "@/lib/options";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../../../assets/logo.png";
-import dayjs from "dayjs";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { Btn } from "@/components";
 
 const OwnerPersonalInfo: React.FC = () => {
+	const location = useLocation();
 	const [form] = Form.useForm();
 	const [password, setPassword] = useState("");
 	const [passwordStrength, setPasswordStrength] = useState(0);
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+	const [email, setEmail] = useState<string>("");
+	useEffect(() => {
+		if (location.state?.email) {
+			setEmail(location.state?.email);
+		}
+	}, []);
 
 	const calculatePasswordStrength = (pass: string) => {
 		let strength = 0;
@@ -39,8 +41,55 @@ const OwnerPersonalInfo: React.FC = () => {
 		calculatePasswordStrength(newPassword);
 	};
 
+	const { mutate: registerOwner, isPending } = useMutation({
+		mutationFn: async (formData: FormData) => {
+			const res = await fetch(
+				"http://localhost:5000/api/v1/owner/auth/sign-up",
+				{
+					method: "POST",
+					body: formData,
+				}
+			);
+
+			const data = await res.json();
+
+			if (!res.ok || !data.success) {
+				throw new Error(data.message || "Something went wrong");
+			}
+
+			return data;
+		},
+
+		onSuccess: () => {
+			form.resetFields();
+			setFileList([]);
+		},
+
+		onError: (error) => {
+			toast.error("Registration failed", {
+				description: <p>{error.message}</p>,
+			});
+		},
+	});
+
 	const handleSubmit = (values: any) => {
 		console.log(values);
+
+		const formData = new FormData();
+
+		formData.append("email", email);
+		formData.append("first_Name", values.first_Name);
+		formData.append("last_Name", values.last_Name);
+		formData.append("user_Name", values.user_Name);
+		formData.append("password", values.confirmPassword);
+		formData.append("phone_number", values.phone_number || "");
+		formData.append("idDocument", values.idDocument);
+
+		if (fileList.length > 0 && fileList[0].originFileObj) {
+			formData.append("profileImage", fileList[0].originFileObj as File);
+		}
+		console.log(formData);
+		registerOwner(formData);
 	};
 
 	const getPasswordStrengthText = () => {
@@ -57,7 +106,10 @@ const OwnerPersonalInfo: React.FC = () => {
 	};
 
 	return (
-		<div className="min-h-screen flex flex-col bg-gray-50">
+		<div className="min-h-screen flex flex-col bg-gray-50 relative">
+			{isPending && (
+				<div  className="absolute top-0 left-0 h-full w-full z-10" />
+			)}
 			<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
 				<div className="w-full max-w-lg">
 					<div className="text-center mb-8">
@@ -109,35 +161,43 @@ const OwnerPersonalInfo: React.FC = () => {
 							requiredMark={true}
 							className="space-y-4"
 						>
-							<Form.Item name="email" label="Email Address">
-								<div className="rounded-md text-[16px] py-[7px] px-[11px] border-[1px] border-neutral-200 w-full text-neutral-600">
-									mo@kgabs.com
-								</div>
+							<Form.Item name="email" label="Email">
+								<Input readOnly value={email} size="large" />
+							</Form.Item>
+
+							<Form.Item
+								name="first_Name"
+								label="First Name"
+								rules={[
+									{ required: true, message: "Please enter your first name" },
+								]}
+							>
+								<Input size="large" placeholder="Enter your first name" />
 							</Form.Item>
 
 							<Form.Item
 								name="fullName"
-								label="Full Names (as appears on ID card)"
+								label="Last Name"
 								rules={[
-									{ required: true, message: "Please enter your full name" },
+									{ required: true, message: "Please enter your last name" },
 								]}
 							>
-								<Input
-									size="large"
-									placeholder="Enter your full name"
-									className="rounded-md"
-								/>
+								<Input size="large" placeholder="Enter your last name" />
 							</Form.Item>
+
 							<Form.Item
-								name="username"
-								label="Username"
+								name="user_Name"
+								label={
+									<Space className="flex items-center">
+										<span>User name</span>
+										<Tooltip title="This is the name that will appear on public">
+											<InfoCircleOutlined className="text-gray-400" />
+										</Tooltip>
+									</Space>
+								}
 								rules={[{ required: true, message: "Please enter a username" }]}
 							>
-								<Input
-									size="large"
-									placeholder="Choose a username"
-									className="rounded-md"
-								/>
+								<Input size="large" placeholder="Choose a username" />
 							</Form.Item>
 
 							<Form.Item name="phone_number" label="Phone number">
@@ -146,6 +206,25 @@ const OwnerPersonalInfo: React.FC = () => {
 									size="large"
 									placeholder="Enter phone number"
 									className="rounded-md"
+								/>
+							</Form.Item>
+
+							<Form.Item
+								required
+								rules={[
+									{
+										required: true,
+										message: "Please attact your id document",
+									},
+								]}
+								name="idDocument"
+								label="ID Document"
+							>
+								<Input
+									type="file"
+									accept=".pdf"
+									size="large"
+									placeholder="Enter phone number"
 								/>
 							</Form.Item>
 
@@ -253,14 +332,13 @@ const OwnerPersonalInfo: React.FC = () => {
 							</Form.Item>
 
 							<Form.Item>
-								<Button
-									type="primary"
-									htmlType="submit"
-									size="large"
-									className="w-full bg-blue-600 hover:bg-blue-700 !rounded-button whitespace-nowrap cursor-pointer"
-								>
-									Create Account
-								</Button>
+								<Btn
+									isAnimation
+									loading={isPending}
+									type="submit"
+									className="w-full text-white"
+									text={isPending ? "Loading..." : "Create Account"}
+								/>
 							</Form.Item>
 						</Form>
 

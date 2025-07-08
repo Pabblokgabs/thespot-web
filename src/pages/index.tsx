@@ -19,7 +19,6 @@ import Profile from "./user/profile";
 
 // Owner pages
 import OwnerEmail from "./owner/auth";
-import OwnerPassword from "./owner/auth/password";
 import OwnerPersonalInfo from "./owner/auth/personal.info";
 import Dashboard from "./owner";
 import SpotListing from "./owner/spot.listing";
@@ -36,7 +35,6 @@ export {
 	ResetPassword,
 	PersonalInfo,
 	OwnerPersonalInfo,
-	OwnerPassword,
 	OwnerEmail,
 	ViewAll,
 	Search,
