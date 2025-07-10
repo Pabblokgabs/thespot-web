@@ -1,26 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { Input, Form, Progress, UploadFile, Space, Tooltip } from "antd";
+import {
+	Input,
+	Form,
+	Progress,
+	UploadFile,
+	Space,
+	Tooltip,
+	Upload,
+	Button,
+	message,
+} from "antd";
 import {
 	EyeInvisibleOutlined,
 	EyeTwoTone,
 	CloseCircleFilled,
 	InfoCircleOutlined,
+	UploadOutlined,
 } from "@ant-design/icons";
 import { FaCheck } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { Btn } from "@/components";
 
 const OwnerPersonalInfo: React.FC = () => {
+	const navigation = useNavigate();
+
 	const location = useLocation();
 	const [form] = Form.useForm();
 	const [password, setPassword] = useState("");
 	const [passwordStrength, setPasswordStrength] = useState(0);
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-	const [email, setEmail] = useState<string>("");
+	const [email, setEmail] = useState<string>(location.state?.email);
 	useEffect(() => {
 		if (location.state?.email) {
 			setEmail(location.state?.email);
@@ -44,10 +57,11 @@ const OwnerPersonalInfo: React.FC = () => {
 	const { mutate: registerOwner, isPending } = useMutation({
 		mutationFn: async (formData: FormData) => {
 			const res = await fetch(
-				"http://localhost:5000/api/v1/owner/auth/sign-up",
+				"http://localhost:5000/api/v1/owner/auth/register",
 				{
 					method: "POST",
 					body: formData,
+					credentials: "include",
 				}
 			);
 
@@ -60,37 +74,21 @@ const OwnerPersonalInfo: React.FC = () => {
 			return data;
 		},
 
-		onSuccess: () => {
+		onSuccess: (data) => {
 			form.resetFields();
 			setFileList([]);
+			navigation(`/owner/dashboard/${data.owner._id}`);
 		},
 
 		onError: (error) => {
-			toast.error("Registration failed", {
-				description: <p>{error.message}</p>,
-			});
+			toast.error(
+				<div className="ml-2.5">
+					<p className="font-semibold">Registration failed</p>
+					<p className="text-sm text-gray-600">{error.message}</p>
+				</div>
+			);
 		},
 	});
-
-	const handleSubmit = (values: any) => {
-		console.log(values);
-
-		const formData = new FormData();
-
-		formData.append("email", email);
-		formData.append("first_Name", values.first_Name);
-		formData.append("last_Name", values.last_Name);
-		formData.append("user_Name", values.user_Name);
-		formData.append("password", values.confirmPassword);
-		formData.append("phone_number", values.phone_number || "");
-		formData.append("idDocument", values.idDocument);
-
-		if (fileList.length > 0 && fileList[0].originFileObj) {
-			formData.append("profileImage", fileList[0].originFileObj as File);
-		}
-		console.log(formData);
-		registerOwner(formData);
-	};
 
 	const getPasswordStrengthText = () => {
 		if (passwordStrength <= 25) return "Weak";
@@ -105,10 +103,82 @@ const OwnerPersonalInfo: React.FC = () => {
 		return "#1890ff";
 	};
 
+	const normFile = (e: any) => {
+		if (Array.isArray(e)) {
+			return e;
+		}
+		return e?.fileList;
+	};
+
+	const beforeUpload = (file: File) => {
+		const isPdf = file.type === "application/pdf";
+		const isLtHalfMB = file.size / 1024 / 1024 < 0.5;
+
+		if (!isPdf) {
+			message.error("You can only upload PDF files!");
+			return Upload.LIST_IGNORE;
+		}
+
+		if (!isLtHalfMB) {
+			message.error("File must be smaller than 0.5MB!");
+			return Upload.LIST_IGNORE;
+		}
+
+		return false;
+	};
+
+	const handleProfileChange = ({ fileList }: { fileList: UploadFile[] }) => {
+		setFileList(fileList);
+	};
+
+	const [imgError, setImgError] = useState("");
+	const beforeProfileUpload = (file: File) => {
+		const isImage = file.type.startsWith("image/");
+		const isLt1MB = file.size / 1024 / 1024 < 1;
+
+		if (!isImage) {
+			setImgError("Only image files are allowed!");
+			return Upload.LIST_IGNORE;
+		}
+
+		if (!isLt1MB) {
+			setImgError("Image must be smaller than 1MB!");
+			return Upload.LIST_IGNORE;
+		}
+
+		setImgError("");
+
+		return false;
+	};
+
+	const handleSubmit = (values: any) => {
+		console.log(values);
+
+		const formData = new FormData();
+
+		formData.append("email", email);
+		formData.append("first_Name", values.first_Name);
+		formData.append("last_Name", values.last_Name);
+		formData.append("user_Name", values.user_Name);
+		formData.append("password", values.confirmPassword);
+		formData.append("phone_number", values.phone_number || "");
+
+		const idDocFile = values.idDocument?.[0]?.originFileObj;
+		if (idDocFile) {
+			formData.append("idDocument", idDocFile);
+		}
+
+		if (fileList.length > 0 && fileList[0].originFileObj) {
+			formData.append("profileImage", fileList[0].originFileObj as File);
+		}
+
+		registerOwner(formData);
+	};
+
 	return (
 		<div className="min-h-screen flex flex-col bg-gray-50 relative">
 			{isPending && (
-				<div  className="absolute top-0 left-0 h-full w-full z-10" />
+				<div className="absolute top-0 left-0 h-full w-full z-10" />
 			)}
 			<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
 				<div className="w-full max-w-lg">
@@ -122,37 +192,39 @@ const OwnerPersonalInfo: React.FC = () => {
 						</p>
 					</div>
 					<div className="bg-white p-8 rounded-lg shadow-lg">
-						<div className="flex justify-center mb-8 relative">
-							<div className="relative group">
-								<div className="w-35 h-35 rounded-full bg-gray-100 flex items-center justify-center border-2 border-gray-200">
-									{fileList.length > 0 ? (
-										<img
-											src={URL.createObjectURL(fileList[0] as any)}
-											alt="Profile"
-											className="w-full h-full rounded-full object-cover"
-										/>
-									) : (
-										<i className="fas fa-user text-4xl text-gray-400"></i>
-									)}
-								</div>
-								<label
-									htmlFor="avatar-upload"
-									className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors"
-								>
-									<i className="fas fa-pencil-alt text-white text-sm"></i>
-								</label>
-								<input
-									id="avatar-upload"
-									type="file"
-									className="hidden"
+						<div className="flex flex-col justify-center items-center mb-8 relative">
+							<div className="relative flex justify-center group w-36 h-36">
+								<Upload
+									listType="picture-circle"
+									fileList={fileList}
+									onChange={handleProfileChange}
+									beforeUpload={beforeProfileUpload}
 									accept="image/*"
-									onChange={(e) => {
-										if (e.target.files?.length) {
-											setFileList([e.target.files[0] as any]);
-										}
-									}}
-								/>
+									maxCount={1}
+									showUploadList={false}
+								>
+									<div className="w-full h-full rounded-full bg-gray-800 border-2 border-gray-200 flex items-center justify-center overflow-hidden">
+										{fileList.length > 0 ? (
+											<img
+												src={
+													fileList[0].thumbUrl ||
+													URL.createObjectURL(fileList[0].originFileObj as File)
+												}
+												alt="avatar"
+												className="w-full h-full object-cover"
+											/>
+										) : (
+											<i className="fas fa-user text-4xl text-gray-400"></i>
+										)}
+										<div className="absolute bottom-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors">
+											<i className="fas fa-pencil-alt text-white text-sm"></i>
+										</div>
+									</div>
+								</Upload>
 							</div>
+							<p className="text-red-400 w-full text-center text-sm">
+								{imgError}
+							</p>
 						</div>
 						<Form
 							form={form}
@@ -176,7 +248,7 @@ const OwnerPersonalInfo: React.FC = () => {
 							</Form.Item>
 
 							<Form.Item
-								name="fullName"
+								name="last_Name"
 								label="Last Name"
 								rules={[
 									{ required: true, message: "Please enter your last name" },
@@ -210,22 +282,24 @@ const OwnerPersonalInfo: React.FC = () => {
 							</Form.Item>
 
 							<Form.Item
-								required
-								rules={[
-									{
-										required: true,
-										message: "Please attact your id document",
-									},
-								]}
 								name="idDocument"
 								label="ID Document"
+								valuePropName="fileList"
+								getValueFromEvent={normFile}
+								rules={[
+									{ required: true, message: "Please attach your ID document" },
+								]}
 							>
-								<Input
-									type="file"
+								<Upload
+									style={{ width: "100%" }}
+									beforeUpload={beforeUpload}
 									accept=".pdf"
-									size="large"
-									placeholder="Enter phone number"
-								/>
+									maxCount={1}
+								>
+									<Button style={{ width: "100%" }} icon={<UploadOutlined />}>
+										Click to Upload
+									</Button>
+								</Upload>
 							</Form.Item>
 
 							<Form.Item

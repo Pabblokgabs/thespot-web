@@ -6,14 +6,14 @@ import { Button, Form, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 import { Btn } from "@/components";
 
 function Email() {
 	const navigation = useNavigate();
 
 	const [form] = Form.useForm();
-	const [showVerification, setShowVerification] = useState(true);
+	const [showVerification, setShowVerification] = useState(false);
 	const [email, setEmail] = useState("");
 	const [countdown, setCountdown] = useState(30);
 	const [isCountingDown, setIsCountingDown] = useState(false);
@@ -62,9 +62,7 @@ function Email() {
 
 				return data;
 			} catch (error: any) {
-				toast.error("Something went wrong", {
-					description: <p>{error?.message || "Please try again later"}</p>,
-				});
+				toast.error(error.message);
 				throw error;
 			}
 		},
@@ -139,9 +137,12 @@ function Email() {
 
 				return data;
 			} catch (error: any) {
-				toast.error("Verification error", {
-					description: <p>{error?.message || "Please try again later"}</p>,
-				});
+				toast.error(
+					<div className="ml-2.5">
+						<p className="font-semibold">Login failed</p>
+						<p className="text-sm text-gray-600">{error.message}</p>
+					</div>
+				);
 				throw error;
 			}
 		},

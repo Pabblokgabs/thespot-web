@@ -53,7 +53,7 @@ function App() {
 					path="/owner/signup/personal-information"
 					element={<OwnerPersonalInfo />}
 				/>
-				<Route path="/owner/dashboard" element={<Dashboard />} />
+				<Route path="/owner/dashboard/:id" element={<Dashboard />} />
 				<Route path="/list-spot" element={<SpotListing />} />
 			</Routes>
 		</Router>

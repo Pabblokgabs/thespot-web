@@ -10,6 +10,7 @@ import {
 	Space,
 	Tooltip,
 	Modal,
+	Upload,
 } from "antd";
 import {
 	EyeInvisibleOutlined,
@@ -19,15 +20,16 @@ import {
 } from "@ant-design/icons";
 import { FaCheck } from "react-icons/fa";
 import { gender, recommended } from "@/lib/options";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import dayjs from "dayjs";
 import { Btn } from "@/components";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 const PersonalInfo: React.FC = () => {
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	const [form] = Form.useForm();
 	const [password, setPassword] = useState("");
@@ -36,7 +38,7 @@ const PersonalInfo: React.FC = () => {
 	const [isPredModal, setIsPrefModal] = useState<boolean>(true);
 	const [preferences, setPreferences] = useState<string[]>([]);
 
-	const [email, setEmail] = useState<string>("");
+	const [email, setEmail] = useState<string>(location.state?.email);
 
 	useEffect(() => {
 		if (location.state?.email) {
@@ -63,6 +65,7 @@ const PersonalInfo: React.FC = () => {
 			const res = await fetch("http://localhost:5000/api/v1/auth/sign-up", {
 				method: "POST",
 				body: formData,
+				credentials: "include",
 			});
 
 			const data = await res.json();
@@ -77,14 +80,55 @@ const PersonalInfo: React.FC = () => {
 			form.resetFields();
 			setPreferences([]);
 			setFileList([]);
+			navigate("/");
 		},
 
 		onError: (error) => {
-			toast.error("Registration failed", {
-				description: <p>{error.message}</p>,
-			});
+			toast.error(
+				<div className="ml-2.5">
+					<p className="font-semibold">Registration failed</p>
+					<p className="text-sm text-gray-600">{error.message}</p>
+				</div>
+			);
 		},
 	});
+
+	const [imgError, setImgError] = useState("");
+	const beforeProfileUpload = (file: File) => {
+		const isImage = file.type.startsWith("image/");
+		const isLt1MB = file.size / 1024 / 1024 < 1;
+
+		if (!isImage) {
+			setImgError("Only image files are allowed!");
+			return Upload.LIST_IGNORE;
+		}
+
+		if (!isLt1MB) {
+			setImgError("Image must be smaller than 1MB!");
+			return Upload.LIST_IGNORE;
+		}
+
+		setImgError("");
+
+		return false;
+	};
+
+	const handleProfileChange = ({ fileList }: { fileList: UploadFile[] }) => {
+		setFileList(fileList);
+	};
+
+	const getPasswordStrengthText = () => {
+		if (passwordStrength <= 25) return "Weak";
+		if (passwordStrength <= 50) return "Fair";
+		if (passwordStrength <= 75) return "Good";
+		return "Strong";
+	};
+	const getPasswordStrengthColor = () => {
+		if (passwordStrength <= 25) return "#ff4d4f";
+		if (passwordStrength <= 50) return "#faad14";
+		if (passwordStrength <= 75) return "#52c41a";
+		return "#1890ff";
+	};
 
 	const handleSubmit = (values: any) => {
 		const formData = new FormData();
@@ -107,23 +151,9 @@ const PersonalInfo: React.FC = () => {
 		console.log(formData);
 		registerUser(formData);
 	};
-
-	const getPasswordStrengthText = () => {
-		if (passwordStrength <= 25) return "Weak";
-		if (passwordStrength <= 50) return "Fair";
-		if (passwordStrength <= 75) return "Good";
-		return "Strong";
-	};
-	const getPasswordStrengthColor = () => {
-		if (passwordStrength <= 25) return "#ff4d4f";
-		if (passwordStrength <= 50) return "#faad14";
-		if (passwordStrength <= 75) return "#52c41a";
-		return "#1890ff";
-	};
-
 	return (
 		<div className="min-h-screen flex flex-col bg-gray-50">
-			{isRegistering  && (
+			{isRegistering && (
 				<div className="absolute top-0 left-0 h-full w-full z-10" />
 			)}
 			<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
@@ -138,37 +168,39 @@ const PersonalInfo: React.FC = () => {
 						</p>
 					</div>
 					<div className="bg-white p-8 rounded-lg shadow-lg">
-						<div className="flex justify-center mb-8 relative">
-							<div className="relative group">
-								<div className="w-35 h-35 rounded-full bg-gray-100 flex items-center justify-center border-2 border-gray-200">
-									{fileList.length > 0 ? (
-										<img
-											src={URL.createObjectURL(fileList[0] as any)}
-											alt="Profile"
-											className="w-full h-full rounded-full object-cover"
-										/>
-									) : (
-										<i className="fas fa-user text-4xl text-gray-400"></i>
-									)}
-								</div>
-								<label
-									htmlFor="avatar-upload"
-									className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors"
-								>
-									<i className="fas fa-pencil-alt text-white text-sm"></i>
-								</label>
-								<input
-									id="avatar-upload"
-									type="file"
-									className="hidden"
+						<div className="flex flex-col items-center justify-center mb-8 relative">
+							<div className="relative flex justify-center group w-36 h-36">
+								<Upload
+									listType="picture-circle"
+									fileList={fileList}
+									onChange={handleProfileChange}
+									beforeUpload={beforeProfileUpload}
 									accept="image/*"
-									onChange={(e) => {
-										if (e.target.files?.length) {
-											setFileList([e.target.files[0] as any]);
-										}
-									}}
-								/>
+									maxCount={1}
+									showUploadList={false}
+								>
+									<div className="w-full h-full rounded-full bg-gray-800 border-2 border-gray-200 flex items-center justify-center overflow-hidden">
+										{fileList.length > 0 ? (
+											<img
+												src={
+													fileList[0].thumbUrl ||
+													URL.createObjectURL(fileList[0].originFileObj as File)
+												}
+												alt="avatar"
+												className="w-full h-full object-cover"
+											/>
+										) : (
+											<i className="fas fa-user text-4xl text-gray-400"></i>
+										)}
+										<div className="absolute bottom-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors">
+											<i className="fas fa-pencil-alt text-white text-sm"></i>
+										</div>
+									</div>
+								</Upload>
 							</div>
+							<p className="text-red-400 w-full text-center text-sm">
+								{imgError}
+							</p>
 						</div>
 						<Form
 							form={form}
@@ -177,8 +209,8 @@ const PersonalInfo: React.FC = () => {
 							requiredMark={true}
 							className="space-y-4"
 						>
-							<Form.Item name="email" label="Email">
-								<Input readOnly value={email} size="large" />
+							<Form.Item name="email" label="Email" initialValue={email}>
+								<Input readOnly value={email || ''} size="large" />
 							</Form.Item>
 
 							<Form.Item

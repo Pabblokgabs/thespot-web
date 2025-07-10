@@ -66,7 +66,7 @@ function OwnerEmail() {
 	const { isPending: isEmailPending, mutate: emailMutate } = useMutation({
 		mutationFn: async (email) => {
 			try {
-				const res = await fetch("", {
+				const res = await fetch("http://localhost:5000/api/v1/owner/auth/email", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -118,7 +118,7 @@ function OwnerEmail() {
 			token: string;
 		}) => {
 			try {
-				const res = await fetch("", {
+				const res = await fetch("http://localhost:5000/api/v1/owner/auth/verify", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
@@ -256,7 +256,7 @@ function OwnerEmail() {
 								/>
 							</p>
 							<p
-								className={`text-sm ${
+								className={`text-sm my-2.5 ${
 									verifyingData?.success ? "text-green-400" : "text-red-400"
 								}`}
 							>

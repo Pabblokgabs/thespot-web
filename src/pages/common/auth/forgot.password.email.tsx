@@ -5,6 +5,8 @@ import logo from "../../../assets/logo.png";
 import { FaEnvelope } from "react-icons/fa";
 import { Button, Form, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 function ForgotPasswordEmail() {
 	const navigation = useNavigate();
@@ -16,6 +18,7 @@ function ForgotPasswordEmail() {
 	const [isCountingDown, setIsCountingDown] = useState(false);
 	const [code, setCode] = useState(["", "", "", "", "", ""]);
 	const otpRefs = useRef<any[]>([]);
+	const [token, setToken] = useState<string>("");
 
 	// Initialize refs array
 	useEffect(() => {
@@ -61,16 +64,88 @@ function ForgotPasswordEmail() {
 		}
 	};
 
+	const { isPending: isEmailPending, mutate: emailMutate } = useMutation({
+		mutationFn: async (email) => {
+			const res = await fetch("http://localhost:5000/api/v1/auth/fp/email", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email }),
+			});
+
+			const data = await res.json();
+			if (!res.ok || !data.success) {
+				throw new Error(data.message || "Something went wrong");
+			}
+
+			return data;
+		},
+
+		onSuccess: (data) => {
+			setToken(data.token);
+			setShowVerification(true);
+			setIsCountingDown(true);
+		},
+
+		onError: (error: any) => {
+			toast.error(error.message);
+		},
+	});
+
 	const handleSubmit = (values: any) => {
 		setEmail(values.email);
-		setIsCountingDown(true);
-		setShowVerification(true);
+		emailMutate(values.email);
 	};
 
+	const {
+		isPending: isVerifyPending,
+		mutate: verifyMutate,
+		data: verifyingData,
+	} = useMutation({
+		mutationFn: async ({
+			email,
+			code,
+			token,
+		}: {
+			email: string;
+			code: string;
+			token: string;
+		}) => {
+			const res = await fetch("http://localhost:5000/api/v1/auth/fp/verify", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email, code, token }),
+			});
+
+			const data = await res.json();
+
+			if (!res.ok || !data.success) {
+				throw new Error(data.message || "Verification failed");
+			}
+
+			return data;
+		},
+
+		onSuccess: () => {
+			navigation("/reset-password", { state: { email } });
+		},
+
+		onError: (error: any) => {
+			toast.error(error.message);
+		},
+	});
+
 	const handleVerifyEmail = () => {
-		// Here would be the verification logic
-		alert("Email verified successfully!");
-		navigation("/reset-password");
+		const fullCode = code.join("");
+
+		verifyMutate({
+			email,
+			token,
+			code: fullCode,
+		});
 	};
 
 	return (
@@ -119,7 +194,13 @@ function ForgotPasswordEmail() {
 									/>
 								</Form.Item>
 
-								<Btn isAnimation type="submit" text="Next" width="100%" />
+								<Btn
+									isAnimation
+									loading={isEmailPending}
+									type="submit"
+									text={isEmailPending ? "Loading..." : "Next"}
+									className="text-white w-full"
+								/>
 							</Form>
 						</>
 					) : (
@@ -146,6 +227,13 @@ function ForgotPasswordEmail() {
 									className="ml-1 p-0 h-auto whitespace-nowrap cursor-pointer"
 								/>
 							</p>
+							<p
+								className={`text-sm my-2.5 ${
+									verifyingData?.success ? "text-green-400" : "text-red-400"
+								}`}
+							>
+								{verifyingData?.message}
+							</p>
 							<div className="flex justify-center gap-2 mb-6">
 								{code.map((value, index) => (
 									<Input
@@ -161,14 +249,12 @@ function ForgotPasswordEmail() {
 									/>
 								))}
 							</div>
-							<Button
-								type="primary"
-								size="large"
+							<Btn
+								loading={isVerifyPending}
 								onClick={handleVerifyEmail}
-								className="w-full h-12 bg-blue-600 hover:bg-blue-700 mb-4 !rounded-button whitespace-nowrap cursor-pointer"
-							>
-								Verify Email
-							</Button>
+								className="w-full text-white"
+								text={isVerifyPending ? "Verifying..." : "Verify"}
+							/>
 							<div className="text-sm text-gray-600">
 								Didn't receive the code?{" "}
 								{isCountingDown ? (

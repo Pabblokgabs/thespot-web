@@ -6,15 +6,25 @@ import {
 	EyeInvisibleOutlined,
 	EyeTwoTone,
 } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 function ResetPassword() {
+	const location = useLocation();
 	const navigate = useNavigate();
 	const [form] = Form.useForm();
 	const [password, setPassword] = useState("");
 	const [passwordStrength, setPasswordStrength] = useState(0);
+
+	const [email, setEmail] = useState<string>(location.state?.email);
+	useEffect(() => {
+		if (location.state?.email) {
+			setEmail(location.state?.email);
+		}
+	}, []);
 
 	const calculatePasswordStrength = (pass: string) => {
 		let strength = 0;
@@ -31,12 +41,6 @@ function ResetPassword() {
 		calculatePasswordStrength(newPassword);
 	};
 
-	const handleSubmit = (values: any) => {
-		console.log(values);
-		form.resetFields();
-		navigate("/");
-	};
-
 	const getPasswordStrengthText = () => {
 		if (passwordStrength <= 25) return "Weak";
 		if (passwordStrength <= 50) return "Fair";
@@ -49,6 +53,49 @@ function ResetPassword() {
 		if (passwordStrength <= 50) return "#faad14";
 		if (passwordStrength <= 75) return "#52c41a";
 		return "#1890ff";
+	};
+
+	const { isPending, mutate } = useMutation({
+		mutationFn: async ({
+			email,
+			new_password,
+		}: {
+			email: string;
+			new_password: string;
+		}) => {
+			const res = await fetch(
+				"http://localhost:5000/api/v1/auth/reset-password",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email, new_password }),
+					credentials: "include",
+				}
+			);
+
+			const data = await res.json();
+
+			if (!res.ok || !data.success) {
+				throw new Error(data.message);
+			}
+
+			return data;
+		},
+
+		onSuccess: () => {
+			navigate("/");
+			form.resetFields();
+		},
+
+		onError: (error: any) => {
+			toast.error(error.message);
+		},
+	});
+
+	const handleSubmit = (values: any) => {
+		mutate({ email, new_password: values.confirmPassword });
 	};
 
 	return (
@@ -183,7 +230,13 @@ function ResetPassword() {
 							/>
 						</Form.Item>
 
-						<Btn isAnimation type="submit" text="Reset Password" width="100%" />
+						<Btn
+							loading={isPending}
+							isAnimation
+							type="submit"
+							text={isPending ? "Loading..." : "Reset Password"}
+							className="text-white w-full"
+						/>
 					</Form>
 				</div>
 			</div>

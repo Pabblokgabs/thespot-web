@@ -7,52 +7,61 @@ import { useNavigate } from "react-router-dom";
 import { Form, Input } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 function Login() {
 	const navigation = useNavigate();
 	const [form] = Form.useForm();
 
-	const { isPending, mutate } = useMutation({
-		mutationFn: async (formData: any) => {
+	const { mutate: loginUser, isPending: isLoggingIn } = useMutation({
+		mutationFn: async (loginData: { email: string; password: string }) => {
+			const res = await fetch("http://localhost:5000/api/v1/auth/signin", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify(loginData),
+				credentials: "include",
+			});
+
+			let data;
+
 			try {
-				const res = await fetch("http://localhost:5000/api/v1/login", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: formData,
-				});
-
-				const data = await res.json();
-
-				if (!res.ok || !data.success) {
-					throw new Error(data?.message || "Sonething went wrong");
-				}
-
-				return data;
-			} catch (error: any) {
-				toast.error("Something went wrong", {
-					description: <p>{error?.message || "Please try again later"}</p>,
-				});
-				throw error;
+				data = await res.json();
+			} catch (e) {
+				throw new Error("Invalid JSON response from server");
 			}
+
+			if (!res.ok) {
+				throw new Error(data.message || `HTTP Error ${res.status}`);
+			}
+
+			return data;
 		},
 
 		onSuccess: (data) => {
 			form.resetFields();
 
-			if (data.user.role === "owner") {
-				navigation(`/owner/dashboard/${data.user._id}`);
+			if (data.role === "owner") {
+				navigation(`/owner/dashboard/${data._id}`);
 			} else {
 				navigation("/");
 			}
 		},
+
+		onError: (error: any) => {
+			console.log("Error is:", error);
+			toast.error(
+				<div className="ml-2.5">
+					<p className="font-semibold">Login failed</p>
+					<p className="text-sm text-gray-600">{error.message}</p>
+				</div>
+			);
+		},
 	});
 
 	const handleSubmit = (values: any) => {
-		console.log(values);
-		mutate(values);
+		loginUser(values);
 	};
 
 	const handleGoogleSignIn = () => {
@@ -61,7 +70,7 @@ function Login() {
 
 	return (
 		<div className="min-h-screen flex flex-col bg-gray-50">
-			{isPending  && (
+			{isLoggingIn && (
 				<div className="absolute top-0 left-0 h-full w-full z-10" />
 			)}
 			<div className="py-5 flex-1 h-full px-[20px] md:px-[50px] xl:px-[100px] overflow-x-hidden flex-col items-center justify-center flex overflow-y-auto">
@@ -137,10 +146,10 @@ function Login() {
 						</p>
 
 						<Btn
-							loading={isPending}
+							loading={isLoggingIn}
 							isAnimation
 							type="submit"
-							text={isPending ? "Loading..." : "Submit"}
+							text={isLoggingIn ? "Loading..." : "Submit"}
 							className="text-white w-full"
 						/>
 					</Form>
