@@ -7,7 +7,7 @@ import { Button, Form, Input } from "antd";
 import { EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { toast } from "react-hot-toast";
 
 function OwnerEmail() {
 	const navigation = useNavigate();
@@ -81,9 +81,7 @@ function OwnerEmail() {
 
 				return data;
 			} catch (error: any) {
-				toast.error("Something went wrong", {
-					description: <p>{error?.message || "Please try again later"}</p>,
-				});
+				toast.error(error?.message);
 				throw error;
 			}
 		},
@@ -134,9 +132,7 @@ function OwnerEmail() {
 
 				return data;
 			} catch (error: any) {
-				toast.error("Verification error", {
-					description: <p>{error?.message || "Please try again later"}</p>,
-				});
+				toast.error(error.message);
 				throw error;
 			}
 		},

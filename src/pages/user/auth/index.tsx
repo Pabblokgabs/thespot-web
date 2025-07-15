@@ -13,7 +13,7 @@ function Email() {
 	const navigation = useNavigate();
 
 	const [form] = Form.useForm();
-	const [showVerification, setShowVerification] = useState(false);
+	const [showVerification, setShowVerification] = useState(true);
 	const [email, setEmail] = useState("");
 	const [countdown, setCountdown] = useState(30);
 	const [isCountingDown, setIsCountingDown] = useState(false);
@@ -40,12 +40,13 @@ function Email() {
 	}, [countdown, isCountingDown]);
 
 	const handleResendOTP = () => {
+		emailMutate(email)
 		setCountdown(60);
 		setIsCountingDown(true);
 	};
 
 	const { isPending, mutate: emailMutate } = useMutation({
-		mutationFn: async (email) => {
+		mutationFn: async (email:string) => {
 			try {
 				const res = await fetch("http://localhost:5000/api/v1/auth/email", {
 					method: "POST",
@@ -288,7 +289,7 @@ function Email() {
 								className="w-full text-white"
 								text={isVerifying ? "Verifying..." : "Verify Email"}
 							/>
-							<div className="text-sm text-gray-600">
+							<div className="text-sm mt-2 text-gray-600">
 								Didn't receive the code?{" "}
 								{isCountingDown ? (
 									<span>Resend in {countdown}s</span>
