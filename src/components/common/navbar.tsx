@@ -16,6 +16,7 @@ import { Dropdown, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { UserOutlined } from "@ant-design/icons";
 import { useOverAllContext } from "@/lib/context/useContext";
+import SearchModal from "./search.modal";
 
 interface nav {
 	isScrolled?: boolean;
@@ -42,6 +43,7 @@ const NavBar: React.FC<nav> = ({ isScrolled = false, isSticky = true }) => {
 						{isScrolled && (
 							<div className="relative">
 								<Input
+									readOnly
 									onClick={() => setIsQuerying(true)}
 									allowClear
 									prefix={<FiSearch className="text-gray-400" />}
@@ -190,6 +192,8 @@ const NavBar: React.FC<nav> = ({ isScrolled = false, isSticky = true }) => {
 					</div>
 				</div>
 			</header>
+
+			<SearchModal />
 		</>
 	);
 };
