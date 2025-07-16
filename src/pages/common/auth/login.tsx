@@ -1,5 +1,4 @@
-import { Btn } from "@/components";
-import logo from "../../../assets/logo.png";
+import { AuthNav, Btn } from "@/components";
 import { Link } from "react-router-dom";
 
 import { FaGoogle } from "react-icons/fa";
@@ -73,17 +72,8 @@ function Login() {
 			{isLoggingIn && (
 				<div className="absolute top-0 left-0 h-full w-full z-10" />
 			)}
+			<AuthNav />
 			<div className="py-5 flex-1 h-full px-[20px] md:px-[50px] xl:px-[100px] overflow-x-hidden flex-col items-center justify-center flex overflow-y-auto">
-				<div className="text-center mb-4">
-					<div className="flex items-center justify-center gap-2.5">
-						<img src={logo} alt="Logo" className="w-7 h-auto object-cover" />
-						<h1 className="text-3xl font-bold text-gray-800">kgabs</h1>
-					</div>
-					<p className="text-gray-600 mt-2">
-						Discover and attend amazing local spots
-					</p>
-				</div>
-
 				<div className="my-10 bg-white shadow-[0px_0px_12px_rgba(250,250,250,0.3)] flex flex-col gap-4 rounded-md w-full md:w-[400px] h-fit p-5">
 					<h1 className="text-xl text-center font-extrabold text-black">
 						Log into your account
@@ -170,17 +160,6 @@ function Login() {
 						/>{" "}
 						Continue With Google
 					</button>
-				</div>
-				<div className="text-center mt-4">
-					<p className="text-gray-600">
-						Don't have an account?{" "}
-						<Link
-							to={"/user/signup"}
-							className="text-blue-600 hover:text-blue-800 font-medium"
-						>
-							Sign up
-						</Link>
-					</p>
 				</div>
 			</div>
 		</div>

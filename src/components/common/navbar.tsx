@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "antd";
 import { AvatarImage, Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { IoEllipse, IoEllipsisVerticalSharp } from "react-icons/io5";
@@ -27,6 +27,17 @@ const NavBar: React.FC<nav> = ({ isScrolled = false, isSticky = true }) => {
 	const navigate = useNavigate();
 	const isLoggedIn = false;
 	const { setIsQuerying } = useOverAllContext();
+
+	const [maxW, setMaxW] = useState<number>(window.innerWidth);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setMaxW(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	return (
 		<>
@@ -63,14 +74,6 @@ const NavBar: React.FC<nav> = ({ isScrolled = false, isSticky = true }) => {
 								<MdOutlineLanguage className="text-neutral-800" size={24} />{" "}
 								English
 							</Button>
-							<Link to={"/owner/signup"}>
-								<Button
-									type="primary"
-									className="cursor-pointer !rounded-button whitespace-nowrap"
-								>
-									List Your Spot
-								</Button>
-							</Link>
 						</div>
 						<div className="flex items-center gap-4">
 							<div className="relative block md:hidden">
@@ -144,31 +147,45 @@ const NavBar: React.FC<nav> = ({ isScrolled = false, isSticky = true }) => {
 								<Dropdown
 									trigger={["click"]}
 									menu={{
+										className: `${maxW >= 768 && "w-[300px]"} `,
 										items: [
 											{
-												key: "create-account",
+												key: "create_account",
 												icon: <FaUser className="mr-2" />,
-												label: "Create account",
+												label: "Create an account",
 												onClick: () => navigate("/user/signup"),
 											},
 											{
 												key: "login",
-												icon: <FaCalendarCheck className="mr-2" />,
-												label: "Login",
+												icon: <FaUser className="mr-2" />,
+												label: "Log in",
 												onClick: () => navigate("/signin"),
 											},
 											{
-												key: "contact",
-												icon: <FaHeart className="mr-2" />,
-												label: "Contact Us",
+												type: "divider",
 											},
 											{
-												key: "what-we-do",
+												key: "list_spot",
 												icon: <FaStar className="mr-2" />,
-												label: "What we do?",
+												label: (
+													<div>
+														<h4 className="font-bold text-lg">
+															List Your Spot
+														</h4>
+														<p className="text-neutral-600">
+															List your spot with us and see magic happenig
+														</p>
+													</div>
+												),
+												onClick: () => navigate('/owner/signup')
 											},
 											{
 												type: "divider",
+											},
+											{
+												key: "help_center",
+												icon: <FaUser className="mr-2" />,
+												label: "Help Center",
 											},
 											{
 												key: "report",

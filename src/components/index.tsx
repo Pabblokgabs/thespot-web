@@ -36,6 +36,7 @@ import { TileSkeletonCard, MobileTileSkeleton } from "./common/tile.skeleton";
 import ReviewsContent from "./owner/dashboard/reviews.content";
 import EditSpot from "./owner/dashboard/spot/edit.spot";
 import AllEventsHomeComponent from "./common/home/event";
+import AuthNav from "./common/auth.navbar";
 
 export {
 	MobileTileSkeleton,
@@ -76,5 +77,6 @@ export {
 	CreateEvent,
 	PaginationComponent,
 	ReviewsContent,
-	AllEventsHomeComponent
+	AllEventsHomeComponent,
+	AuthNav,
 };

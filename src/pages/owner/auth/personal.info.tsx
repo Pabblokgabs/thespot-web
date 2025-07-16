@@ -19,10 +19,9 @@ import {
 } from "@ant-design/icons";
 import { FaCheck } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import logo from "../../../assets/logo.png";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-import { Btn } from "@/components";
+import { AuthNav, Btn } from "@/components";
 
 const OwnerPersonalInfo: React.FC = () => {
 	const navigation = useNavigate();
@@ -180,17 +179,9 @@ const OwnerPersonalInfo: React.FC = () => {
 			{isPending && (
 				<div className="absolute top-0 left-0 h-full w-full z-10" />
 			)}
+			<AuthNav />
 			<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
 				<div className="w-full max-w-lg">
-					<div className="text-center mb-8">
-						<div className="flex items-center justify-center gap-2.5">
-							<img src={logo} alt="Logo" className="w-7 h-auto object-cover" />
-							<h1 className="text-3xl font-bold text-gray-800">kgabs</h1>
-						</div>
-						<p className="text-gray-600 mt-2">
-							Discover and attend amazing local spots
-						</p>
-					</div>
 					<div className="bg-white p-8 rounded-lg shadow-lg">
 						<div className="flex flex-col justify-center items-center mb-8 relative">
 							<div className="relative flex justify-center group w-36 h-36">

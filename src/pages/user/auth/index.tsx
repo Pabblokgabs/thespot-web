@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import logo from "../../../assets/logo.png";
 import { FaEnvelope, FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Button, Form, Input } from "antd";
@@ -7,13 +6,13 @@ import { EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-import { Btn } from "@/components";
+import { AuthNav, Btn } from "@/components";
 
 function Email() {
 	const navigation = useNavigate();
 
 	const [form] = Form.useForm();
-	const [showVerification, setShowVerification] = useState(true);
+	const [showVerification, setShowVerification] = useState(false);
 	const [email, setEmail] = useState("");
 	const [countdown, setCountdown] = useState(30);
 	const [isCountingDown, setIsCountingDown] = useState(false);
@@ -40,13 +39,13 @@ function Email() {
 	}, [countdown, isCountingDown]);
 
 	const handleResendOTP = () => {
-		emailMutate(email)
+		emailMutate(email);
 		setCountdown(60);
 		setIsCountingDown(true);
 	};
 
 	const { isPending, mutate: emailMutate } = useMutation({
-		mutationFn: async (email:string) => {
+		mutationFn: async (email: string) => {
 			try {
 				const res = await fetch("http://localhost:5000/api/v1/auth/email", {
 					method: "POST",
@@ -167,17 +166,8 @@ function Email() {
 			{(isVerifying || isPending) && (
 				<div className="absolute top-0 left-0 h-full w-full z-10" />
 			)}
+			<AuthNav />
 			<div className="py-5 flex-1 h-full px-[20px] md:px-[50px] xl:px-[100px] overflow-x-hidden flex-col items-center justify-center flex overflow-y-auto">
-				<div className="text-center mb-4">
-					<div className="flex items-center justify-center gap-2.5">
-						<img src={logo} alt="Logo" className="w-7 h-auto object-cover" />
-						<h1 className="text-3xl font-bold text-gray-800">kgabs</h1>
-					</div>
-					<p className="text-gray-600 mt-2">
-						Discover and attend amazing local spots
-					</p>
-				</div>
-
 				<div className="my-10 bg-white shadow-[0px_0px_12px_rgba(250,250,250,0.3)] flex flex-col gap-4 rounded-md w-full md:w-[400px] h-fit p-5">
 					{!showVerification ? (
 						<>
@@ -216,7 +206,7 @@ function Email() {
 									loading={isVerifying}
 									type="submit"
 									className="w-full text-white"
-									text={isPending ? "Loading..." : "next"}
+									text={isPending ? "Loading..." : "Continue"}
 								/>
 							</Form>
 
@@ -284,6 +274,7 @@ function Email() {
 								))}
 							</div>
 							<Btn
+								isAnimation
 								loading={isVerifying}
 								onClick={handleVerifyEmail}
 								className="w-full text-white"
