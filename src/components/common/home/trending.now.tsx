@@ -183,7 +183,7 @@ function TrendingNow() {
 										</div>
 										<div className="mt-3 flex flex-wrap gap-2">
 											{spot.tags.map((tag: string, index) => (
-												<Tag color={tagColors(tag)} key={index}>
+												<Tag key={index}>
 													{tag}
 												</Tag>
 											))}

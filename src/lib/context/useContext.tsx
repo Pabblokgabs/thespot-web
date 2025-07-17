@@ -20,7 +20,7 @@ const OverAllProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	const [queryResults, setQueryResults] = useState<any>();
 	const [destination, setDestination] = useState<string>("");
 	const [what, setWhat] = useState<string>("");
-	const [isQuerying, setIsQuerying] = useState<boolean>(true);
+	const [isQuerying, setIsQuerying] = useState<boolean>(false);
 	return (
 		<OverAllContext.Provider
 			value={{

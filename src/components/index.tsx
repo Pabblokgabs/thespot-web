@@ -37,6 +37,10 @@ import ReviewsContent from "./owner/dashboard/reviews.content";
 import EditSpot from "./owner/dashboard/spot/edit.spot";
 import AllEventsHomeComponent from "./common/home/event";
 import AuthNav from "./common/auth.navbar";
+import SpotCard from "./common/cards/search.card/desktop/spot.card";
+import EventCard from "./common/cards/search.card/desktop/event.card";
+import MapViewCard from "./common/cards/search.card/desktop/map.view.card";
+import Card4Both from "./common/cards/search.card/mobile/card4both";
 
 export {
 	MobileTileSkeleton,
@@ -79,4 +83,8 @@ export {
 	ReviewsContent,
 	AllEventsHomeComponent,
 	AuthNav,
+	SpotCard,
+	EventCard,
+	MapViewCard,
+	Card4Both,
 };

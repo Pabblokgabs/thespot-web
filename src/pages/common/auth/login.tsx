@@ -74,13 +74,13 @@ function Login() {
 			)}
 			<AuthNav />
 			<div className="py-5 flex-1 h-full px-[20px] md:px-[50px] xl:px-[100px] overflow-x-hidden flex-col items-center justify-center flex overflow-y-auto">
-				<div className="my-10 bg-white shadow-[0px_0px_12px_rgba(250,250,250,0.3)] flex flex-col gap-4 rounded-md w-full md:w-[400px] h-fit p-5">
+				<div className="md:my-10 md:bg-white md:shadow-[0px_0px_12px_rgba(250,250,250,0.3)] flex flex-col gap-4 md:rounded-md w-full md:w-[400px] h-fit md:p-5">
 					<h1 className="text-xl text-center font-extrabold text-black">
 						Log into your account
 					</h1>
 
 					<p className="text-center text-neutral-600 mb-2.5 -mt-2">
-						Hey! You've been missed.
+						Hey! Welcome back to kgabs.
 					</p>
 
 					<Form
@@ -139,15 +139,15 @@ function Login() {
 							loading={isLoggingIn}
 							isAnimation
 							type="submit"
-							text={isLoggingIn ? "Loading..." : "Submit"}
+							text={isLoggingIn ? "Loading..." : "Login"}
 							className="text-white w-full"
 						/>
 					</Form>
 
 					<div className="flex flex-row items-center gap-2.5">
-						<span className="flex-1 h-[1px] bg-zinc-600" />
-						<p className="text-gray-500">OR</p>
-						<span className="flex-1 h-[1px] bg-zinc-600" />
+						<span className="flex-1 h-[1px] bg-zinc-400" />
+						<p className="text-gray-400 text-sm">OR</p>
+						<span className="flex-1 h-[1px] bg-zinc-400" />
 					</div>
 
 					<button

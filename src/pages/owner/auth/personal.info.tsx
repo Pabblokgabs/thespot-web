@@ -9,6 +9,7 @@ import {
 	Upload,
 	Button,
 	message,
+	Select,
 } from "antd";
 import {
 	EyeInvisibleOutlined,
@@ -22,6 +23,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { AuthNav, Btn } from "@/components";
+import countries from "@/lib/county";
 
 const OwnerPersonalInfo: React.FC = () => {
 	const navigation = useNavigate();
@@ -31,6 +33,7 @@ const OwnerPersonalInfo: React.FC = () => {
 	const [password, setPassword] = useState("");
 	const [passwordStrength, setPasswordStrength] = useState(0);
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
+	const [countryCode, setCountryCode] = useState<string>("");
 
 	const [email, setEmail] = useState<string>(location.state?.email);
 	useEffect(() => {
@@ -160,7 +163,7 @@ const OwnerPersonalInfo: React.FC = () => {
 		formData.append("last_Name", values.last_Name);
 		formData.append("user_Name", values.user_Name);
 		formData.append("password", values.confirmPassword);
-		formData.append("phone_number", values.phone_number || "");
+		formData.append("phone_number", countryCode + values.phone_number || "");
 
 		const idDocFile = values.idDocument?.[0]?.originFileObj;
 		if (idDocFile) {
@@ -182,7 +185,7 @@ const OwnerPersonalInfo: React.FC = () => {
 			<AuthNav />
 			<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
 				<div className="w-full max-w-lg">
-					<div className="bg-white p-8 rounded-lg shadow-lg">
+					<div className="md:bg-white md:p-8 md:rounded-lg md:shadow-lg">
 						<div className="flex flex-col justify-center items-center mb-8 relative">
 							<div className="relative flex justify-center group w-36 h-36">
 								<Upload
@@ -207,8 +210,8 @@ const OwnerPersonalInfo: React.FC = () => {
 										) : (
 											<i className="fas fa-user text-4xl text-gray-400"></i>
 										)}
-										<div className="absolute bottom-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors">
-											<i className="fas fa-pencil-alt text-white text-sm"></i>
+										<div className="absolute bottom-0 w-8 h-8 text-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:text-blue-600 transition-all">
+											Edit
 										</div>
 									</div>
 								</Upload>
@@ -263,18 +266,40 @@ const OwnerPersonalInfo: React.FC = () => {
 								<Input size="large" placeholder="Choose a username" />
 							</Form.Item>
 
-							<Form.Item name="phone_number" label="Phone number">
-								<Input
-									inputMode="numeric"
-									size="large"
-									placeholder="Enter phone number"
-									className="rounded-md"
-								/>
+							<Form.Item name="phone_number" label="Phone Number">
+								<div className="flex gap-2 items-center">
+									<div className="w-1/4">
+										<Select
+											onChange={(value) => setCountryCode(value)}
+											size="large"
+											placeholder="+123"
+										>
+											{countries.map((country) => (
+												<Select.Option key={country.label} value={country.code}>
+													{country.code}
+												</Select.Option>
+											))}
+										</Select>
+									</div>
+									<Input
+										type="number"
+										size="large"
+										placeholder="Enter phone number"
+										className="rounded-md"
+									/>
+								</div>
 							</Form.Item>
 
 							<Form.Item
 								name="idDocument"
-								label="ID Document"
+								label={
+									<Space className="flex items-center">
+										<span>ID Document</span>
+										<Tooltip title="This is required for ...">
+											<InfoCircleOutlined className="text-gray-400" />
+										</Tooltip>
+									</Space>
+								}
 								valuePropName="fileList"
 								getValueFromEvent={normFile}
 								rules={[
@@ -287,7 +312,11 @@ const OwnerPersonalInfo: React.FC = () => {
 									accept=".pdf"
 									maxCount={1}
 								>
-									<Button style={{ width: "100%" }} icon={<UploadOutlined />}>
+									<Button
+										size="large"
+										style={{ width: "100%" }}
+										icon={<UploadOutlined />}
+									>
 										Click to Upload
 									</Button>
 								</Upload>

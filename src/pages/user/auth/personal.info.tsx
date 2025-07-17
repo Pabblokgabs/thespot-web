@@ -25,6 +25,7 @@ import dayjs from "dayjs";
 import { AuthNav, Btn } from "@/components";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
+import countries from "@/lib/county";
 
 const PersonalInfo: React.FC = () => {
 	const location = useLocation();
@@ -34,8 +35,9 @@ const PersonalInfo: React.FC = () => {
 	const [password, setPassword] = useState("");
 	const [passwordStrength, setPasswordStrength] = useState(0);
 	const [fileList, setFileList] = useState<UploadFile[]>([]);
-	const [isPredModal, setIsPrefModal] = useState<boolean>(true);
+	const [isPredModal, setIsPrefModal] = useState<boolean>(false);
 	const [preferences, setPreferences] = useState<string[]>([]);
+	const [countryCode, setCountryCode] = useState<string>("");
 
 	const [email, setEmail] = useState<string>(location.state?.email);
 
@@ -138,7 +140,7 @@ const PersonalInfo: React.FC = () => {
 		formData.append("date_of_birth", values.date_of_birth.format("YYYY-MM-DD"));
 		formData.append("gender", values.gender);
 		formData.append("city", values.city || "");
-		formData.append("phone_number", values.phone_number || "");
+		formData.append("phone_number", countryCode + values.phone_number || "");
 
 		preferences.forEach((pref) => {
 			formData.append("preferences[]", pref);
@@ -151,14 +153,14 @@ const PersonalInfo: React.FC = () => {
 		registerUser(formData);
 	};
 	return (
-		<div className="min-h-screen flex flex-col bg-gray-50">
+		<div className="min-h-screen flex flex-col bg-neutral-50">
 			{isRegistering && (
 				<div className="absolute top-0 left-0 h-full w-full z-10" />
 			)}
 			<AuthNav />
 			<div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
 				<div className="w-full max-w-lg">
-					<div className="bg-white p-8 rounded-lg shadow-lg">
+					<div className="md:bg-white md:p-8 md:rounded-lg md:shadow-lg">
 						<div className="flex flex-col items-center justify-center mb-8 relative">
 							<div className="relative flex justify-center group w-36 h-36">
 								<Upload
@@ -183,8 +185,8 @@ const PersonalInfo: React.FC = () => {
 										) : (
 											<i className="fas fa-user text-4xl text-gray-400"></i>
 										)}
-										<div className="absolute bottom-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors">
-											<i className="fas fa-pencil-alt text-white text-sm"></i>
+										<div className="absolute bottom-0 w-8 h-8 text-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:text-blue-600 transition-all">
+											Edit
 										</div>
 									</div>
 								</Upload>
@@ -218,12 +220,27 @@ const PersonalInfo: React.FC = () => {
 							</Form.Item>
 
 							<Form.Item name="phone_number" label="Phone Number">
-								<Input
-									type="number"
-									size="large"
-									placeholder="Enter phone number"
-									className="rounded-md"
-								/>
+								<div className="flex gap-2 items-center">
+									<div className="w-1/4">
+										<Select
+											onChange={(value) => setCountryCode(value)}
+											size="large"
+											placeholder="+123"
+										>
+											{countries.map((country) => (
+												<Select.Option key={country.label} value={country.code}>
+													{country.code}
+												</Select.Option>
+											))}
+										</Select>
+									</div>
+									<Input
+										type="number"
+										size="large"
+										placeholder="Enter phone number"
+										className="rounded-md"
+									/>
+								</div>
 							</Form.Item>
 
 							<Form.Item
@@ -324,7 +341,7 @@ const PersonalInfo: React.FC = () => {
 											size="large"
 											mode="multiple"
 											value={preferences}
-										></Select>
+										/>
 									</>
 								)}
 							</Form.Item>
@@ -478,6 +495,7 @@ const PersonalInfo: React.FC = () => {
 						Cancel
 					</Button>,
 					<Button
+						disabled={preferences.length < 3}
 						key="submit"
 						type="primary"
 						onClick={() => setIsPrefModal(false)}

@@ -20,6 +20,16 @@ function SearchModal() {
 		what,
 	} = useOverAllContext();
 	const [isSearchName, setIsSearchName] = useState<boolean>(false);
+	const [maxW, setMaxW] = useState<number>(window.innerWidth);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setMaxW(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	useEffect(() => {
 		if (!query.trim()) return setQueryResults([]);
@@ -37,7 +47,7 @@ function SearchModal() {
 
 	return (
 		<Modal
-			open={isQuerying}
+			open={isQuerying && maxW < 768}
 			onCancel={() => setIsQuerying(false)}
 			footer={[
 				<Button key="back" onClick={() => setIsQuerying(false)}>

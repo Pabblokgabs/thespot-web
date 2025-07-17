@@ -1,4 +1,3 @@
-import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
 	Input,
@@ -13,16 +12,12 @@ import {
 	Dropdown,
 	Menu,
 	Tooltip,
-	Badge,
 } from "antd";
 import {
-	SearchOutlined,
 	EnvironmentOutlined,
-	ClockCircleOutlined,
 	StarFilled,
 	DownOutlined,
 	FilterOutlined,
-	HeartOutlined,
 	CloseOutlined,
 	AppstoreOutlined,
 } from "@ant-design/icons";
@@ -40,23 +35,26 @@ import {
 	NavBar,
 	PaginationComponent,
 	MobileTileSkeleton,
+	SpotCard,
+	EventCard,
+	MapViewCard,
+	Card4Both,
 } from "@/components";
-import { tagColors } from "@/lib/options";
-import { FaStar } from "react-icons/fa";
+import { recommended } from "@/lib/options";
+import { useOverAllContext } from "@/lib/context/useContext";
 const { TabPane } = Tabs;
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+
 const SearchResults: React.FC = () => {
-	const location = useLocation();
-	const params = new URLSearchParams(location.search);
-	const city = params.get("location");
-	const category = params.get("category");
+	const { what, setWhat, destination, setDestination, query } =
+		useOverAllContext();
 
 	const [viewMode, setViewMode] = useState<"list" | "map" | "grid">("grid");
 	const [filterVisible, setFilterVisible] = useState(false);
 	const [mapVisible, setMapVisible] = useState(false);
-	const [visibleSpots, setVisibleSpots] = useState(12);
-	const [visibleEvents, setVisibleEvents] = useState(12);
+	const visibleSpots = 12;
+	const visibleEvents = 12;
 	const [spotCurrentPage, setSpotCurrentPage] = useState<number>(1);
 	const [eventCurrentPage, setEventCurrentPage] = useState<number>(1);
 	const [selectedFilters, setSelectedFilters] = useState<{
@@ -73,7 +71,6 @@ const SearchResults: React.FC = () => {
 		tags: ["Open Now"],
 	});
 	const [loading, setLoading] = useState(true);
-	const [searchQuery, setSearchQuery] = useState("restaurants near me");
 	const [maxW, setMaxW] = useState<number>(window.innerWidth);
 
 	// Simulate loading data for now till we connect backend
@@ -510,33 +507,35 @@ const SearchResults: React.FC = () => {
 
 	return (
 		<div className="min-h-screen bg-gray-50">
-			<NavBar isSticky={false} />
+			<NavBar isSticky={false} isSearchBar={false} />
 			<header className="sticky top-0 z-50 bg-white shadow-sm">
 				{/* Search Section */}
 				<div className="bg-gradient-to-r hidden md:block from-blue-600 to-indigo-700 py-6">
 					<div className="container mx-auto px-4">
 						<div className="flex flex-col md:flex-row items-center gap-4">
 							<div className="w-full md:w-1/3 lg:w-2/4 flex items-center">
-								<Input
-									placeholder="Enter spot or event name..."
-									prefix={<SearchOutlined className="text-gray-400" />}
-									defaultValue="Spas near Downtown"
-									className="rounded-full border-2 border-gray-200 hover:border-blue-500 focus:border-blue-500 pl-4 pr-4"
-								/>
+								<Select
+									value={what}
+									onChange={(value) => setWhat(value)}
+									size="large"
+									placeholder="Select the type?"
+									className="w-full"
+								>
+									{recommended.map((item, index) => (
+										<Select.Option key={index + item.value} value={item.value}>
+											{item.label}
+										</Select.Option>
+									))}
+								</Select>
 							</div>
-
-							<div className="relative flex w-full mb-3 md:mb-0 md:mr-4">
-								<Input
-									placeholder="Enter the location..."
-									prefix={<SearchOutlined className="text-gray-400" />}
-									defaultValue="Spas near Downtown"
-									className="rounded-full border-2 border-gray-200 hover:border-blue-500 focus:border-blue-500 pl-4 pr-4"
-								/>
-								<div className="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center">
-									<EnvironmentOutlined className="text-blue-500 mr-1" />
-									<span className="text-sm text-gray-500">Downtown</span>
-								</div>
-							</div>
+							<Input
+								size="large"
+								placeholder="Enter the location..."
+								prefix={<EnvironmentOutlined className="text-gray-400" />}
+								value={destination}
+								onChange={(e) => setDestination(e.target.value)}
+								className="pl-4 pr-4"
+							/>
 
 							<div className="w-full md:w-1/5 lg:w-1/4">
 								<Btn
@@ -601,7 +600,7 @@ const SearchResults: React.FC = () => {
 									value={selectedFilters.sortBy}
 									onChange={(value) => handleFilterChange("sortBy", value)}
 									className="w-36"
-									bordered={false}
+									variant="borderless"
 									suffixIcon={
 										<DownOutlined className="text-gray-400 text-xs" />
 									}
@@ -626,7 +625,7 @@ const SearchResults: React.FC = () => {
 											className="cursor-pointer !rounded-button whitespace-nowrap"
 										/>
 									</Tooltip>
-									<Tooltip title={mapVisible ? "Hide Map" : "Show Map"}>
+									<Tooltip title="Map view">
 										<Button
 											type={viewMode === "map" ? "primary" : "text"}
 											icon={<EnvironmentOutlined />}
@@ -649,7 +648,7 @@ const SearchResults: React.FC = () => {
 						<div className="flex justify-between items-center">
 							<p className="text-sm text-gray-600 truncate line-clamp-1">
 								<span className="font-medium">{searchResults.length}</span>{" "}
-								results for <span className="font-medium">"{searchQuery}"</span>
+								results for <span className="font-medium">"{query}"</span>
 							</p>
 							<div className="flex space-x-2">
 								<Button
@@ -719,128 +718,27 @@ const SearchResults: React.FC = () => {
 									<>
 										{/* Mobile Carousel View */}
 										<div className="md:hidden mb-6">
-											<Swiper
-												modules={[Pagination, Autoplay]}
-												pagination={{ clickable: true }}
-												autoplay={{ delay: 5000, disableOnInteraction: false }}
-												className="w-full"
-											>
-												{Array.from({
-													length: Math.ceil(filteredSpots.length / 12),
-												}).map((_, pageIndex) => (
-													<SwiperSlide key={`spots-page-${pageIndex}`}>
-														<div className="grid grid-cols-1 gap-4">
-															{filteredSpots
-																.slice(pageIndex * 12, (pageIndex + 1) * 12)
-																.map((spot) => (
-																	<div
-																		key={spot.id}
-																		className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-																	>
-																		<div className="flex">
-																			<div className="w-1/3">
-																				<img
-																					src={spot.image}
-																					alt={spot.name}
-																					className="w-full h-full object-cover"
-																				/>
-																			</div>
-																			<div className="w-2/3 p-3">
-																				<div className="flex justify-between items-start">
-																					<h3 className="text-base font-semibold text-gray-800">
-																						{spot.name}
-																					</h3>
-																					<div className="flex items-center">
-																						<StarFilled className="text-yellow-500 mr-1" />
-																						<span className="text-sm">
-																							{spot.rating}
-																						</span>
-																					</div>
-																				</div>
-																				<div className="flex items-center text-gray-500 text-sm mt-1">
-																					<EnvironmentOutlined className="mr-1" />
-																					<span>{spot.distance}</span>
-																				</div>
-																				<div className="flex flex-wrap gap-1 mt-2">
-																					{spot.tags.map((tag, index) => (
-																						<Tag
-																							color={tagColors(tag)}
-																							key={index}
-																						>
-																							{tag}
-																						</Tag>
-																					))}
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																))}
-														</div>
-													</SwiperSlide>
-												))}
-											</Swiper>
+											{Array.from({
+												length: Math.ceil(filteredSpots.length / 12),
+											}).map((_, pageIndex) => (
+												<div className="grid grid-cols-1 gap-4">
+													{filteredSpots
+														.slice(pageIndex * 12, (pageIndex + 1) * 12)
+														.map((spot) => (
+															<Card4Both data={spot} />
+														))}
+												</div>
+											))}
 										</div>
 										{/* Desktop View */}
-										<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+										<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 											{filteredSpots.map((spot) => (
-												<div
-													key={spot.id}
-													className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-												>
-													<div className="relative h-48 overflow-hidden">
-														<img
-															src={spot.image}
-															alt={spot.name}
-															className="w-full h-full object-cover object-center"
-														/>
-														<button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md !rounded-button whitespace-nowrap cursor-pointer">
-															<HeartOutlined className="text-gray-600" />
-														</button>
-													</div>
-													<div className="p-4">
-														<div className="flex justify-between items-start mb-2">
-															<h3 className="text-lg font-semibold text-gray-800">
-																{spot.name}
-															</h3>
-															<div className="flex items-center">
-																<FaStar className="text-yellow-500 mr-1" />
-																<span className="text-gray-700 font-medium">
-																	{spot.rating}
-																</span>
-																<span className="text-gray-500 text-sm ml-1">
-																	({spot.reviews})
-																</span>
-															</div>
-														</div>
-														<div className="flex items-center text-gray-500 mb-3">
-															<EnvironmentOutlined className="mr-1" />
-															<span>{spot.distance}</span>
-														</div>
-														<p className="text-gray-600 mb-3 line-clamp-2">
-															{spot.description}
-														</p>
-														<div className="flex flex-wrap gap-2 mb-4">
-															{spot.tags.map((tag, index) => (
-																<Tag color={tagColors(tag)} key={index}>
-																	{tag}
-																</Tag>
-															))}
-														</div>
-														<div className="flex justify-between">
-															<button className="text-blue-600 hover:text-blue-800 text-sm font-medium !rounded-button whitespace-nowrap cursor-pointer">
-																View Details
-															</button>
-															<button className="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap cursor-pointer">
-																See Events
-															</button>
-														</div>
-													</div>
-												</div>
+												<SpotCard data={spot} />
 											))}
 										</div>
 										<PaginationComponent
 											pageSize={visibleSpots}
-											total={50}
+											total={500}
 											currentPage={spotCurrentPage}
 											setCurrentPage={setSpotCurrentPage}
 										/>
@@ -903,12 +801,7 @@ const SearchResults: React.FC = () => {
 																			{spot.tags
 																				.slice(0, 2)
 																				.map((tag, index) => (
-																					<Tag
-																						key={index}
-																						color={tagColors(tag)}
-																					>
-																						{tag}
-																					</Tag>
+																					<Tag key={index}>{tag}</Tag>
 																				))}
 																		</div>
 																	</div>
@@ -920,7 +813,7 @@ const SearchResults: React.FC = () => {
 											</div>
 
 											{/* Desktop Grid for Nearby Suggestions */}
-											<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+											<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 												{spots.slice(0, 6).map((spot) => (
 													<div
 														key={`nearby-${spot.id}`}
@@ -956,9 +849,7 @@ const SearchResults: React.FC = () => {
 															</div>
 															<div className="flex flex-wrap gap-2 mb-3">
 																{spot.tags.map((tag, index) => (
-																	<Tag key={index} color={tagColors(tag)}>
-																		{tag}
-																	</Tag>
+																	<Tag key={index}>{tag}</Tag>
 																))}
 															</div>
 															<button className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap cursor-pointer">
@@ -991,114 +882,22 @@ const SearchResults: React.FC = () => {
 									<>
 										{/* Mobile Events Carousel */}
 										<div className="md:hidden mb-6">
-											<Swiper
-												modules={[Pagination, Autoplay]}
-												pagination={{ clickable: true }}
-												autoplay={{ delay: 5000, disableOnInteraction: false }}
-												className="w-full"
-											>
-												{Array.from({
-													length: Math.ceil(filteredEvents.length / 12),
-												}).map((_, pageIndex) => (
-													<SwiperSlide key={`events-page-${pageIndex}`}>
-														<div className="grid grid-cols-1 gap-4">
-															{filteredEvents
-																.slice(pageIndex * 12, (pageIndex + 1) * 12)
-																.map((event) => (
-																	<div
-																		key={event.id}
-																		className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-																	>
-																		<div className="flex">
-																			<div className="w-1/3">
-																				<img
-																					src={event.image}
-																					alt={event.title}
-																					className="w-full h-full object-cover"
-																				/>
-																			</div>
-																			<div className="w-2/3 p-3">
-																				<h3 className="text-base font-semibold text-gray-800">
-																					{event.title}
-																				</h3>
-																				<div className="text-sm text-blue-600 mt-1">
-																					{event.host}
-																				</div>
-																				<div className="flex items-center text-gray-500 text-sm mt-1">
-																					<ClockCircleOutlined className="mr-1" />
-																					<span>{event.date}</span>
-																				</div>
-																				<div className="flex flex-wrap gap-1 mt-2">
-																					{event.tags.map((tag, index) => (
-																						<Tag
-																							key={index}
-																							color={tagColors(tag)}
-																						>
-																							{tag}
-																						</Tag>
-																					))}
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																))}
-														</div>
-													</SwiperSlide>
-												))}
-											</Swiper>
+											{Array.from({
+												length: Math.ceil(filteredEvents.length / 12),
+											}).map((_, pageIndex) => (
+												<div className="grid grid-cols-1 gap-4">
+													{filteredEvents
+														.slice(pageIndex * 12, (pageIndex + 1) * 12)
+														.map((event) => (
+															<Card4Both data={event} />
+														))}
+												</div>
+											))}
 										</div>
 										{/* Desktop View */}
-										<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+										<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 											{filteredEvents.map((event) => (
-												<div
-													key={event.id}
-													className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-												>
-													<div className="relative h-48 overflow-hidden">
-														<img
-															src={event.image}
-															alt={event.title}
-															className="w-full h-full object-cover object-center"
-														/>
-														<div className="absolute top-0 left-0 bg-orange-600 text-white px-3 py-1 rounded-br-lg">
-															<i className="fas fa-calendar-alt mr-1"></i> Event
-														</div>
-														<button className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md !rounded-button whitespace-nowrap cursor-pointer">
-															<HeartOutlined className="text-gray-600" />
-														</button>
-													</div>
-													<div className="p-4">
-														<h3 className="text-lg font-semibold text-gray-800 mb-1">
-															{event.title}
-														</h3>
-														<div className="flex items-center text-gray-600 mb-2">
-															<span>at </span>
-															<span className="font-medium ml-1 text-blue-600">
-																{event.host}
-															</span>
-														</div>
-														<div className="flex items-center text-gray-500 mb-3">
-															<ClockCircleOutlined className="mr-1" />
-															<span>{event.date}</span>
-														</div>
-														<p className="text-gray-600 mb-3 line-clamp-2">
-															{event.description}
-														</p>
-														<div className="flex flex-wrap gap-2 mb-4">
-															{event.tags.map((tag, index) => (
-																<Tag key={index} color={tagColors(tag)}>
-																	{tag}
-																</Tag>
-															))}
-														</div>
-														<Button
-															type="primary"
-															className="w-full bg-pink-600 text-white py-2 rounded-lg font-medium hover:bg-pink-700 !rounded-button whitespace-nowrap cursor-pointer"
-														>
-															More Details
-														</Button>
-													</div>
-												</div>
+												<EventCard data={event} />
 											))}
 										</div>
 										<PaginationComponent
@@ -1120,104 +919,41 @@ const SearchResults: React.FC = () => {
 				) : (
 					<div className="flex flex-col lg:flex-row h-[calc(100vh-220px)] min-h-[600px]">
 						{/* List panel */}
-						<div className="lg:w-1/3 overflow-y-auto p-2 bg-white rounded-l-xl shadow-sm mb-4 lg:mb-0 lg:mr-4">
+						<div className="lg:w-1/3 overflow-y-auto overflow-x-hidden p-2 bg-white rounded-l-xl shadow-sm mb-4 lg:mb-0 lg:mr-4">
 							<div className="mb-4">
 								<h3 className="text-lg font-semibold text-gray-800 mb-2">
 									Nearby Spots & Events
 								</h3>
 								<p className="text-gray-500 text-sm">Showing results on map</p>
 							</div>
-							<div className="space-y-3">
+							<div className="space-y-3 mb-2.5">
 								{loading ? (
 									<div>
 										{Array(6)
 											.fill(null)
 											.map((_, index) => (
-												<div className="mb-2.5" key={index}>{MobileTileSkeleton()}</div>
+												<div className="mb-2.5" key={index}>
+													{MobileTileSkeleton()}
+												</div>
 											))}
 									</div>
 								) : (
 									<>
-										{filteredSpots.slice(0, 3).map((spot) => (
-											<Badge.Ribbon text="Spot" color="blue">
-												<div
-													key={spot.id}
-													className="flex bg-white p-3 rounded-lg border border-gray-100 hover:border-blue-300 cursor-pointer"
-												>
-													<div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-														<img
-															src={spot.image}
-															alt={spot.name}
-															className="w-full h-full object-cover"
-														/>
-													</div>
-													<div className="ml-3 flex-grow">
-														<h4 className="font-medium text-gray-800">
-															{spot.name}
-														</h4>
-														<div className="flex items-center text-sm text-gray-500 mb-1">
-															<EnvironmentOutlined className="mr-1 text-xs" />
-															<span>{spot.distance}</span>
-															<div className="mx-1">•</div>
-															<StarFilled className="text-yellow-500 mr-1 text-xs" />
-															<span>{spot.rating}</span>
-														</div>
-														<div className="flex flex-wrap gap-1">
-															{spot.tags.slice(0, 2).map((tag, index) => (
-																<Tag key={index} color={tagColors(tag)}>
-																	{tag}
-																</Tag>
-															))}
-														</div>
-													</div>
-												</div>
-											</Badge.Ribbon>
-										))}
-										{filteredEvents.slice(0, 3).map((event) => (
-											<Badge.Ribbon text="Event" color="orange">
-												<div
-													key={event.id}
-													className="flex bg-white p-3 rounded-lg border border-gray-100 hover:border-pink-300 cursor-pointer"
-												>
-													<div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-														<img
-															src={event.image}
-															alt={event.title}
-															className="w-full h-full object-cover"
-														/>
-													</div>
-													<div className="ml-3 flex-grow">
-														<h4 className="font-medium text-gray-800">
-															{event.title}
-														</h4>
-														<div className="flex items-center text-sm text-gray-500 mb-1">
-															<span className="text-blue-600">
-																{event.host}
-															</span>
-														</div>
-														<div className="flex items-center text-sm text-gray-500 mb-1">
-															<ClockCircleOutlined className="mr-1 text-xs" />
-															<span>{event.date}</span>
-														</div>
-														<div className="flex flex-wrap gap-1">
-															{event.tags.slice(0, 2).map((tag, index) => (
-																<Tag key={index} color={tagColors(tag)}>
-																	{tag}
-																</Tag>
-															))}
-														</div>
-													</div>
-												</div>
-											</Badge.Ribbon>
+										{[
+											...filteredSpots.slice(0, 3),
+											...filteredEvents.slice(0, 3),
+										].map((spot) => (
+											<MapViewCard data={spot} />
 										))}
 									</>
 								)}
-
-								<div className="text-center py-2">
-									<button className="text-blue-600 font-medium hover:text-blue-800 !rounded-button whitespace-nowrap cursor-pointer">
-										View All Results
-									</button>
-								</div>
+								<PaginationComponent
+									pageSize={visibleSpots}
+									total={500}
+									currentPage={spotCurrentPage}
+									setCurrentPage={setSpotCurrentPage}
+									isNextPrev={false}
+								/>
 							</div>
 						</div>
 						{/* Map container */}

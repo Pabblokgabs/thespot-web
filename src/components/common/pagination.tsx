@@ -7,6 +7,7 @@ interface paginationProps {
 	total?: number;
 	pageSize?: number;
 	setCurrentPage?: React.Dispatch<React.SetStateAction<number>>;
+	isNextPrev?: boolean;
 }
 
 const PaginationComponent: React.FC<paginationProps> = ({
@@ -14,6 +15,7 @@ const PaginationComponent: React.FC<paginationProps> = ({
 	setCurrentPage,
 	total,
 	pageSize,
+	isNextPrev = true,
 }) => {
 	return (
 		<div className="mt-8 flex justify-center">
@@ -28,14 +30,22 @@ const PaginationComponent: React.FC<paginationProps> = ({
 						return (
 							<Button className="!rounded-button whitespace-nowrap cursor-pointer">
 								<LeftOutlined />
-								<span className="hidden md:block">Previous</span>
+								<span
+									className={`hidden ${isNextPrev ? "md:block" : "hidden"}`}
+								>
+									Previous
+								</span>
 							</Button>
 						);
 					}
 					if (type === "next") {
 						return (
 							<Button className="!rounded-button whitespace-nowrap cursor-pointer">
-								<span className="hidden md:block">Next</span>
+								<span
+									className={`hidden ${isNextPrev ? "md:block" : "hidden"}`}
+								>
+									Next
+								</span>
 								<RightOutlined />
 							</Button>
 						);

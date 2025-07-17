@@ -8,7 +8,7 @@ import {
 	StarOutlined,
 } from "@ant-design/icons";
 import type { TabsProps } from "antd";
-import { Footer, NavBar } from "@/components";
+import { Btn, Footer, NavBar } from "@/components";
 
 const { Panel } = Collapse;
 
@@ -214,7 +214,7 @@ const SubcriptionPricing: React.FC = () => {
 			key: "1",
 			label: "Plan Cards",
 			children: (
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
 					{plans.map((plan) => (
 						<Card
 							key={plan.id}
@@ -236,11 +236,12 @@ const SubcriptionPricing: React.FC = () => {
 									<h3 className="text-xl font-bold m-0">{plan.name}</h3>
 								</div>
 								{plan.badge && (
-									<Badge
-										className="!rounded-button"
-										style={{ backgroundColor: plan.color }}
-										count={plan.badge}
-									/>
+									<div className="!rounded-button">
+										<Badge
+											style={{ backgroundColor: plan.color }}
+											count={plan.badge}
+										/>
+									</div>
 								)}
 							</div>
 
@@ -302,7 +303,7 @@ const SubcriptionPricing: React.FC = () => {
 					columns={columns}
 					dataSource={tableData}
 					pagination={false}
-					className="mt-6"
+					className="mt-6 p-0"
 				/>
 			),
 		},
@@ -313,7 +314,7 @@ const SubcriptionPricing: React.FC = () => {
 			<NavBar />
 			<div className="container mx-auto px-4 py-8">
 				<header className="mb-8">
-					<h1 className="text-3xl font-bold text-gray-800 mb-2">
+					<h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-2">
 						Subscription Plans
 					</h1>
 					<p className="text-gray-600">
@@ -323,8 +324,10 @@ const SubcriptionPricing: React.FC = () => {
 
 				{/* Plan Selection */}
 				<div className="mb-8">
-					<div className="flex justify-between items-center mb-6">
-						<h2 className="text-xl font-bold text-gray-800">Available Plans</h2>
+					<div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
+						<h2 className="md:text-xl font-bold text-gray-800 mb-2.5 md:mb-0">
+							Available Plans
+						</h2>
 						<div className="flex items-center">
 							<span className="mr-3 text-gray-600">Monthly</span>
 							<Switch
@@ -452,24 +455,26 @@ const SubcriptionPricing: React.FC = () => {
 				</div>
 
 				{/* Need Help Section */}
-				<div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-8 text-white">
+				<div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl p-4 md:p-8 text-white">
 					<div className="flex flex-col md:flex-row justify-between items-center">
 						<div className="mb-4 md:mb-0">
-							<h3 className="text-2xl font-bold mb-2">
+							<h3 className="md:text-2xl font-bold mb-2">
 								Need help choosing the right plan?
 							</h3>
-							<p className="text-blue-100 max-w-2xl">
+							<p className="text-blue-100 text-sm max-w-2xl">
 								Our team is ready to help you find the perfect solution for your
 								venue's specific needs. Schedule a free consultation with our
 								plan experts.
 							</p>
 						</div>
-						<Button
-							size="large"
-							className="bg-white text-blue-600 border-white hover:bg-blue-50 hover:border-blue-50 hover:text-blue-700 !rounded-button whitespace-nowrap cursor-pointer"
-						>
-							Contact Support
-						</Button>
+						<div className="w-full md:w-40 lg:w-50">
+							<Btn
+								isAnimation
+								animationColor="#155dfc"
+								className="bg-white text-blue-600"
+								text="Contact Support"
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
