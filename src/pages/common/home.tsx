@@ -8,17 +8,15 @@ import {
 	Wedo,
 	PopularCity,
 	// Events,
-	AllEventsHomeComponent
+	AllEventsHomeComponent,
 } from "@/components";
 import TrendingNow from "@/components/common/home/trending.now";
 import Recommended from "@/components/common/home/recommended.spot";
 
 const Home: React.FC = () => {
-
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<NavBar isSticky={true} />
-
 
 			<TrendingNow />
 

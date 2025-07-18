@@ -25,10 +25,8 @@ import event from "@/assets/spot/1.jpg";
 import spot from "@/assets/spot/2.jpg";
 
 import * as echarts from "echarts";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Pagination, Autoplay } from "swiper/modules";
 import {
 	Btn,
 	Footer,
@@ -39,6 +37,8 @@ import {
 	EventCard,
 	MapViewCard,
 	Card4Both,
+	NoSpotResultsFoundCard,
+	NoSpotResultsMobile,
 } from "@/components";
 import { recommended } from "@/lib/options";
 import { useOverAllContext } from "@/lib/context/useContext";
@@ -660,7 +660,15 @@ const SearchResults: React.FC = () => {
 								<Button
 									icon={<EnvironmentOutlined />}
 									type={mapVisible ? "primary" : "text"}
-									onClick={() => setMapVisible(!mapVisible)}
+									onClick={() => {
+										setMapVisible((prev) => !prev);
+
+										if (viewMode === "grid") {
+											setViewMode("map");
+										} else {
+											setViewMode("grid");
+										}
+									}}
 									className="cursor-pointer !rounded-button whitespace-nowrap"
 								/>
 							</div>
@@ -700,9 +708,11 @@ const SearchResults: React.FC = () => {
 								{filteredSpots.length} spots & {filteredEvents.length} events
 								found
 							</h2>
-							<p className="text-gray-500">
-								Showing results for "Spas near Downtown"
-							</p>
+							{what && destination && (
+								<p className="text-gray-500">
+									Showing results for "{what} near {destination}"
+								</p>
+							)}
 						</div>
 						{/* Tabs for Spots and Events */}
 						<Tabs defaultActiveKey="spots" className="mb-6">
@@ -730,6 +740,7 @@ const SearchResults: React.FC = () => {
 												</div>
 											))}
 										</div>
+
 										{/* Desktop View */}
 										<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 											{filteredSpots.map((spot) => (
@@ -752,7 +763,7 @@ const SearchResults: React.FC = () => {
 												className="mx-auto w-48 h-48 mb-4"
 											/>
 											<h3 className="text-xl font-semibold text-gray-800 mb-2">
-												No exact matches found in Downtown
+												No exact matches found in Tafelkop
 											</h3>
 											<p className="text-gray-600">
 												But we found some similar spots nearby you might like!
@@ -762,101 +773,13 @@ const SearchResults: React.FC = () => {
 										<div className="mb-6">
 											{/* Mobile Carousel for Nearby Suggestions */}
 											<div className="md:hidden">
-												<Swiper
-													modules={[Pagination, Autoplay]}
-													pagination={{ clickable: true }}
-													autoplay={{
-														delay: 5000,
-														disableOnInteraction: false,
-													}}
-													className="w-full"
-												>
-													{spots.slice(0, 6).map((spot) => (
-														<SwiperSlide key={`nearby-${spot.id}`}>
-															<div className="bg-white rounded-xl shadow-sm p-4 mb-4">
-																<div className="flex items-start">
-																	<img
-																		src={spot.image}
-																		alt={spot.name}
-																		className="w-24 h-24 rounded-lg object-cover mr-4"
-																	/>
-																	<div>
-																		<h5 className="font-medium text-gray-800">
-																			{spot.name}
-																		</h5>
-																		<div className="text-sm text-gray-500 mb-2">
-																			<i className="fas fa-map-marker-alt mr-1"></i>
-																			2.5 miles from Downtown
-																		</div>
-																		<div className="flex items-center mb-2">
-																			<StarFilled className="text-yellow-500 mr-1" />
-																			<span className="font-medium">
-																				{spot.rating}
-																			</span>
-																			<span className="text-gray-500 text-sm ml-1">
-																				({spot.reviews})
-																			</span>
-																		</div>
-																		<div className="flex flex-wrap gap-1">
-																			{spot.tags
-																				.slice(0, 2)
-																				.map((tag, index) => (
-																					<Tag key={index}>{tag}</Tag>
-																				))}
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</SwiperSlide>
-													))}
-												</Swiper>
+												<NoSpotResultsMobile data={spots} />
 											</div>
 
 											{/* Desktop Grid for Nearby Suggestions */}
 											<div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 												{spots.slice(0, 6).map((spot) => (
-													<div
-														key={`nearby-${spot.id}`}
-														className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-													>
-														<div className="relative h-48">
-															<img
-																src={spot.image}
-																alt={spot.name}
-																className="w-full h-full object-cover"
-															/>
-															<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
-																<div className="text-white">
-																	<div className="font-medium mb-1">
-																		{spot.name}
-																	</div>
-																	<div className="text-sm">
-																		<i className="fas fa-map-marker-alt mr-1"></i>
-																		2.5 miles from Downtown
-																	</div>
-																</div>
-															</div>
-														</div>
-														<div className="p-4">
-															<div className="flex items-center mb-2">
-																<StarFilled className="text-yellow-500 mr-1" />
-																<span className="font-medium">
-																	{spot.rating}
-																</span>
-																<span className="text-gray-500 text-sm ml-1">
-																	({spot.reviews})
-																</span>
-															</div>
-															<div className="flex flex-wrap gap-2 mb-3">
-																{spot.tags.map((tag, index) => (
-																	<Tag key={index}>{tag}</Tag>
-																))}
-															</div>
-															<button className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 !rounded-button whitespace-nowrap cursor-pointer">
-																View Details
-															</button>
-														</div>
-													</div>
+													<NoSpotResultsFoundCard spot={spot} />
 												))}
 											</div>
 										</div>
@@ -926,7 +849,7 @@ const SearchResults: React.FC = () => {
 								</h3>
 								<p className="text-gray-500 text-sm">Showing results on map</p>
 							</div>
-							<div className="space-y-3 mb-2.5">
+							<div className="space-y-3 hidden lg:block mb-2.5">
 								{loading ? (
 									<div>
 										{Array(6)
@@ -1097,11 +1020,19 @@ const SearchResults: React.FC = () => {
 			{/* Mobile Map Toggle Button */}
 			<div className="md:hidden fixed bottom-6 right-6 z-30">
 				<Button
-					type="primary"
+					type={viewMode === "map" ? "primary" : "default"}
 					shape="circle"
 					size="large"
 					icon={<EnvironmentOutlined />}
-					onClick={() => setMapVisible(!mapVisible)}
+					onClick={() => {
+						setMapVisible((prev) => !prev);
+
+						if (viewMode === "grid") {
+							setViewMode("map");
+						} else {
+							setViewMode("grid");
+						}
+					}}
 					className="shadow-lg cursor-pointer"
 				/>
 			</div>

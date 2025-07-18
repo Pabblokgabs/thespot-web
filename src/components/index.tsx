@@ -41,6 +41,10 @@ import SpotCard from "./common/cards/search.card/desktop/spot.card";
 import EventCard from "./common/cards/search.card/desktop/event.card";
 import MapViewCard from "./common/cards/search.card/desktop/map.view.card";
 import Card4Both from "./common/cards/search.card/mobile/card4both";
+import {
+	NoSpotResultsFoundCard,
+	NoSpotResultsMobile,
+} from "./common/cards/search.card/noResultsFound.card";
 
 export {
 	MobileTileSkeleton,
@@ -87,4 +91,6 @@ export {
 	EventCard,
 	MapViewCard,
 	Card4Both,
+	NoSpotResultsFoundCard,
+	NoSpotResultsMobile,
 };
