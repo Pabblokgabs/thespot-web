@@ -77,7 +77,7 @@ const NavBar: React.FC<nav> = ({ isSticky = true, isSearchBar = true }) => {
 		<>
 			<header
 				className={`${
-					isSticky ? "top-0 sticky" : ""
+					isSticky && "top-0 sticky"
 				} z-50 opacity-100 bg-white/95 shadow-sm backdrop-blur-sm transition ease-in-out duration-500 !w-full`}
 			>
 				<div className="container mx-auto px-4 py-4 flex items-center justify-between">

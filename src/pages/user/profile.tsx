@@ -68,7 +68,6 @@ import { IoEllipsisVerticalSharp } from "react-icons/io5";
 const Profile: React.FC = () => {
 	const navigation = useNavigate();
 
-	const [activeTab, setActiveTab] = useState("upcoming");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [venueFilter, setVenueFilter] = useState("all");
 	const [showAccountSettings, setShowAccountSettings] = useState(false);
@@ -434,28 +433,30 @@ const Profile: React.FC = () => {
 													key={venue.id}
 													className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
 												>
-													<div className="h-50 overflow-hidden relative">
-														<img
-															src={venue.image}
-															alt={venue.name}
-															className="w-full h-full object-cover object-top"
-														/>
-														<div className="absolute top-4 left-4">
-															<Badge
-																className={`${
-																	venue.isOpen ? "bg-green-500" : "bg-red-500"
-																} text-white`}
-															>
-																{venue.isOpen ? "Open Now" : "Closed"}
-															</Badge>
+													<Link to={`/spot-details/${venue.id}`}>
+														<div className="h-50 overflow-hidden relative cursor-pointer">
+															<img
+																src={venue.image}
+																alt={venue.name}
+																className="w-full h-full object-cover object-top transition-transform hover:scale-110"
+															/>
+															<div className="absolute top-4 left-4">
+																<Badge
+																	className={`${
+																		venue.isOpen ? "bg-green-500" : "bg-red-500"
+																	} text-white`}
+																>
+																	{venue.isOpen ? "Open Now" : "Closed"}
+																</Badge>
+															</div>
+															<div className="absolute top-4 right-4">
+																<Badge className="flex bg-white items-center text-black">
+																	<FaStar className="text-yellow-400" />
+																	{venue.rating}
+																</Badge>
+															</div>
 														</div>
-														<div className="absolute top-4 right-4">
-															<Badge className="flex items-center text-white">
-																<FaStar className="text-yellow-400" />
-																{venue.rating}
-															</Badge>
-														</div>
-													</div>
+													</Link>
 													<div className="p-4">
 														<div className="hidden md:flex justify-between items-start">
 															<div className="mt-1">
@@ -574,10 +575,7 @@ const Profile: React.FC = () => {
 								<div className="px-4 md:px-6 py-4 border-b border-gray-100">
 									<h3 className="text-xl font-bold text-gray-900">My Events</h3>
 								</div>
-								<Tabs
-									defaultActiveKey="upcoming"
-									onChange={(key) => setActiveTab(key)}
-								>
+								<Tabs defaultActiveKey="upcoming">
 									<p />
 									<TabPane tab="Upcoming Events" key="upcoming">
 										{upcomingEvents.length > 0 ? (

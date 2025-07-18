@@ -11,6 +11,12 @@ type OwnerContextType = {
 	setIsQuerying: React.Dispatch<React.SetStateAction<boolean>>;
 	queryResults: any;
 	setQueryResults: React.Dispatch<React.SetStateAction<any>>;
+	allImageToView: string[];
+	setAllImageToView: React.Dispatch<React.SetStateAction<string[]>>;
+	isViewAllImgModal: boolean;
+	setIsViewAllImgModal: React.Dispatch<React.SetStateAction<boolean>>;
+	onViewImg: string;
+	setOnViewImg: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const OverAllContext = createContext<OwnerContextType | null>(null);
@@ -21,6 +27,10 @@ const OverAllProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	const [destination, setDestination] = useState<string>("");
 	const [what, setWhat] = useState<string>("");
 	const [isQuerying, setIsQuerying] = useState<boolean>(false);
+	const [allImageToView, setAllImageToView] = useState<string[]>([]);
+	const [isViewAllImgModal, setIsViewAllImgModal] = useState<boolean>(false);
+	const [onViewImg, setOnViewImg] = useState<string>(allImageToView[0]);
+
 	return (
 		<OverAllContext.Provider
 			value={{
@@ -34,6 +44,12 @@ const OverAllProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				setWhat,
 				queryResults,
 				setQueryResults,
+				allImageToView,
+				setAllImageToView,
+				isViewAllImgModal,
+				setIsViewAllImgModal,
+				onViewImg,
+				setOnViewImg,
 			}}
 		>
 			{children}

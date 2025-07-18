@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
@@ -37,7 +37,6 @@ import {
 	FaShareAlt,
 	FaSort,
 	FaStar,
-	FaStarHalfAlt,
 } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
 import { Footer, NavBar } from "@/components";
@@ -58,23 +57,17 @@ import {
 	TimePicker,
 	Upload,
 } from "antd";
+import { socialMedia } from "@/lib/options";
+import { useOverAllContext } from "@/lib/context/useContext";
 
 const SpotDetails: React.FC = () => {
 	const [follow, setFollow] = useState(false);
-	const [isScrolled, setIsScrolled] = useState(false);
 	const [allReviewsModal, setAllReviewsModal] = useState(false);
+
+	const { setAllImageToView, setIsViewAllImgModal } = useOverAllContext();
 
 	const [rateModal, setRateModal] = useState(false);
 	const [rateForm] = Form.useForm();
-
-	useEffect(() => {
-		const handleScroll = () => {
-			setIsScrolled(window.scrollY > 500);
-		};
-
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
 
 	const venue = {
 		name: "Skyline Rooftop Lounge",
@@ -197,11 +190,11 @@ const SpotDetails: React.FC = () => {
 				myChart.dispose();
 			};
 		}
-	}, []);
+	}, [window.innerWidth]);
 
 	return (
 		<div className="min-h-screen bg-white">
-			<NavBar isSticky={!isScrolled} />
+			<NavBar isSticky={false} />
 			{/* Hero Section */}
 			<div className="relative h-[500px] w-full">
 				<div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10"></div>
@@ -223,7 +216,7 @@ const SpotDetails: React.FC = () => {
 						</h1>
 						<div className="flex items-center text-white mb-4">
 							<span className="flex items-center">
-								<FaStar className="text-yellow-400 mr-1" />
+								<FaStar className="text-yellow-400 mr-1 mb-1.5" />
 								<span className="font-semibold">{venue.rating}</span>
 							</span>
 							<span className="mx-2">•</span>
@@ -243,8 +236,8 @@ const SpotDetails: React.FC = () => {
 
 			{/* Action Bar */}
 			<div className="sticky top-0 z-30 bg-white border-b shadow-sm">
-				<div className="container mx-auto px-4 py-3 flex items-center justify-end md:justify-between">
-					<div className="md:flex items-center hidden  space-x-6">
+				<div className="container mx-auto px-4 py-3 flex items-center justify-end lg:justify-between">
+					<div className="lg:flex items-center hidden  space-x-6">
 						<a
 							href="#info"
 							className="text-gray-700 hover:text-blue-600 font-medium whitespace-nowrap"
@@ -376,37 +369,46 @@ const SpotDetails: React.FC = () => {
 										</li>
 									</ul>
 								</div>
+							</div>
 
-								<div>
-									<h3 className="text-lg font-semibold mb-3 flex items-center">
-										<FaInfoCircle className="text-blue-600 mr-2" />
-										Contact & Location
-									</h3>
-									<ul className="space-y-3">
-										<li className="flex items-start">
-											<FaMapMarkedAlt className="text-gray-600 mt-1 mr-3" />
-											<span>{venue.address}</span>
-										</li>
-										<li className="flex items-center">
-											<FaPhone className="text-gray-600 mr-3" />
-											<span>{venue.phone}</span>
-										</li>
-										<li className="flex items-center">
-											<FaGlobe className="text-gray-600 mr-3" />
-											<a href="#" className="text-blue-600 hover:underline">
-												{venue.website}
+							<div className="mb-10">
+								<h3 className="text-lg font-semibold mb-3 flex items-center">
+									<FaInfoCircle className="text-blue-600 mr-2" />
+									Contact & Location
+								</h3>
+								<ul className="space-y-3">
+									<li className="flex items-start">
+										<FaMapMarkedAlt className="text-gray-600 mt-1 mr-3" />
+										<span>{venue.address}</span>
+									</li>
+									<li className="flex items-center">
+										<FaPhone className="text-gray-600 mr-3" />
+										<span>{venue.phone}</span>
+									</li>
+									<li className="flex items-center">
+										<FaGlobe className="text-gray-600 mr-3" />
+										<a href="#" className="text-blue-600 hover:underline">
+											{venue.website}
+										</a>
+									</li>
+									<li className="flex items-center gap-3">
+										{[
+											"Youtube",
+											"Instagram",
+											"TikTok",
+											"Twitter",
+											"Facebook",
+										].map((item) => (
+											<a
+												key={item}
+												href=""
+												className="text-2xl transition-transform hover:scale-[1.05]"
+											>
+												{socialMedia(item)}
 											</a>
-										</li>
-									</ul>
-
-									<div className="mt-4 h-[200px] bg-gray-200 rounded-lg overflow-hidden">
-										<img
-											src={map}
-											alt="Map location"
-											className="w-full h-full object-cover"
-										/>
-									</div>
-								</div>
+										))}
+									</li>
+								</ul>
 							</div>
 
 							<div>
@@ -414,7 +416,7 @@ const SpotDetails: React.FC = () => {
 									<FaConciergeBell className="fas fa-concierge-bell text-blue-600 mr-2" />
 									Amenities
 								</h3>
-								<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  gap-4">
 									{venue.amenities.map((amenity, index) => (
 										<div key={index} className="flex items-center">
 											<i
@@ -425,6 +427,17 @@ const SpotDetails: React.FC = () => {
 									))}
 								</div>
 							</div>
+
+							<div className="flex mt-11">
+								<h2 className="text-2xl font-bold">Map Location</h2>
+							</div>
+							<div className="mt-4 h-[300px] bg-gray-200 rounded-lg overflow-hidden">
+								<img
+									src={map}
+									alt="Map location"
+									className="w-full h-full object-cover"
+								/>
+							</div>
 						</section>
 
 						{/* Photo Gallery */}
@@ -432,6 +445,10 @@ const SpotDetails: React.FC = () => {
 							<div className="flex items-center justify-between mb-6">
 								<h2 className="text-2xl font-bold">Photos</h2>
 								<Button
+									onClick={() => {
+										setAllImageToView(venue.photos);
+										setIsViewAllImgModal(true);
+									}}
 									variant="outline"
 									className="!rounded-button whitespace-nowrap cursor-pointer hover:text-indigo-400 hover:border-indigo-400 hover:bg-white"
 								>
@@ -487,7 +504,7 @@ const SpotDetails: React.FC = () => {
 							</div>
 
 							<div className="flex flex-col md:flex-row gap-8 mb-8">
-								<div className="bg-gray-50 p-6 rounded-lg flex-2/5 h-fit">
+								<div className="bg-gray-50 p-6 rounded-lg md:w-2/5 h-fit">
 									<div className="text-center mb-4">
 										<div className="text-4xl font-bold text-blue-600">
 											{venue.rating}
@@ -514,7 +531,7 @@ const SpotDetails: React.FC = () => {
 									<div id="rating-chart" className="h-[200px] w-full"></div>
 								</div>
 
-								<div className="lg:col-span-2 flex-3/5">
+								<div className="md:w-3/5">
 									<Tabs defaultValue="recent">
 										<TabsList className="mb-4">
 											<TabsTrigger
@@ -538,42 +555,53 @@ const SpotDetails: React.FC = () => {
 										</TabsList>
 
 										<TabsContent value="recent" className="mt-0">
-											<div className="space-y-6">
+											<Swiper
+												modules={[Pagination, Autoplay, Navigation]}
+												spaceBetween={20}
+												slidesPerView={1}
+												pagination={{ clickable: true }}
+												autoplay
+												className="pb-20"
+											>
 												{reviews.slice(0, 3).map((review) => (
-													<Card key={review.id} className="p-5">
-														<div className="flex items-start">
-															<Avatar className="h-12 w-12 mr-4">
-																<img src={review.avatar} alt={review.user} />
-															</Avatar>
-															<div className="flex-1">
-																<div className="flex items-center justify-between mb-1">
-																	<h4 className="font-semibold">
-																		{review.user}
-																	</h4>
-																	<span className="text-sm text-gray-500">
-																		{review.date}
-																	</span>
+													<SwiperSlide className="mb-15" key={review.id}>
+														<Card className="p-5 overflow-hidden h-full w-full">
+															<div className="flex items-start">
+																<Avatar className="h-12 w-12 mr-4">
+																	<img src={review.avatar} alt={review.user} />
+																</Avatar>
+																<div className="flex-1">
+																	<div className="flex items-center justify-between mb-1">
+																		<h4 className="font-semibold">
+																			{review.user}
+																		</h4>
+																		<span className="text-sm text-gray-500">
+																			{review.date}
+																		</span>
+																	</div>
+																	<div className="flex items-center mb-3">
+																		{[...Array(5)].map((_, i) => (
+																			<i
+																				key={i}
+																				className={`${
+																					i < review.rating ? "fas" : "fas"
+																				} fa-star ${
+																					i < review.rating
+																						? "text-yellow-400"
+																						: "text-gray-300"
+																				} text-sm mr-1`}
+																			/>
+																		))}
+																	</div>
+																	<p className="text-gray-700 text-wrap">
+																		{review.text}
+																	</p>
 																</div>
-																<div className="flex items-center mb-3">
-																	{[...Array(5)].map((_, i) => (
-																		<i
-																			key={i}
-																			className={`${
-																				i < review.rating ? "fas" : "fas"
-																			} fa-star ${
-																				i < review.rating
-																					? "text-yellow-400"
-																					: "text-gray-300"
-																			} text-sm mr-1`}
-																		/>
-																	))}
-																</div>
-																<p className="text-gray-700">{review.text}</p>
 															</div>
-														</div>
-													</Card>
+														</Card>
+													</SwiperSlide>
 												))}
-											</div>
+											</Swiper>
 
 											{reviews.length > 3 && (
 												<div className="mt-6 text-center">
@@ -591,17 +619,131 @@ const SpotDetails: React.FC = () => {
 										</TabsContent>
 
 										<TabsContent value="highest" className="mt-0">
-											<div className="p-8 text-center text-gray-500">
-												<FaStarHalfAlt className="text-4xl mb-4 text-gray-400" />
-												<p>Switch to this tab to see highest rated reviews</p>
-											</div>
+											<Swiper
+												modules={[Pagination, Autoplay, Navigation]}
+												spaceBetween={20}
+												slidesPerView={1}
+												pagination={{ clickable: true }}
+												autoplay
+												className="pb-20"
+											>
+												{reviews.slice(0, 3).map((review) => (
+													<SwiperSlide className="mb-15" key={review.id}>
+														<Card className="p-5 overflow-hidden h-full w-full">
+															<div className="flex items-start">
+																<Avatar className="h-12 w-12 mr-4">
+																	<img src={review.avatar} alt={review.user} />
+																</Avatar>
+																<div className="flex-1">
+																	<div className="flex items-center justify-between mb-1">
+																		<h4 className="font-semibold">
+																			{review.user}
+																		</h4>
+																		<span className="text-sm text-gray-500">
+																			{review.date}
+																		</span>
+																	</div>
+																	<div className="flex items-center mb-3">
+																		{[...Array(5)].map((_, i) => (
+																			<i
+																				key={i}
+																				className={`${
+																					i < review.rating ? "fas" : "fas"
+																				} fa-star ${
+																					i < review.rating
+																						? "text-yellow-400"
+																						: "text-gray-300"
+																				} text-sm mr-1`}
+																			/>
+																		))}
+																	</div>
+																	<p className="text-gray-700 text-wrap">
+																		{review.text}
+																	</p>
+																</div>
+															</div>
+														</Card>
+													</SwiperSlide>
+												))}
+											</Swiper>
+
+											{reviews.length > 3 && (
+												<div className="mt-6 text-center">
+													<Button
+														size={"sm"}
+														onClick={() => setAllReviewsModal(true)}
+														variant="outline"
+														className="!rounded-button whitespace-nowrap cursor-pointer hover:text-indigo-400 hover:border-indigo-400 hover:bg-white"
+													>
+														View All Reviews
+														<FaArrowRight className="ml-2" />
+													</Button>
+												</div>
+											)}
 										</TabsContent>
 
 										<TabsContent value="lowest" className="mt-0">
-											<div className="p-8 text-center text-gray-500">
-												<FaStarHalfAlt className="text-4xl mb-4 text-gray-400" />
-												<p>Switch to this tab to see lowest rated reviews</p>
-											</div>
+											<Swiper
+												modules={[Pagination, Autoplay, Navigation]}
+												spaceBetween={20}
+												slidesPerView={1}
+												pagination={{ clickable: true }}
+												autoplay
+												className="pb-20"
+											>
+												{reviews.slice(0, 3).map((review) => (
+													<SwiperSlide className="mb-15" key={review.id}>
+														<Card className="p-5 overflow-hidden h-full w-full">
+															<div className="flex items-start">
+																<Avatar className="h-12 w-12 mr-4">
+																	<img src={review.avatar} alt={review.user} />
+																</Avatar>
+																<div className="flex-1">
+																	<div className="flex items-center justify-between mb-1">
+																		<h4 className="font-semibold">
+																			{review.user}
+																		</h4>
+																		<span className="text-sm text-gray-500">
+																			{review.date}
+																		</span>
+																	</div>
+																	<div className="flex items-center mb-3">
+																		{[...Array(5)].map((_, i) => (
+																			<i
+																				key={i}
+																				className={`${
+																					i < review.rating ? "fas" : "fas"
+																				} fa-star ${
+																					i < review.rating
+																						? "text-yellow-400"
+																						: "text-gray-300"
+																				} text-sm mr-1`}
+																			/>
+																		))}
+																	</div>
+																	<p className="text-gray-700 text-wrap">
+																		{review.text}
+																	</p>
+																</div>
+															</div>
+														</Card>
+													</SwiperSlide>
+												))}
+											</Swiper>
+
+											{reviews.length > 3 && (
+												<div className="mt-6 text-center">
+													<Button
+														size={"sm"}
+														onClick={() => setAllReviewsModal(true)}
+														variant="outline"
+														className="!rounded-button whitespace-nowrap cursor-pointer hover:text-indigo-400 hover:border-indigo-400 hover:bg-white"
+													>
+														View All Reviews
+														<FaArrowRight className="ml-2" />
+													</Button>
+												</div>
+											)}
 										</TabsContent>
 									</Tabs>
 								</div>

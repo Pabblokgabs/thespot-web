@@ -1,32 +1,3 @@
-interface Gender {
-	label: string;
-	value: string;
-}
-
-export const gender: Gender[] = [
-	{ label: "Male", value: "male" },
-	{ label: "Female", value: "female" },
-	{ label: "Other", value: "other" },
-];
-
-interface Anemity {
-	name: string;
-	icon: string;
-}
-
-export const amenities: Anemity[] = [
-	{ name: "Outdoor Seating", icon: "fa-umbrella-beach" },
-	{ name: "Live Music", icon: "fa-music" },
-	{ name: "Craft Cocktails", icon: "fa-martini-glass-citrus" },
-	{ name: "Reservations", icon: "fa-calendar-check" },
-	{ name: "Valet Parking", icon: "fa-car" },
-	{ name: "Wheelchair Accessible", icon: "fa-wheelchair" },
-	{ name: "Happy Hour", icon: "fa-clock" },
-	{ name: "Private Events", icon: "fa-champagne-glasses" },
-];
-
-import { ReactNode } from "react";
-
 import {
 	MdFastfood,
 	MdChurch,
@@ -44,6 +15,61 @@ import {
 	IoShirt,
 	IoMusicalNote,
 } from "react-icons/io5";
+import {
+	FacebookOutlined,
+	InstagramOutlined,
+	TikTokOutlined,
+	TwitterOutlined,
+	YoutubeOutlined,
+} from "@ant-design/icons";
+import { ReactNode } from "react";
+
+export const gender: { label: string; value: string }[] = [
+	{ label: "Male", value: "male" },
+	{ label: "Female", value: "female" },
+	{ label: "Other", value: "other" },
+];
+
+export const amenities: {
+	name: string;
+	icon: string;
+}[] = [
+	{ name: "Outdoor Seating", icon: "fa-umbrella-beach" },
+	{ name: "Live Music", icon: "fa-music" },
+	{ name: "Craft Cocktails", icon: "fa-martini-glass-citrus" },
+	{ name: "Reservations", icon: "fa-calendar-check" },
+	{ name: "Valet Parking", icon: "fa-car" },
+	{ name: "Wheelchair Accessible", icon: "fa-wheelchair" },
+	{ name: "Happy Hour", icon: "fa-clock" },
+	{ name: "Private Events", icon: "fa-champagne-glasses" },
+];
+
+export const socialMedia = (opt: string) => {
+	const newOpt = opt.toLowerCase();
+
+	const mediaIcons: ReactNode[] = [
+		<YoutubeOutlined style={{ color: "red" }} />,
+		<InstagramOutlined style={{ color: "pink" }} />,
+		<FacebookOutlined style={{ color: "blue" }} />,
+		<TwitterOutlined style={{ color: "#155dfc" }} />,
+		<TikTokOutlined style={{ color: "black" }} />,
+	];
+
+	switch (newOpt) {
+		case "youtube":
+			return mediaIcons[0];
+		case "instagram":
+			return mediaIcons[1];
+		case "facebook":
+			return mediaIcons[2];
+		case "twitter":
+			return mediaIcons[3];
+		case "tiktok":
+			return mediaIcons[4];
+		default:
+			break;
+	}
+};
 
 interface RecommendationItem {
 	label: string;
