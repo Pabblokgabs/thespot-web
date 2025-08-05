@@ -1,4 +1,4 @@
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -8,7 +8,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -23,62 +22,67 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { FiSearch } from "react-icons/fi";
+import { Input, Dropdown, Switch, Select } from "antd";
 
 function TransactionHistory() {
 	return (
-		<Card>
+		<Card className="border-none md:border shadow-none md:shadow-md m-0">
 			<CardHeader>
-				<div className="flex justify-between items-center">
+				<div className="flex flex-col md:flex-row md:justify-between md:items-center">
 					<div>
 						<CardTitle>Transaction History</CardTitle>
 						<CardDescription>
 							View all your past transactions and payouts
 						</CardDescription>
 					</div>
-					<div className="flex items-center gap-3">
-						<div className="relative">
-							<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+					<div className="flex items-center gap-2 md:gap-3">
+						<div className="w-full mt-2 md:mt-0 md:w-[250px]">
 							<Input
+								prefix={<FiSearch className="text-gray-400" />}
 								placeholder="Search transactions..."
-								className="pl-10 w-[250px]"
+								className="w-full"
 							/>
 						</div>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="outline"
-									className="!rounded-button whitespace-nowrap cursor-pointer"
-								>
-									Filter
-									<ChevronDown className="h-4 w-4 ml-2" />
+						<div className="flex items-center md:gap-2.5">
+							<Dropdown
+								trigger={["click"]}
+								menu={{
+									items: [
+										{ key: "all", label: "All Trasactions" },
+										{ key: "payouts", label: "Payouts" },
+										{ key: "bookings", label: "Bookings" },
+										{ key: "refunds", label: "Refunds" },
+										{ key: "fees", label: "Fees" },
+									],
+								}}
+							>
+								<Button variant="outline" className="h-4">
+									Filter <ChevronDown />
 								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent>
-								<DropdownMenuItem>All Transactions</DropdownMenuItem>
-								<DropdownMenuItem>Payouts</DropdownMenuItem>
-								<DropdownMenuItem>Bookings</DropdownMenuItem>
-								<DropdownMenuItem>Refunds</DropdownMenuItem>
-								<DropdownMenuItem>Fees</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="outline"
-									className="!rounded-button whitespace-nowrap cursor-pointer"
-								>
-									Last 30 Days
-									<ChevronDown className="h-4 w-4 ml-2" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent>
-								<DropdownMenuItem>Last 7 Days</DropdownMenuItem>
-								<DropdownMenuItem>Last 30 Days</DropdownMenuItem>
-								<DropdownMenuItem>Last 90 Days</DropdownMenuItem>
-								<DropdownMenuItem>This Year</DropdownMenuItem>
-								<DropdownMenuItem>Custom Range</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
+							</Dropdown>
+
+							<div className="hidden md:block">
+								<DropdownMenu>
+									<DropdownMenuTrigger asChild>
+										<Button
+											variant="outline"
+											className="!rounded-button whitespace-nowrap cursor-pointer"
+										>
+											Last 30 Days
+											<ChevronDown className="h-4 w-4 ml-2" />
+										</Button>
+									</DropdownMenuTrigger>
+									<DropdownMenuContent>
+										<DropdownMenuItem>Last 7 Days</DropdownMenuItem>
+										<DropdownMenuItem>Last 30 Days</DropdownMenuItem>
+										<DropdownMenuItem>Last 90 Days</DropdownMenuItem>
+										<DropdownMenuItem>This Year</DropdownMenuItem>
+										<DropdownMenuItem>Custom Range</DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
+							</div>
+						</div>
 					</div>
 				</div>
 			</CardHeader>
@@ -215,68 +219,67 @@ function TransactionHistory() {
 }
 
 function PayoutsSettings() {
-  return (
-    <Card>
-              <CardHeader>
-                <CardTitle>Payout Settings</CardTitle>
-                <CardDescription>Configure your payout preferences</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Payout Schedule</label>
-                    <div className="relative">
-                      <select className="w-full h-10 px-3 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
-                        <option value="automatic">Automatic (Every 2 weeks)</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="manual">Manual</option>
-                      </select>
-                      <span className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none i-fa-solid-chevron-down text-gray-400"></span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">
-                      Minimum Payout Amount
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        $
-                      </span>
-                      <Input className="pl-8" defaultValue="100.00" />
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      Minimum amount required for automatic payouts
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between border-t pt-4 mt-4">
-                    <div>
-                      <p className="font-medium">Instant Payouts</p>
-                      <p className="text-sm text-gray-500">
-                        1% fee applies to instant transfers
-                      </p>
-                    </div>
-                    <div className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200">
-                      <span className="absolute h-4 w-4 rounded-full bg-white translate-x-1"></span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between border-t pt-4">
-                    <div>
-                      <p className="font-medium">Email Notifications</p>
-                      <p className="text-sm text-gray-500">
-                        Get notified about payouts
-                      </p>
-                    </div>
-                    <div className="relative inline-flex h-6 w-11 items-center rounded-full bg-blue-600">
-                      <span className="absolute h-4 w-4 rounded-full bg-white translate-x-6"></span>
-                    </div>
-                  </div>
-                  <Button className="w-full !rounded-button whitespace-nowrap cursor-pointer">
-                    Save Changes
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-  )
+	return (
+		<Card className="border-none md:border shadow-none md:shadow-md m-0">
+			<CardHeader>
+				<CardTitle>Payout Settings</CardTitle>
+				<CardDescription>Configure your payout preferences</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<div className="space-y-4">
+					<div>
+						<label className="text-sm font-medium mb-2">Payout Schedule</label>
+						<Select
+							className="w-full"
+							placeholder="Choose the schedule"
+							defaultValue="Automatic (Every 2 weeks)"
+						>
+							{["Automatic (Every 2 weeks)", "Monthly", "Manual"].map(
+								(item) => (
+									<Select.Option value={item} key={item}>
+										{item}
+									</Select.Option>
+								)
+							)}
+						</Select>
+					</div>
+					<div className="space-y-2">
+						<label className="text-sm font-medium">Minimum Payout Amount</label>
+						<div className="relative">
+							<span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+								$
+							</span>
+							<Input className="pl-8" defaultValue="100.00" />
+						</div>
+						<p className="text-xs text-gray-500">
+							Minimum amount required for automatic payouts
+						</p>
+					</div>
+					<div className="flex items-center justify-between border-t pt-4 mt-4">
+						<div>
+							<p className="font-medium">Instant Payouts</p>
+							<p className="text-sm text-gray-500">
+								1% fee applies to instant transfers
+							</p>
+						</div>
+						<Switch />
+					</div>
+					<div className="flex items-center justify-between border-t pt-4">
+						<div>
+							<p className="font-medium">Email Notifications</p>
+							<p className="text-sm text-gray-500">
+								Get notified about payouts
+							</p>
+						</div>
+						<Switch />
+					</div>
+					<Button className="w-full !rounded-button whitespace-nowrap cursor-pointer">
+						Save Changes
+					</Button>
+				</div>
+			</CardContent>
+		</Card>
+	);
 }
 
-export { TransactionHistory, PayoutsSettings};
+export { TransactionHistory, PayoutsSettings };

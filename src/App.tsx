@@ -20,10 +20,12 @@ import {
 	SpotListing,
 	SubcriptionPricing,
 } from "./pages/index";
+import ScrollToTop from "./lib/scrollToTop";
 
 function App() {
 	return (
 		<Router>
+			<ScrollToTop />
 			<Routes>
 				{/* Common pages */}
 				<Route path="/" element={<Home />} />

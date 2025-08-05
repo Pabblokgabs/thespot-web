@@ -27,7 +27,17 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { events } from "@/lib/mock";
-import { FaEllipsisH } from "react-icons/fa";
+import {
+	FaCalendarAlt,
+	FaCalendarDay,
+	FaClock,
+	FaEdit,
+	FaEllipsisH,
+	FaEye,
+	FaTicketAlt,
+	FaTrash,
+	FaUsers,
+} from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
 import { useOwnerContext } from "@/lib/context/owner";
 const { Title } = Typography;
@@ -57,9 +67,7 @@ const EventsContent = () => {
 						<Statistic
 							title="Total Events"
 							value={12}
-							prefix={
-								<i className="fas fa-calendar-star text-blue-600 mr-1"></i>
-							}
+							prefix={<FaCalendarDay className="text-blue-600 mr-1" />}
 							valueStyle={{ color: "#2563EB" }}
 						/>
 						<div className="mt-2 text-xs text-gray-500">
@@ -72,7 +80,7 @@ const EventsContent = () => {
 						<Statistic
 							title="Total Bookings"
 							value={336}
-							prefix={<i className="fas fa-ticket-alt text-blue-600 mr-1"></i>}
+							prefix={<FaTicketAlt className="text-blue-600 mr-1" />}
 							valueStyle={{ color: "#2563EB" }}
 						/>
 						<div className="mt-2 text-xs text-gray-500">
@@ -100,7 +108,7 @@ const EventsContent = () => {
 							title="Avg. Capacity Filled"
 							value={82}
 							suffix="%"
-							prefix={<i className="fas fa-users text-blue-600 mr-1"></i>}
+							prefix={<FaUsers className="text-blue-600 mr-1" />}
 							valueStyle={{ color: "#2563EB" }}
 						/>
 						<div className="mt-2 text-xs text-gray-500">
@@ -167,7 +175,7 @@ const EventsContent = () => {
 							</Dropdown>
 							<Button
 								type="default"
-								icon={<i className="fas fa-calendar-alt"></i>}
+								icon={<FaCalendarAlt />}
 								className="cursor-pointer whitespace-nowrap !rounded-button"
 							>
 								Calendar View
@@ -193,21 +201,21 @@ const EventsContent = () => {
 								<Tooltip title="View Details">
 									<Button
 										type="text"
-										icon={<i className="fas fa-eye"></i>}
+										icon={<FaEye />}
 										className="cursor-pointer"
 									/>
 								</Tooltip>,
 								<Tooltip title="Edit">
 									<Button
 										type="text"
-										icon={<i className="fas fa-edit"></i>}
+										icon={<FaEdit />}
 										className="cursor-pointer"
 									/>
 								</Tooltip>,
 								<Tooltip title="Manage Bookings">
 									<Button
 										type="text"
-										icon={<i className="fas fa-ticket-alt"></i>}
+										icon={<FaTicketAlt />}
 										className="cursor-pointer"
 									/>
 								</Tooltip>,
@@ -226,7 +234,7 @@ const EventsContent = () => {
 											<span>Cancel</span>
 										</DropdownMenuItem>
 										<DropdownMenuItem className="cursor-pointer text-red-600">
-											<i className="fas fa-trash mr-2"></i>
+											<FaTrash className="mr-2" />
 											<span>Delete</span>
 										</DropdownMenuItem>
 									</DropdownMenuContent>
@@ -266,16 +274,16 @@ const EventsContent = () => {
 							<Divider className="my-3" />
 							<div className="space-y-2">
 								<div className="flex items-center justify-between">
-									<div className="text-sm text-gray-500">
-										<i className="fas fa-calendar-alt mr-1"></i> {event.date}
+									<div className="text-sm text-gray-500 flex items-center">
+										<FaCalendarAlt className="mr-1" /> {event.date}
 									</div>
-									<div className="text-sm text-gray-500">
-										<i className="fas fa-clock mr-1"></i> {event.time}
+									<div className="text-sm text-gray-500 flex items-center">
+										<FaClock className="fas fa-clock mr-1" /> {event.time}
 									</div>
 								</div>
 								<div className="flex items-center justify-between">
-									<div className="text-sm text-gray-500">
-										<i className="fas fa-users mr-1"></i> Capacity
+									<div className="text-sm text-gray-500 flex items-center">
+										<FaUsers className="mr-1" /> Capacity
 									</div>
 									<div className="text-sm font-medium">
 										{event.booked}/{event.capacity}

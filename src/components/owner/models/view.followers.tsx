@@ -3,7 +3,6 @@ import {
 	HeartFilled,
 	MessageOutlined,
 	SearchOutlined,
-	UserOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Input, Space, Table, Typography } from "antd";
 const { Text, Paragraph } = Typography;
@@ -45,22 +44,22 @@ function ViewFollowers() {
 					>
 						Message
 					</Button>
-					<Button
+					{/* <Button
 						type="text"
 						icon={<UserOutlined />}
 						className="cursor-pointer !rounded-button whitespace-nowrap"
 						onClick={(e) => e.stopPropagation()}
 					>
 						Profile
-					</Button>
+					</Button> */}
 				</Space>
 			),
 		},
 	];
 	return (
 		<>
-			<div className="mb-4">
-				<div className="flex items-center justify-between mb-3">
+			<div className="mb-4 mt-6">
+				<div className="flex items-center gap-2 mb-3">
 					<div className="flex items-center">
 						<HeartFilled className="text-red-500 mr-2 text-xl" />
 						<Text strong className="text-lg">
@@ -70,7 +69,7 @@ function ViewFollowers() {
 					<Input
 						placeholder="Search followers"
 						prefix={<SearchOutlined className="text-gray-400" />}
-						className="w-64"
+						className="flex-1"
 					/>
 				</div>
 				<Paragraph className="text-gray-500">

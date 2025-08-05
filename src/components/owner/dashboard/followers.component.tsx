@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tooltip, Dropdown } from "antd";
 import {
 	Card,
 	CardContent,
@@ -34,12 +34,12 @@ import {
 	FaHandshake,
 	FaPlus,
 	FaStar,
-	FaUserTag,
 } from "react-icons/fa";
+import { ChevronRight } from "lucide-react";
 
 function FollowersComponent() {
 	return (
-		<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+		<div className="grid grid-cols-1 xl:grid-cols-3 space-y-6 space-x-0 xl:space-y-0 xl:space-x-6">
 			<Card className="col-span-2 border-none shadow-sm">
 				<CardHeader>
 					<div className="flex items-center justify-between">
@@ -71,9 +71,22 @@ function FollowersComponent() {
 									<DropdownMenuItem className="cursor-pointer">
 										Recent Followers
 									</DropdownMenuItem>
-									<DropdownMenuItem className="cursor-pointer">
-										By Spot
-									</DropdownMenuItem>
+									<Dropdown
+										menu={{
+											items: [
+												{ key: "1", label: "Profile" },
+												{ key: "2", label: "Account Settings" },
+												{ key: "3", label: "Billing" },
+												{ key: "4", label: "Help & Support" },
+												{ key: "5", label: "Sign Out" },
+											],
+										}}
+										trigger={["click"]}
+									>
+										<DropdownMenuItem className="cursor-pointer flex justify-between items-center">
+											<span>By Spot</span> <ChevronRight />
+										</DropdownMenuItem>
+									</Dropdown>
 								</DropdownMenuContent>
 							</DropdownMenu>
 						</div>
@@ -223,14 +236,18 @@ function FollowersComponent() {
 												type="default"
 												className="cursor-pointer whitespace-nowrap !rounded-button"
 											>
-												<FaEnvelope className="text-gray-600" />
+												<Tooltip title="Message">
+													<FaEnvelope className="text-gray-600" />
+												</Tooltip>
 											</Button>
-											<Button
+											{/* <Button
 												type="default"
 												className="cursor-pointer whitespace-nowrap !rounded-button"
 											>
-												<FaUserTag className="text-gray-600" />
-											</Button>
+												<Tooltip title="Message">
+													<FaUserTag className="text-gray-600" />
+												</Tooltip>
+											</Button> */}
 											<DropdownMenu>
 												<DropdownMenuTrigger asChild>
 													<Button
@@ -283,8 +300,8 @@ function FollowersComponent() {
 					</Button>
 				</CardFooter>
 			</Card>
-			<div className="space-y-6">
-				<Card className="border-none shadow-sm">
+			<div className="flex flex-col md:flex-row xl:flex-col gap-y-6 md:gap-x-6 xl:gap-y-6">
+				<Card className="flex-1 border-none shadow-sm">
 					<CardHeader>
 						<CardTitle>Follower Demographics</CardTitle>
 						<CardDescription>Audience insights</CardDescription>
@@ -362,7 +379,7 @@ function FollowersComponent() {
 						</div>
 					</CardContent>
 				</Card>
-				<Card className="border-none shadow-sm hidden md:block">
+				<Card className="flex-1 border-none shadow-sm">
 					<CardHeader>
 						<CardTitle>Recent Campaigns</CardTitle>
 						<CardDescription>Follower engagement initiatives</CardDescription>

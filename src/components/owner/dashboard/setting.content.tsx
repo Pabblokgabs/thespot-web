@@ -7,36 +7,61 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Divider, List, Switch, Tag, Button } from "antd";
+import { Divider, List, Switch, Tag, Button, Input } from "antd";
 import Subscription from "./subscription";
 import { useOwnerContext } from "@/lib/context/owner";
+import {
+	FaCamera,
+	FaCheck,
+	FaEdit,
+	FaEllipsisH,
+	FaExclamationTriangle,
+	FaFacebook,
+	FaGoogle,
+	FaInstagram,
+	FaKey,
+	FaLaptop,
+	FaLink,
+	FaPlus,
+	FaSave,
+	FaShieldAlt,
+	FaStar,
+	FaTimes,
+	FaTrash,
+	FaTwitter,
+	FaUnlink,
+} from "react-icons/fa";
 
 const SettingsContent = () => {
 	const { isBillingView, setIsBillingView } = useOwnerContext();
+	const state = false;
 
 	const renderSpotContent = () => {
 		return (
-			<div className="space-y-6 p-2 md:p-6">
-				<div className="flex items-center justify-between">
-					<h1 className="text-2xl font-bold">Settings</h1>
-					<Button
-						type="primary"
-						className="cursor-pointer whitespace-nowrap !rounded-button"
-					>
-						<i className="fas fa-save mr-2" />
-						<span>Save Changes</span>
-					</Button>
+			<div className="space-y-6 p-0 pt-6 md:pt-0 md:p-6">
+				<div className="flex items-center px-5 md:px-0 justify-between">
+					<h1 className="text-xl md:text-2xl font-bold">Settings</h1>
+					{state ? (
+						<Button
+							type="primary"
+							className="cursor-pointer whitespace-nowrap !rounded-button"
+						>
+							<FaSave className="mr-2" />
+							<span>Save Changes</span>
+						</Button>
+					) : (
+						<div />
+					)}
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-					<Card className="lg:col-span-2 border-none shadow-sm">
+					<Card className="lg:col-span-2 border-none m-0 md:border shadow-none md:shadow-md">
 						<CardHeader>
 							<CardTitle>Account Settings</CardTitle>
 							<CardDescription>
@@ -55,7 +80,7 @@ const SettingsContent = () => {
 											type="default"
 											className="cursor-pointer whitespace-nowrap !rounded-button"
 										>
-											<i className="fas fa-camera mr-2" />
+											<FaCamera className="mr-2" />
 											<span>Change Photo</span>
 										</Button>
 										<p className="text-sm text-gray-500 mt-1">
@@ -67,48 +92,33 @@ const SettingsContent = () => {
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 									<div className="space-y-2">
 										<label className="text-sm font-medium">First Name</label>
-										<Input defaultValue="John" className="border-gray-200" />
+										<Input defaultValue="John" />
 									</div>
 									<div className="space-y-2">
 										<label className="text-sm font-medium">Last Name</label>
-										<Input defaultValue="Doe" className="border-gray-200" />
+										<Input defaultValue="Doe" />
 									</div>
 									<div className="space-y-2">
 										<label className="text-sm font-medium">Email Address</label>
-										<Input
-											defaultValue="john.doe@example.com"
-											className="border-gray-200"
-										/>
+										<Input defaultValue="john.doe@example.com" />
 									</div>
 									<div className="space-y-2">
 										<label className="text-sm font-medium">Phone Number</label>
-										<Input
-											defaultValue="+1 (555) 123-4567"
-											className="border-gray-200"
-										/>
+										<Input defaultValue="+1 (555) 123-4567" />
 									</div>
 									<div className="space-y-2">
 										<label className="text-sm font-medium">Company Name</label>
-										<Input
-											defaultValue="SpotOwner Inc."
-											className="border-gray-200"
-										/>
+										<Input defaultValue="SpotOwner Inc." />
 									</div>
 									<div className="space-y-2">
 										<label className="text-sm font-medium">Website</label>
-										<Input
-											defaultValue="www.spotowner.com"
-											className="border-gray-200"
-										/>
+										<Input defaultValue="www.spotowner.com" />
 									</div>
 								</div>
 
 								<div className="space-y-2">
 									<label className="text-sm font-medium">Bio</label>
-									<Input
-										defaultValue="Experienced venue owner and event manager with a passion for creating memorable experiences."
-										className="border-gray-200"
-									/>
+									<Input defaultValue="Experienced venue owner and event manager with a passion for creating memorable experiences." />
 								</div>
 								<Divider />
 								<div>
@@ -150,7 +160,7 @@ const SettingsContent = () => {
 											<List.Item>
 												<div>
 													<div className="flex items-center">
-														<i className="fas fa-laptop mr-2" />
+														<FaLaptop className="mr-2" />
 														<span className="font-medium">{item.device}</span>
 													</div>
 													<div className="text-sm text-gray-500">
@@ -176,7 +186,7 @@ const SettingsContent = () => {
 					</Card>
 
 					<div className="space-y-6">
-						<Card className="border-none shadow-sm">
+						<Card className="border-none m-0 md:border shadow-none md:shadow-md">
 							<CardHeader>
 								<CardTitle>Security</CardTitle>
 								<CardDescription>
@@ -204,7 +214,7 @@ const SettingsContent = () => {
 									type="default"
 									className="cursor-pointer whitespace-nowrap !rounded-button w-full"
 								>
-									<i className="fas fa-key mr-2" />
+									<FaKey className="mr-2" />
 									<span>Update Password</span>
 								</Button>
 
@@ -216,14 +226,14 @@ const SettingsContent = () => {
 										type="default"
 										className="cursor-pointer whitespace-nowrap !rounded-button w-full"
 									>
-										<i className="fas fa-shield-alt mr-2" />
+										<FaShieldAlt className="mr-2" />
 										<span>Enable 2FA</span>
 									</Button>
 								</div>
 							</CardContent>
 						</Card>
 
-						<Card className="border-none shadow-sm">
+						<Card className="border-none m-0 md:border shadow-none md:shadow-md">
 							<CardHeader>
 								<CardTitle>Notifications</CardTitle>
 								<CardDescription>
@@ -270,7 +280,7 @@ const SettingsContent = () => {
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-					<Card className="lg:col-span-2 border-none shadow-sm">
+					<Card className="lg:col-span-2 border-none m-0 md:border shadow-none md:shadow-md">
 						<CardHeader>
 							<CardTitle>Payment Settings</CardTitle>
 							<CardDescription>
@@ -330,20 +340,20 @@ const SettingsContent = () => {
 															type="default"
 															className="cursor-pointer whitespace-nowrap !rounded-button"
 														>
-															<i className="fas fa-ellipsis-h" />
+															<FaEllipsisH />
 														</Button>
 													</DropdownMenuTrigger>
 													<DropdownMenuContent align="end">
 														<DropdownMenuItem className="cursor-pointer">
-															<i className="fas fa-star mr-2" />
+															<FaStar className="mr-2" />
 															<span>Set as Default</span>
 														</DropdownMenuItem>
 														<DropdownMenuItem className="cursor-pointer">
-															<i className="fas fa-edit mr-2" />
+															<FaEdit className="mr-2" />
 															<span>Edit</span>
 														</DropdownMenuItem>
 														<DropdownMenuItem className="cursor-pointer text-red-600">
-															<i className="fas fa-trash mr-2" />
+															<FaTrash className="mr-2" />
 															<span>Remove</span>
 														</DropdownMenuItem>
 													</DropdownMenuContent>
@@ -352,10 +362,10 @@ const SettingsContent = () => {
 										))}
 									</div>
 									<Button
-										type="default"
-										className="cursor-pointer whitespace-nowrap !rounded-button w-full mt-4"
+										type="primary"
+										className="w-full mt-4"
+										icon={<FaPlus className="mr-2" />}
 									>
-										<i className="fas fa-plus mr-2" />
 										<span>Add Payment Method</span>
 									</Button>
 								</div>
@@ -448,7 +458,7 @@ const SettingsContent = () => {
 						</CardContent>
 					</Card>
 
-					<Card className="border-none shadow-sm">
+					<Card className="border-none m-0 md:border shadow-none md:shadow-md">
 						<CardHeader>
 							<CardTitle>Subscription</CardTitle>
 							<CardDescription>Manage your subscription plan</CardDescription>
@@ -465,15 +475,15 @@ const SettingsContent = () => {
 									<p className="text-sm text-gray-600 mb-3">$49.99/month</p>
 									<ul className="space-y-2 text-sm text-gray-600">
 										<li className="flex items-center">
-											<i className="fas fa-check text-green-600 mr-2" />
+											<FaCheck className="text-green-600 mr-2" />
 											<span>Unlimited Spots</span>
 										</li>
 										<li className="flex items-center">
-											<i className="fas fa-check text-green-600 mr-2" />
+											<FaCheck className="text-green-600 mr-2" />
 											<span>Advanced Analytics</span>
 										</li>
 										<li className="flex items-center">
-											<i className="fas fa-check text-green-600 mr-2" />
+											<FaCheck className="text-green-600 mr-2" />
 											<span>Priority Support</span>
 										</li>
 									</ul>
@@ -494,7 +504,7 @@ const SettingsContent = () => {
 										type="default"
 										className="cursor-pointer whitespace-nowrap !rounded-button w-full mt-4"
 									>
-										<i className="fas fa-times mr-2" />
+										<FaTimes className="mr-2 text-red-600" />
 										<span className="text-red-600">Cancel Subscription</span>
 									</Button>
 								</div>
@@ -503,7 +513,7 @@ const SettingsContent = () => {
 					</Card>
 				</div>
 
-				<Card className="border-none shadow-sm">
+				<Card className="border-none m-0 md:border shadow-none md:shadow-md">
 					<CardHeader>
 						<CardTitle>Connected Accounts</CardTitle>
 						<CardDescription>
@@ -513,44 +523,41 @@ const SettingsContent = () => {
 					<CardContent>
 						<div className="space-y-4">
 							{[
-								{ name: "Google", icon: "fa-google", connected: true },
-								{ name: "Facebook", icon: "fa-facebook", connected: true },
-								{ name: "Twitter", icon: "fa-twitter", connected: false },
-								{ name: "Instagram", icon: "fa-instagram", connected: true },
+								{ name: "Google", icon: <FaGoogle />, connected: true },
+								{ name: "Facebook", icon: <FaFacebook />, connected: true },
+								{ name: "Twitter", icon: <FaTwitter />, connected: false },
+								{ name: "Instagram", icon: <FaInstagram />, connected: true },
 							].map((account, index) => (
 								<div
 									key={index}
 									className="flex items-center justify-between p-3 border rounded-lg"
 								>
-									<div className="flex items-center">
-										<i
-											className={`fab ${account.icon} text-xl ${
-												account.icon === "fa-google"
-													? "text-red-500"
-													: account.icon === "fa-facebook"
-													? "text-blue-600"
-													: account.icon === "fa-twitter"
-													? "text-blue-400"
-													: "text-pink-600"
-											}`}
-										/>
+									<div
+										className={`flex items-center  ${
+											account.name === "Google"
+												? "text-red-500"
+												: account.name === "Facebook"
+												? "text-blue-600"
+												: account.name === "Twitter"
+												? "text-blue-400"
+												: "text-pink-600"
+										}`}
+									>
+										{account.icon}
 										<span className="ml-3 font-medium">{account.name}</span>
 									</div>
 									<Button
 										type={account.connected ? "primary" : "default"}
+										icon={
+											account.connected ? (
+												<FaUnlink className="mr-2" />
+											) : (
+												<FaLink className="mr-2" />
+											)
+										}
 										className="cursor-pointer whitespace-nowrap !rounded-button"
 									>
-										{account.connected ? (
-											<>
-												<i className="fas fa-unlink mr-2" />
-												<span>Disconnect</span>
-											</>
-										) : (
-											<>
-												<i className="fas fa-link mr-2" />
-												<span>Connect</span>
-											</>
-										)}
+										{account.connected ? "Disconnect" : "Connect"}
 									</Button>
 								</div>
 							))}
@@ -558,7 +565,7 @@ const SettingsContent = () => {
 					</CardContent>
 				</Card>
 
-				<Card className="border-none shadow-sm">
+				<Card className="border-none m-0 md:border shadow-none md:shadow-md">
 					<CardHeader>
 						<CardTitle>Danger Zone</CardTitle>
 						<CardDescription>Irreversible account actions</CardDescription>
@@ -576,7 +583,7 @@ const SettingsContent = () => {
 								type="default"
 								className="cursor-pointer whitespace-nowrap !rounded-button w-full"
 							>
-								<i className="fas fa-exclamation-triangle mr-2" />
+								<FaExclamationTriangle className="mr-2" />
 								<span>Delete Account</span>
 							</Button>
 						</div>

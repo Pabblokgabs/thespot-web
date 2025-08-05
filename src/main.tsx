@@ -19,7 +19,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 				<OwnerProvider>
 					<UserProvider>
 						<App />
-						<Toaster position="bottom-right" reverseOrder={false} />
+						<Toaster
+							toastOptions={{ duration: 3000 }}
+							position="bottom-right"
+							reverseOrder={false}
+						/>
 						<ViewAllImages />
 					</UserProvider>
 				</OwnerProvider>

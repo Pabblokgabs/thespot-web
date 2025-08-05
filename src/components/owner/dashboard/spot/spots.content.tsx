@@ -26,17 +26,31 @@ import { mySpots } from "@/lib/mock";
 import {
 	FaArrowRight,
 	FaChartLine,
+	FaCog,
+	FaEdit,
 	FaEllipsisH,
 	FaMapMarkerAlt,
 	FaStar,
+	FaTrash,
+	FaUserFriends,
+	FaUsers,
+	FaEye,
+	FaCalendarAlt,
+	FaList,
+	FaThLarge,
 } from "react-icons/fa";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import ViewSpot from "./view.spot";
 import SpotNav from "./spot.nav";
 
 function SpotsContent() {
-	const { showFollowersModal, isSpotView, setIsSpotView, setSelectedSpot } =
-		useOwnerContext();
+	const {
+		showFollowersModal,
+		isSpotView,
+		setIsSpotView,
+		setSelectedSpot,
+		setShowEditSpotModal,
+	} = useOwnerContext();
 
 	const ShowSpotContent = () => {
 		return (
@@ -49,14 +63,14 @@ function SpotsContent() {
 								value="grid"
 								className="!rounded-button whitespace-nowrap"
 							>
-								<i className="fas fa-th-large mr-2" />
+								<FaThLarge className="mr-2" />
 								<span>Grid View</span>
 							</TabsTrigger>
 							<TabsTrigger
 								value="list"
 								className="!rounded-button whitespace-nowrap"
 							>
-								<i className="fas fa-list mr-2" />
+								<FaList className="mr-2" />
 								<span>List View</span>
 							</TabsTrigger>
 						</TabsList>
@@ -75,7 +89,7 @@ function SpotsContent() {
 											className="w-full h-full object-cover object-top transition-transform duration-300 hover:scale-105"
 										/>
 										<div className="absolute top-3 left-3">
-											<Badge className="bg-purple-400 text-gray-800">
+											<Badge className="bg-purple-600 text-white">
 												{spot.type}
 											</Badge>
 										</div>
@@ -90,24 +104,34 @@ function SpotsContent() {
 													</Button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end">
-													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-edit mr-2" />
+													<DropdownMenuItem
+														onClick={() => {
+															setIsSpotView(true);
+															setSelectedSpot(spot);
+															setShowEditSpotModal(true);
+														}}
+														className="cursor-pointer"
+													>
+														<FaEdit className="mr-2" />
 														<span>Edit Spot</span>
 													</DropdownMenuItem>
 													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-calendar-alt mr-2" />
+														<FaCalendarAlt className="mr-2" />
 														<span>View Bookings</span>
 													</DropdownMenuItem>
-													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-user-friends mr-2" />
-														<span>Manage Followers</span>
+													<DropdownMenuItem
+														onClick={() => showFollowersModal(spot)}
+														className="cursor-pointer"
+													>
+														<FaUserFriends className="mr-2" />
+														<span>View Followers</span>
 													</DropdownMenuItem>
 													<DropdownMenuItem className="cursor-pointer">
 														<FaChartLine className="mr-2" />
 														<span>Analytics</span>
 													</DropdownMenuItem>
 													<DropdownMenuItem className="cursor-pointer text-red-600">
-														<i className="fas fa-trash mr-2"></i>
+														<FaTrash className="mr-2" />
 														<span>Delete</span>
 													</DropdownMenuItem>
 												</DropdownMenuContent>
@@ -212,7 +236,7 @@ function SpotsContent() {
 												<TableCell>{spot.location}</TableCell>
 												<TableCell>
 													<div className="flex items-center">
-														<i className="fas fa-star text-amber-500 mr-1" />
+														<FaStar className="text-amber-500 mr-1" />
 														<span>{spot.rating}</span>
 													</div>
 												</TableCell>
@@ -234,19 +258,25 @@ function SpotsContent() {
 															type="default"
 															className="cursor-pointer !rounded-button whitespace-nowrap"
 														>
-															<i className="fas fa-edit" />
+															<Tooltip title="Edit">
+																<FaEdit />
+															</Tooltip>
 														</Button>
 														<Button
 															type="default"
 															className="cursor-pointer !rounded-button whitespace-nowrap"
 														>
-															<i className="fas fa-calendar-alt" />
+															<Tooltip title="View Bookings">
+																<FaCalendarAlt />
+															</Tooltip>
 														</Button>
 														<Button
 															type="default"
 															className="cursor-pointer !rounded-button whitespace-nowrap"
 														>
-															<i className="fas fa-user-friends" />
+															<Tooltip title="View Followers">
+																<FaUsers />
+															</Tooltip>
 														</Button>
 														<DropdownMenu>
 															<DropdownMenuTrigger asChild>
@@ -254,28 +284,28 @@ function SpotsContent() {
 																	type="text"
 																	className="cursor-pointer !rounded-button whitespace-nowrap"
 																>
-																	<i className="fas fa-ellipsis-h" />
+																	<FaEllipsisH />
 																</Button>
 															</DropdownMenuTrigger>
 															<DropdownMenuContent align="end">
 																<DropdownMenuItem className="cursor-pointer">
-																	<i className="fas fa-eye mr-2" />
+																	<FaEye className="mr-2" />
 																	<span>View Details</span>
 																</DropdownMenuItem>
 																<DropdownMenuItem className="cursor-pointer">
-																	<i className="fas fa-users mr-2" />
+																	<FaUsers className="mr-2" />
 																	<span>Manage Staff</span>
 																</DropdownMenuItem>
 																<DropdownMenuItem className="cursor-pointer">
-																	<i className="fas fa-chart-line mr-2" />
+																	<FaChartLine className="mr-2" />
 																	<span>Analytics</span>
 																</DropdownMenuItem>
 																<DropdownMenuItem className="cursor-pointer">
-																	<i className="fas fa-cog mr-2" />
+																	<FaCog className="mr-2" />
 																	<span>Settings</span>
 																</DropdownMenuItem>
 																<DropdownMenuItem className="cursor-pointer text-red-600">
-																	<i className="fas fa-trash mr-2" />
+																	<FaTrash className="mr-2" />
 																	<span>Delete</span>
 																</DropdownMenuItem>
 															</DropdownMenuContent>
@@ -291,112 +321,112 @@ function SpotsContent() {
 					</TabsContent>
 				</Tabs>
 				<div className="grid md:hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-							{mySpots.map((spot, index) => (
-								<Card
-									key={index}
-									className="overflow-hidden border-none shadow-sm p-0 pb-6"
-								>
-									<div className="relative h-48 overflow-hidden">
-										<img
-											src={spot.image}
-											alt={spot.name}
-											className="w-full h-full object-cover object-top transition-transform duration-300 hover:scale-105"
-										/>
-										<div className="absolute top-3 left-3">
-											<Badge className="bg-purple-400 text-gray-800">
-												{spot.type}
-											</Badge>
-										</div>
-										<div className="absolute top-3 right-3">
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														type="default"
-														className="cursor-pointer !rounded-button whitespace-nowrap"
-													>
-														<FaEllipsisH className="text-gray-700" />
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-edit mr-2" />
-														<span>Edit Spot</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-calendar-alt mr-2" />
-														<span>View Bookings</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-user-friends mr-2" />
-														<span>Manage Followers</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem className="cursor-pointer">
-														<FaChartLine className="mr-2" />
-														<span>Analytics</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem className="cursor-pointer text-red-600">
-														<i className="fas fa-trash mr-2"></i>
-														<span>Delete</span>
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
+					{mySpots.map((spot, index) => (
+						<Card
+							key={index}
+							className="overflow-hidden border-none shadow-sm p-0 pb-6"
+						>
+							<div className="relative h-48 overflow-hidden">
+								<img
+									src={spot.image}
+									alt={spot.name}
+									className="w-full h-full object-cover object-top transition-transform duration-300 hover:scale-105"
+								/>
+								<div className="absolute top-3 left-3">
+									<Badge className="bg-purple-400 text-gray-800">
+										{spot.type}
+									</Badge>
+								</div>
+								<div className="absolute top-3 right-3">
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button
+												type="default"
+												className="cursor-pointer !rounded-button whitespace-nowrap"
+											>
+												<FaEllipsisH className="text-gray-700" />
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="end">
+											<DropdownMenuItem className="cursor-pointer">
+												<FaEdit className="mr-2" />
+												<span>Edit Spot</span>
+											</DropdownMenuItem>
+											<DropdownMenuItem className="cursor-pointer">
+												<FaCalendarAlt className="mr-2" />
+												<span>View Bookings</span>
+											</DropdownMenuItem>
+											<DropdownMenuItem className="cursor-pointer">
+												<FaUserFriends className="mr-2" />
+												<span>Manage Followers</span>
+											</DropdownMenuItem>
+											<DropdownMenuItem className="cursor-pointer">
+												<FaChartLine className="mr-2" />
+												<span>Analytics</span>
+											</DropdownMenuItem>
+											<DropdownMenuItem className="cursor-pointer text-red-600">
+												<FaTrash className="mr-2" />
+												<span>Delete</span>
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+							</div>
+							<CardHeader className="pb-2">
+								<CardTitle>{spot.name}</CardTitle>
+								<div className="flex items-center text-gray-500">
+									<FaMapMarkerAlt className="mr-1" /> {spot.location}
+								</div>
+							</CardHeader>
+							<CardContent className="pb-3">
+								<div className="grid grid-cols-4 gap-2 text-sm">
+									<div className="flex flex-col items-center p-2 bg-gray-50 rounded-lg">
+										<div className="text-gray-500 mb-1">Rating</div>
+										<div className="font-semibold flex items-center">
+											<FaStar className="text-amber-500 mr-1" />
+											{spot.rating}
 										</div>
 									</div>
-									<CardHeader className="pb-2">
-										<CardTitle>{spot.name}</CardTitle>
-										<div className="flex items-center text-gray-500">
-											<FaMapMarkerAlt className="mr-1" /> {spot.location}
+									<div className="flex flex-col items-center p-2 bg-gray-50 rounded-lg">
+										<div className="text-gray-500 mb-1">Bookings</div>
+										<div className="font-semibold">{spot.bookings}</div>
+									</div>
+									<div className="flex flex-col items-center p-2 bg-gray-50 rounded-lg">
+										<div className="text-gray-500 mb-1">Revenue</div>
+										<div className="font-semibold">{spot.revenue}</div>
+									</div>
+									<div
+										onClick={() => showFollowersModal(spot)}
+										className="flex flex-col items-center p-2 bg-indigo-50 rounded-lg cursor-pointer group"
+									>
+										<div className="text-indigo-500 mb-1 group-hover:text-indigo-700 group-hover:underline">
+											Followers
 										</div>
-									</CardHeader>
-									<CardContent className="pb-3">
-										<div className="grid grid-cols-4 gap-2 text-sm">
-											<div className="flex flex-col items-center p-2 bg-gray-50 rounded-lg">
-												<div className="text-gray-500 mb-1">Rating</div>
-												<div className="font-semibold flex items-center">
-													<FaStar className="text-amber-500 mr-1" />
-													{spot.rating}
-												</div>
-											</div>
-											<div className="flex flex-col items-center p-2 bg-gray-50 rounded-lg">
-												<div className="text-gray-500 mb-1">Bookings</div>
-												<div className="font-semibold">{spot.bookings}</div>
-											</div>
-											<div className="flex flex-col items-center p-2 bg-gray-50 rounded-lg">
-												<div className="text-gray-500 mb-1">Revenue</div>
-												<div className="font-semibold">{spot.revenue}</div>
-											</div>
-											<div
-												onClick={() => showFollowersModal(spot)}
-												className="flex flex-col items-center p-2 bg-indigo-50 rounded-lg cursor-pointer group"
-											>
-												<div className="text-indigo-500 mb-1 group-hover:text-indigo-700 group-hover:underline">
-													Followers
-												</div>
-												<div className="font-semibold flex items-center">
-													{spot.followers}
-													<span className="text-green-600 text-xs ml-1">
-														{spot.followerGrowth}
-													</span>
-												</div>
-											</div>
+										<div className="font-semibold flex items-center">
+											{spot.followers}
+											<span className="text-green-600 text-xs ml-1">
+												{spot.followerGrowth}
+											</span>
 										</div>
-									</CardContent>
-									<CardFooter className="pt-0">
-										<Button
-											onClick={() => {
-												setIsSpotView(true);
-												setSelectedSpot(spot);
-											}}
-											type="primary"
-											className="cursor-pointer w-full !rounded-button whitespace-nowrap"
-										>
-											<span>Manage Spot</span>
-											<FaArrowRight className="ml-2 text-xs" />
-										</Button>
-									</CardFooter>
-								</Card>
-							))}
-						</div>
+									</div>
+								</div>
+							</CardContent>
+							<CardFooter className="pt-0">
+								<Button
+									onClick={() => {
+										setIsSpotView(true);
+										setSelectedSpot(spot);
+									}}
+									type="primary"
+									className="cursor-pointer w-full !rounded-button whitespace-nowrap"
+								>
+									<span>Manage Spot</span>
+									<FaArrowRight className="ml-2 text-xs" />
+								</Button>
+							</CardFooter>
+						</Card>
+					))}
+				</div>
 			</div>
 		);
 	};

@@ -217,7 +217,7 @@ function TrendingNow() {
 					</div>
 
 					<ScrollArea className="w-full block md:hidden whitespace-nowrap overflow-x-auto">
-						<div className="flex h-ful w-full px-1 space-x-4 mb-6">
+						<div className="flex h-full w-full px-1 space-x-4 mb-6">
 							{trendingSpots.map((spot) => (
 								<div
 									key={spot.id}

@@ -17,6 +17,7 @@ import {
 } from "@ant-design/icons";
 import { followerActivity } from "@/lib/mock";
 import FollowersComponent from "./followers.component";
+import { FaChartLine } from "react-icons/fa";
 const { Title, Text } = Typography;
 
 const FollowersContent = () => {
@@ -38,7 +39,7 @@ const FollowersContent = () => {
 				</div>
 				<Row gutter={[24, 24]}>
 					{/* Stats Cards */}
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={12} sm={12} md={6}>
 						<Card className="h-full shadow-sm">
 							<Statistic
 								title="Total Followers"
@@ -51,7 +52,7 @@ const FollowersContent = () => {
 							</div>
 						</Card>
 					</Col>
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={12} sm={12} md={6}>
 						<Card className="h-full shadow-sm">
 							<Statistic
 								title="New Followers"
@@ -64,14 +65,14 @@ const FollowersContent = () => {
 							</div>
 						</Card>
 					</Col>
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={12} sm={12} md={6}>
 						<Card className="h-full shadow-sm">
 							<Statistic
 								title="Engagement Rate"
 								value={18.5}
 								suffix="%"
 								prefix={
-									<i className="fas fa-chart-line text-blue-600 mr-1"></i>
+									<FaChartLine className="text-blue-600 mr-1"/>
 								}
 								valueStyle={{ color: "#2563EB" }}
 								precision={1}
@@ -81,7 +82,7 @@ const FollowersContent = () => {
 							</div>
 						</Card>
 					</Col>
-					<Col xs={24} sm={12} md={6}>
+					<Col xs={12} sm={12} md={6}>
 						<Card className="h-full shadow-sm">
 							<Statistic
 								title="Avg. Bookings per Follower"

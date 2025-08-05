@@ -6,6 +6,7 @@ import p3 from "@/assets/spot/3.jpg";
 import p4 from "@/assets/spot/4.jpg";
 import p5 from "@/assets/spot/5.jpg";
 import p6 from "@/assets/spot/6.jpg";
+import type { staffMembers } from "./types";
 
 // Mock data for spots
 const spots = [
@@ -353,7 +354,7 @@ const staffTasks = [
 	},
 ];
 // Mock data for staff management
-const staffMembers = [
+const staffMembers: staffMembers[] = [
 	{
 		key: "1",
 		name: "David Miller",

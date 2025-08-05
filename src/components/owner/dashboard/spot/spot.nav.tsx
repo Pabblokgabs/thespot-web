@@ -9,6 +9,7 @@ import {
 	Statistic,
 	Typography,
 } from "antd";
+import { FaFilter, FaSort } from "react-icons/fa";
 import { FaCalendarCheck } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 const { Title } = Typography;
@@ -109,7 +110,7 @@ function SpotNav() {
 								trigger={["click"]}
 							>
 								<Button className="cursor-pointer whitespace-nowrap !rounded-button">
-									<i className="fas fa-filter mr-2" />
+									<FaFilter className="mr-2" />
 									<span>Filter</span>
 								</Button>
 							</Dropdown>
@@ -125,7 +126,7 @@ function SpotNav() {
 								trigger={["click"]}
 							>
 								<Button className="cursor-pointer whitespace-nowrap !rounded-button">
-									<i className="fas fa-sort mr-2" />
+									<FaSort className="mr-2" />
 									<span>Sort</span>
 								</Button>
 							</Dropdown>

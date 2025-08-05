@@ -57,14 +57,15 @@ import {
 	TimePicker,
 	Upload,
 } from "antd";
-import { socialMedia } from "@/lib/options";
+import { socialMediaIcons } from "@/lib/options";
 import { useOverAllContext } from "@/lib/context/useContext";
 
 const SpotDetails: React.FC = () => {
 	const [follow, setFollow] = useState(false);
 	const [allReviewsModal, setAllReviewsModal] = useState(false);
 
-	const { setAllImageToView, setIsViewAllImgModal } = useOverAllContext();
+	const { setAllImageToView, setIsViewAllImgModal, setOnViewImg } =
+		useOverAllContext();
 
 	const [rateModal, setRateModal] = useState(false);
 	const [rateForm] = Form.useForm();
@@ -404,7 +405,7 @@ const SpotDetails: React.FC = () => {
 												href=""
 												className="text-2xl transition-transform hover:scale-[1.05]"
 											>
-												{socialMedia(item)}
+												{socialMediaIcons(item)}
 											</a>
 										))}
 									</li>
@@ -460,6 +461,11 @@ const SpotDetails: React.FC = () => {
 							<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
 								{venue.photos.slice(0, 5).map((image, index) => (
 									<div
+										onClick={() => {
+											setOnViewImg(image);
+											setIsViewAllImgModal(true);
+											setAllImageToView(venue.photos);
+										}}
 										key={index}
 										className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer group"
 									>
@@ -475,7 +481,13 @@ const SpotDetails: React.FC = () => {
 								))}
 
 								{venue.photos.length > 5 && (
-									<div className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer group">
+									<div
+										onClick={() => {
+											setIsViewAllImgModal(true);
+											setAllImageToView(venue.photos);
+										}}
+										className="relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer group"
+									>
 										<img
 											src={venue.photos[5]}
 											alt={`Gallery image 6`}

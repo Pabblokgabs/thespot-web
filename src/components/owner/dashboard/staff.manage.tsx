@@ -1,4 +1,15 @@
-import { Tag, Dropdown, List, Row, Col, Card, Button, Input,Typography } from "antd";
+import {
+	Tag,
+	Dropdown,
+	List,
+	Row,
+	Col,
+	Card,
+	Button,
+	Input,
+	Typography,
+	Tooltip,
+} from "antd";
 import { useOwnerContext } from "@/lib/context/owner";
 import {
 	CardContent,
@@ -24,10 +35,26 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+	FaEdit,
+	FaEllipsisH,
+	FaEye,
+	FaKey,
+	FaPause,
+	FaPlay,
+	FaRedo,
+	FaTimes,
+	FaTrash,
+	FaUserPlus,
+} from "react-icons/fa";
+import { FaPaperPlane } from "react-icons/fa6";
+import toast from "react-hot-toast";
+import { staffPermission } from "@/lib/options";
+import { StaffDisplayCard } from "./display.card";
 const { Title } = Typography;
 
 const StaffContent = () => {
-	const { setShowStaffModal } = useOwnerContext();
+	const { setShowStaffModal, setStaffManageModal } = useOwnerContext();
 
 	const bargeColor = (status: string) => {
 		switch (status) {
@@ -39,31 +66,86 @@ const StaffContent = () => {
 				return "bg-yellow-100 text-yellow-800";
 		}
 	};
+	let isResend: boolean = false;
+	const handleResend = () => {
+		isResend = true;
+		setTimeout(() => {
+			isResend = false;
+		}, 3000);
+	};
+
+	const handleCancelInvitation = () => {
+		toast.success("Invitation Cancelled");
+	};
 
 	return (
-		<div className="space-y-6 p-2 md:p-6">
-			<div className="flex items-center justify-between">
-				<Title level={4} >Staff Management</Title>
+		<div className="md:p-6">
+			<div className="flex px-5 md:px-0 justify-between items-center mb-6 mt-4">
+				<Title level={4} className="m-0 hidden md:block">
+					Staff Management
+				</Title>
+				<h4 className="m-0 text-xl block md:hidden">Staff Management</h4>
 				<Button
-					onClick={() => setShowStaffModal(true)}
-					className="bg-blue-600 hover:bg-blue-700 !rounded-button whitespace-nowrap"
+					onClick={() => {
+						setShowStaffModal(true);
+						setStaffManageModal("add_staff");
+					}}
+					type={window.innerWidth <= 768 ? "primary" : "default"}
 				>
-					<i className="fas fa-user-plus mr-2"/>
-					<span className='hidden md:block'>Add Staff Member</span>
-					<span className='block md:hidden'>Add New</span>
+					<FaUserPlus className="mr-2" />
+					<span className="hidden md:block">Add Staff Member</span>
+					<span className="block md:hidden">Add New</span>
 				</Button>
 			</div>
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-				<Card className="col-span-2 border-none shadow-sm">
-					<CardHeader>
-						<div className="flex items-center justify-between">
-							<CardTitle>Staff Members</CardTitle>
-							<div className="flex items-center space-x-2">
+
+			<div className="flex md:hidden px-5 mt-4 flex-col gap-2">
+				<CardHeader className="p-0 m-0">
+					<div className="flex flex-col mb-2">
+						<div className="flex items-center space-x-2">
+							<div className="w-full">
 								<Input
 									placeholder="Search staff member..."
 									prefix={<SearchOutlined className="text-gray-400" />}
-									className="w-64"
+									className="w-full"
 								/>
+							</div>
+							<Dropdown
+								menu={{
+									items: [
+										{ key: "1", label: "All Staff" },
+										{ key: "2", label: "Managers" },
+										{ key: "3", label: "Support" },
+										{ key: "4", label: "Event Hosts" },
+										{ key: "5", label: "Active Only" },
+									],
+								}}
+								trigger={["click"]}
+							>
+								<Button type="default">
+									Filter <FilterFilled />
+								</Button>
+							</Dropdown>
+						</div>
+					</div>
+				</CardHeader>
+				{staffMembers.map((staff) => (
+					<StaffDisplayCard data={staff} />
+				))}
+			</div>
+
+			<div className="grid mb-6  grid-cols-1 xl:grid-cols-3 gap-y-6 gap-x-0 xl:gap-y-0 xl:gap-x-6">
+				<Card className="col-span-2 hidden md:block border-none m-0 md:border shadow-none md:shadow-md">
+					<CardHeader className="p-0 m-0">
+						<div className="flex flex-col md:flex-row md:justify-between md:items-center">
+							<CardTitle>Staff Members</CardTitle>
+							<div className="flex items-center space-x-2">
+								<div className="w-full md:w-64">
+									<Input
+										placeholder="Search staff member..."
+										prefix={<SearchOutlined className="text-gray-400" />}
+										className="w-full"
+									/>
+								</div>
 								<Dropdown
 									menu={{
 										items: [
@@ -86,7 +168,7 @@ const StaffContent = () => {
 							</div>
 						</div>
 					</CardHeader>
-					<CardContent>
+					<CardContent className="p-0 m-0">
 						<Table>
 							<TableHeader>
 								<TableRow>
@@ -143,36 +225,36 @@ const StaffContent = () => {
 														type="default"
 														className="cursor-pointer whitespace-nowrap !rounded-button"
 													>
-														<i className="fas fa-ellipsis-h"/>
+														<FaEllipsisH />
 													</Button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end">
 													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-eye mr-2"/>
+														<FaEye className="mr-2" />
 														<span>View Profile</span>
 													</DropdownMenuItem>
 													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-edit mr-2"/>
+														<FaEdit className="mr-2" />
 														<span>Edit Permissions</span>
 													</DropdownMenuItem>
 													<DropdownMenuItem className="cursor-pointer">
-														<i className="fas fa-key mr-2"/>
+														<FaKey className="mr-2" />
 														<span>Reset Password</span>
 													</DropdownMenuItem>
 													{staff.status === "Active" && (
 														<DropdownMenuItem className="cursor-pointer text-yellow-600">
-															<i className="fas fa-pause mr-2"/>
+															<FaPause className="fas fa-pause mr-2" />
 															<span>Deactivate</span>
 														</DropdownMenuItem>
 													)}
 													{staff.status === "Inactive" && (
 														<DropdownMenuItem className="cursor-pointer text-green-600">
-															<i className="fas fa-play mr-2"/>
+															<FaPlay className="mr-2" />
 															<span>Activate</span>
 														</DropdownMenuItem>
 													)}
 													<DropdownMenuItem className="cursor-pointer text-red-600">
-														<i className="fas fa-trash mr-2"/>
+														<FaTrash className="mr-2" />
 														<span>Remove</span>
 													</DropdownMenuItem>
 												</DropdownMenuContent>
@@ -184,13 +266,14 @@ const StaffContent = () => {
 						</Table>
 					</CardContent>
 				</Card>
-				<div>
-					<Card className=" border-none shadow-sm">
-						<CardHeader>
+
+				<div className="flex flex-col lg:flex-row xl:flex-col gap-y-6 md:gap-x-6 xl:gap-y-6">
+					<Card className="flex-1 border-none m-0 md:border shadow-none md:shadow-md">
+						<CardHeader className="p-0 m-0">
 							<CardTitle>Staff Roles</CardTitle>
 							<CardDescription>Manage staff permissions</CardDescription>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="p-0 m-0">
 							<div className="space-y-4">
 								{[
 									{
@@ -207,6 +290,11 @@ const StaffContent = () => {
 										role: "Support",
 										description: "Handle customer inquiries",
 										count: 2,
+									},
+									{
+										role: "Admin",
+										description: "Reply Messages",
+										count: 1,
 									},
 								].map((role, index) => (
 									<div
@@ -226,25 +314,27 @@ const StaffContent = () => {
 											>
 												{role.count} members
 											</Badge>
-											<Button
-												type="default"
-												className="cursor-pointer whitespace-nowrap !rounded-button"
-											>
-												<i className="fas fa-edit text-gray-500"/>
-											</Button>
+											<Tooltip title="Edit">
+												<Button
+													type="default"
+													className="cursor-pointer whitespace-nowrap !rounded-button"
+												>
+													<FaEdit className="text-gray-500" />
+												</Button>
+											</Tooltip>
 										</div>
 									</div>
 								))}
 							</div>
 						</CardContent>
 					</Card>
-					<div className="h-6" />
-					<Card className="border-none shadow-sm">
-						<CardHeader>
+
+					<Card className="flex-1 border-none m-0 md:border shadow-none md:shadow-md">
+						<CardHeader className="p-0 m-0">
 							<CardTitle>Pending Invitations</CardTitle>
 							<CardDescription>Staff awaiting confirmation</CardDescription>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="p-0 m-0">
 							<div className="space-y-4">
 								{[
 									{
@@ -260,7 +350,7 @@ const StaffContent = () => {
 								].map((invitation, index) => (
 									<div
 										key={index}
-										className="flex justify-between items-center p-3 bg-white border border-gray-100 rounded-lg"
+										className="flex xs:flex-col sm:flex-row lg:flex-col xl:flex-row sm:justify-between lg:justify-start xl:justify-between sm:items-center md:items-start xl:items-center p-3 bg-white border border-gray-100 rounded-lg"
 									>
 										<div>
 											<h3 className="font-medium">{invitation.email}</h3>
@@ -278,25 +368,34 @@ const StaffContent = () => {
 											<Button
 												type="default"
 												className="cursor-pointer whitespace-nowrap !rounded-button"
+												onClick={() => handleResend()}
 											>
-												<i className="fas fa-redo-alt mr-1"/>
+												<FaRedo
+													className={`mr-1 ${isResend && "animate-spin"}`}
+												/>
 												<span>Resend</span>
 											</Button>
-											<Button
-												type="default"
-												className="cursor-pointer whitespace-nowrap !rounded-button"
-											>
-												<i className="fas fa-times text-red-600 "/>
-											</Button>
+											<Tooltip title="Cancel invitation">
+												<Button
+													onClick={() => handleCancelInvitation()}
+													danger
+													type="default"
+												>
+													<FaTimes />
+												</Button>
+											</Tooltip>
 										</div>
 									</div>
 								))}
 								<Button
-									onClick={() => setShowStaffModal(true)}
+									onClick={() => {
+										setShowStaffModal(true);
+										setStaffManageModal("add_staff");
+									}}
 									type="default"
 									className="cursor-pointer whitespace-nowrap !rounded-button"
 								>
-									<i className="fas fa-paper-plane mr-2"/>
+									<FaPaperPlane className="mr-2" />
 									<span>Send New Invitation</span>
 								</Button>
 							</div>
@@ -304,13 +403,17 @@ const StaffContent = () => {
 					</Card>
 				</div>
 			</div>
-			<Row gutter={24}>
-				<Col xs={24} lg={16}>
+			<Row gutter={24} className="gap-y-6 md:gap-y-0">
+				<Col xs={24} md={12} xl={16}>
 					<Card
 						title="Role Permissions"
-						className="shadow-sm h-full"
+						className="border-none m-0 md:border shadow-none md:shadow-md"
 						extra={
 							<Button
+								onClick={() => {
+									setShowStaffModal(true);
+									setStaffManageModal("edit_pms");
+								}}
 								type="link"
 								className="cursor-pointer whitespace-nowrap !rounded-button"
 							>
@@ -320,119 +423,43 @@ const StaffContent = () => {
 					>
 						<div className="mb-6">
 							<div className="font-medium mb-2">Manager</div>
-							<div className="flex flex-wrap">
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Manage Bookings
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Manage Staff
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									View Analytics
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Process Payments
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Edit Spot Details
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Manage Events
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Manage Followers
-								</Tag>
+							<div className="flex flex-wrap gap-2">
+								{staffPermission.map((item) => (
+									<Tag color="blue">{item}</Tag>
+								))}
 							</div>
 						</div>
 						<div className="mb-6">
 							<div className="font-medium mb-2">Event Host</div>
-							<div className="flex flex-wrap">
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Manage Bookings
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									View Calendar
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Reply to Messages
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Manage Events
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									View Followers
-								</Tag>
+							<div className="flex flex-wrap gap-2">
+								{staffPermission.slice(0, 1).map((item) => (
+									<Tag color="blue">{item}</Tag>
+								))}
+							</div>
+						</div>
+						<div className="mb-6">
+							<div className="font-medium mb-2">Support Staff</div>
+							<div className="flex flex-wrap gap-2">
+								{staffPermission.slice(1, 2).map((item) => (
+									<Tag color="blue">{item}</Tag>
+								))}
 							</div>
 						</div>
 						<div>
-							<div className="font-medium mb-2">Support Staff</div>
-							<div className="flex flex-wrap">
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									View Bookings
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									View Calendar
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									Reply to Messages
-								</Tag>
-								<Tag
-									color="blue"
-									className="mb-2 mr-2 whitespace-nowrap !rounded-button"
-								>
-									View Followers
-								</Tag>
+							<div className="font-medium mb-2">Admin</div>
+							<div className="flex flex-wrap gap-2">
+								{staffPermission.slice(2, 3).map((item) => (
+									<Tag color="blue">{item}</Tag>
+								))}
 							</div>
 						</div>
 					</Card>
 				</Col>
-				<Col xs={24} lg={8}>
-					<Card title="Recent Activities" className="shadow-sm h-full">
+				<Col xs={24} md={12} xl={8}>
+					<Card
+						title="Recent Activities"
+						className="border-none m-0 md:border shadow-none md:shadow-md"
+					>
 						<List
 							itemLayout="horizontal"
 							dataSource={[
@@ -473,6 +500,9 @@ const StaffContent = () => {
 										avatar={
 											<Avatar>
 												<AvatarImage src={item.avatar} />
+												<AvatarFallback>
+													{item.title.substring(0, 1)}
+												</AvatarFallback>
 											</Avatar>
 										}
 										title={item.title}

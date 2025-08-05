@@ -1,4 +1,10 @@
-import { createContext, useState, ReactNode, FC, useContext } from "react";
+import React, {
+	createContext,
+	useState,
+	ReactNode,
+	FC,
+	useContext,
+} from "react";
 
 interface ViewSpotProp {
 	selectedSpot: {
@@ -48,7 +54,7 @@ type OwnerContextType = {
 	showCreateEventModal: boolean;
 	setShowCreateEventModal: React.Dispatch<React.SetStateAction<boolean>>;
 	selectedSpot: ViewSpotProp["selectedSpot"];
-	setSelectedSpot: React.Dispatch<React.SetStateAction<ViewSpotProp>>;
+	setSelectedSpot: React.Dispatch<React.SetStateAction<any>>;
 	followersModalVisible: boolean;
 	setFollowersModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 	showFollowersModal: (spot: any) => void;
@@ -72,11 +78,24 @@ type OwnerContextType = {
 	setActiveBillingFaqTab: React.Dispatch<React.SetStateAction<string>>;
 	isBillingView: boolean;
 	setIsBillingView: React.Dispatch<React.SetStateAction<boolean>>;
+	activeTab: string;
+	setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+	activeEdit: string;
+	setActiveEdit: React.Dispatch<React.SetStateAction<string>>;
+	staffManageModal: "add_staff" | "edit_pms" | "";
+	setStaffManageModal: React.Dispatch<
+		React.SetStateAction<"add_staff" | "edit_pms" | "">
+	>;
+	isLoading: boolean;
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+	warning: boolean;
+	setWarning: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const OwnerContext = createContext<OwnerContextType | null>(null);
 
 const OwnerProvider: FC<{ children: ReactNode }> = ({ children }) => {
+	const [activeTab, setActiveTab] = useState("staff");
 	const [showStaffModal, setShowStaffModal] = useState(false);
 	const [isMobileMessage, setIsMobileMessage] = useState(false);
 	const [showEditSpotModal, setShowEditSpotModal] = useState(false);
@@ -96,6 +115,14 @@ const OwnerProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	);
 	const [activeBillingFaqTab, setActiveBillingFaqTab] = useState("1");
 	const [isBillingView, setIsBillingView] = useState(false);
+	const [activeEdit, setActiveEdit] = useState("basic");
+
+	// for staff content
+	const [staffManageModal, setStaffManageModal] = useState<
+		"add_staff" | "edit_pms" | ""
+	>("add_staff");
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [warning, setWarning] = useState<boolean>(true);
 
 	// Open followers modal for a specific spot
 	const showFollowersModal = (spot: any) => {
@@ -106,6 +133,8 @@ const OwnerProvider: FC<{ children: ReactNode }> = ({ children }) => {
 	return (
 		<OwnerContext.Provider
 			value={{
+				activeTab,
+				setActiveTab,
 				isSubmitted,
 				setIsSubmitted,
 				showStaffModal,
@@ -133,6 +162,14 @@ const OwnerProvider: FC<{ children: ReactNode }> = ({ children }) => {
 				setActiveBillingFaqTab,
 				isBillingView,
 				setIsBillingView,
+				activeEdit,
+				setActiveEdit,
+				staffManageModal,
+				setStaffManageModal,
+				isLoading,
+				setIsLoading,
+				warning,
+				setWarning,
 			}}
 		>
 			{children}

@@ -50,7 +50,6 @@ import {
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 import { useOwnerContext } from "@/lib/context/owner";
-import { toast } from "sonner";
 import CalendarBookings from "@/components/owner/dashboard/calendar";
 import { Link } from "react-router-dom";
 import { MenuIcon } from "lucide-react";
@@ -59,8 +58,9 @@ const Dashboard: React.FC = () => {
 	const [collapsed, setCollapsed] = useState<boolean>(true);
 	const [isMobileDrawer, setIsMobileDrawer] = useState<boolean>(false);
 	const [maxW, setMaxW] = useState<number>(window.innerWidth);
-	const [activeTab, setActiveTab] = useState("dashboard");
 	const {
+		activeTab,
+		setActiveTab,
 		showStaffModal,
 		setShowStaffModal,
 		selectedSpot,
@@ -72,6 +72,10 @@ const Dashboard: React.FC = () => {
 		setIsSubmitted,
 		showEditSpotModal,
 		setShowEditSpotModal,
+		setActiveEdit,
+		activeEdit,
+		staffManageModal,
+		setStaffManageModal,
 	} = useOwnerContext();
 
 	useEffect(() => {
@@ -82,6 +86,10 @@ const Dashboard: React.FC = () => {
 		window.addEventListener("resize", handleResize);
 		return () => window.removeEventListener("resize", handleResize);
 	}, []);
+
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: "instant" });
+	}, [activeTab]);
 
 	React.useEffect(() => {
 		const chartDom = document.getElementById("revenue-chart");
@@ -135,7 +143,7 @@ const Dashboard: React.FC = () => {
 				myChart.dispose();
 			};
 		}
-	}, [activeTab]);
+	}, [activeTab, window.innerWidth]);
 	// Bookings chart initialization
 	React.useEffect(() => {
 		const chartDom = document.getElementById("bookings-chart");
@@ -200,7 +208,7 @@ const Dashboard: React.FC = () => {
 				myChart.dispose();
 			};
 		}
-	}, [activeTab]);
+	}, [activeTab, window.innerWidth]);
 	// Initialize analytics charts
 	React.useEffect(() => {
 		// Revenue by Spot Chart
@@ -548,7 +556,7 @@ const Dashboard: React.FC = () => {
 				myChart.dispose();
 			};
 		}
-	}, [activeTab]);
+	}, [activeTab, window.innerWidth]);
 
 	// Render content based on active tab
 	const renderContent: any = () => {
@@ -699,12 +707,12 @@ const Dashboard: React.FC = () => {
 					</div>
 				</Header>
 				<Header
-					className="bg-white flex lg:hidden justify-between items-center shadow-sm fixed top-0 right-0 z-34"
+					className="bg-white flex lg:hidden justify-between items-center  shadow-sm fixed top-0 right-0 z-34"
 					style={{
 						width: `100%`,
 						backgroundColor: "#fff",
 						height: "60px",
-						padding: "16px",
+						padding: `0px ${window.innerWidth >= 768 ? "32px" : "20px"}`,
 					}}
 				>
 					<div
@@ -717,12 +725,26 @@ const Dashboard: React.FC = () => {
 						<Badge count={5}>
 							<BellOutlined style={{ fontSize: "20px" }} />
 						</Badge>
-						<Avatar size={32} icon={<UserOutlined />} />
+						<Dropdown
+							className="ml-4"
+							menu={{
+								items: [
+									{ key: "1", label: "Profile" },
+									{ key: "2", label: "Account Settings" },
+									{ key: "3", label: "Billing" },
+									{ key: "4", label: "Help & Support" },
+									{ key: "5", label: "Sign Out" },
+								],
+							}}
+							trigger={["click"]}
+						>
+							<Avatar size={32} icon={<UserOutlined />} />
+						</Dropdown>
 					</div>
 				</Header>
 
 				<Content
-					className="bg-gray-50 md:p-6 p-2.5"
+					className="bg-white md:bg-gray-50 p-0 md:p-2.5 lg:p-6"
 					style={{
 						marginTop: 64,
 						overflow: "auto",
@@ -786,11 +808,24 @@ const Dashboard: React.FC = () => {
 					</Drawer>
 					<Modal
 						open={showEditSpotModal}
-						onCancel={() => setShowEditSpotModal(false)}
+						onCancel={() => {
+							setShowEditSpotModal(false);
+							setActiveEdit("");
+						}}
 						footer={null}
-						width={800}
+						width={900}
 						centered
-						title={"Edit Spot"}
+						title={
+							<h4 className="text-lg font-semibold text-gray-700 mb-4">
+								{activeEdit === "basic"
+									? "Basic Information"
+									: activeEdit === "media"
+									? "Media"
+									: activeEdit === "contact"
+									? "Contact and Social information"
+									: activeEdit === "hours" && "Change Oparation Hours"}
+							</h4>
+						}
 					>
 						<EditSpot />
 					</Modal>
@@ -863,35 +898,17 @@ const Dashboard: React.FC = () => {
 						<CreateEvent />
 					</Modal>
 					<Modal
-						title={"Invite Staff Member"}
+						title={
+							staffManageModal === "add_staff"
+								? "Invite Staff Member"
+								: staffManageModal === "edit_pms" && "Edit Permission"
+						}
 						open={showStaffModal}
-						onCancel={() => setShowStaffModal(false)}
-						footer={[
-							<Button
-								key="back"
-								onClick={() => setShowStaffModal(false)}
-								className="cursor-pointer !rounded-button whitespace-nowrap"
-							>
-								Close
-							</Button>,
-							<Button
-								key="submit"
-								type="primary"
-								onClick={() => {
-									setShowStaffModal(false),
-										toast.success("Invitation has been sent", {
-											description: (
-												<p className="text-neutral-600">
-													Waiting for pabblo to accept the invitation
-												</p>
-											),
-										});
-								}}
-								className="cursor-pointer !rounded-button whitespace-nowrap"
-							>
-								Send Invitation
-							</Button>,
-						]}
+						onCancel={() => {
+							setShowStaffModal(false);
+							setStaffManageModal("");
+						}}
+						footer={null}
 						width={700}
 					>
 						<AddStaff />
@@ -902,23 +919,7 @@ const Dashboard: React.FC = () => {
 						}
 						open={followersModalVisible}
 						onCancel={() => setFollowersModalVisible(false)}
-						footer={[
-							<Button
-								key="back"
-								onClick={() => setFollowersModalVisible(false)}
-								className="cursor-pointer !rounded-button whitespace-nowrap"
-							>
-								Close
-							</Button>,
-							<Button
-								key="submit"
-								type="primary"
-								onClick={() => setFollowersModalVisible(false)}
-								className="cursor-pointer !rounded-button whitespace-nowrap"
-							>
-								Send Message to All
-							</Button>,
-						]}
+						footer={null}
 						width={700}
 					>
 						<ViewFollowers />

@@ -46,6 +46,7 @@ import {
 	NoSpotResultsMobile,
 } from "./common/cards/search.card/noResultsFound.card";
 import ViewAllImages from "./common/viewAllImages";
+import { StaffDisplayCard } from "./owner/dashboard/display.card";
 
 export {
 	MobileTileSkeleton,
@@ -95,4 +96,5 @@ export {
 	NoSpotResultsFoundCard,
 	NoSpotResultsMobile,
 	ViewAllImages,
+	StaffDisplayCard,
 };

@@ -10,7 +10,14 @@ import {
 	Col,
 } from "antd";
 import { DownOutlined, DollarOutlined } from "@ant-design/icons";
-import { FaCalendarCheck, FaChartBar, FaChartLine, FaChartPie, FaClock, FaUsers } from "react-icons/fa";
+import {
+	FaCalendarCheck,
+	FaChartBar,
+	FaChartLine,
+	FaChartPie,
+	FaClock,
+	FaUsers,
+} from "react-icons/fa";
 const { Title, Text } = Typography;
 
 const AnalyticsContent = () => {
@@ -54,9 +61,7 @@ const AnalyticsContent = () => {
 						<Statistic
 							title="Total Bookings"
 							value={856}
-							prefix={
-								<FaCalendarCheck className="text-blue-600 mr-1"/>
-							}
+							prefix={<FaCalendarCheck className="text-blue-600 mr-1" />}
 							valueStyle={{ color: "#2563EB" }}
 						/>
 						<div className="mt-2 text-xs text-gray-500">
@@ -97,8 +102,8 @@ const AnalyticsContent = () => {
 					<Card
 						title={
 							<div className="flex items-center">
-								<FaChartLine className="fas fa-chart-line mr-2 text-blue-600"/> Revenue
-								by Spot
+								<FaChartLine className="fas fa-chart-line mr-2 text-blue-600" />{" "}
+								Revenue by Spot
 							</div>
 						}
 						className="shadow-sm h-full"
@@ -111,8 +116,8 @@ const AnalyticsContent = () => {
 					<Card
 						title={
 							<div className="flex items-center">
-								<FaChartPie className="fas fa-chart-pie mr-2 text-blue-600"/> Booking
-								Distribution
+								<FaChartPie className="fas fa-chart-pie mr-2 text-blue-600" />{" "}
+								Booking Distribution
 							</div>
 						}
 						className="shadow-sm h-full"
@@ -125,7 +130,7 @@ const AnalyticsContent = () => {
 					<Card
 						title={
 							<div className="flex items-center">
-								<FaUsers className="fas fa-users mr-2 text-blue-600"/> Customer
+								<FaUsers className="fas fa-users mr-2 text-blue-600" /> Customer
 								Demographics
 							</div>
 						}
@@ -139,8 +144,7 @@ const AnalyticsContent = () => {
 					<Card
 						title={
 							<div className="flex items-center">
-								<FaClock className="text-blue-600"/> Peak Hours
-								Analysis
+								<FaClock className="text-blue-600" /> Peak Hours Analysis
 							</div>
 						}
 						className="shadow-sm h-full"
@@ -153,8 +157,8 @@ const AnalyticsContent = () => {
 					<Card
 						title={
 							<div className="flex items-center">
-								<FaChartBar className="fas fa-chart-bar mr-2 text-blue-600"/> Key
-								Performance Metrics
+								<FaChartBar className="fas fa-chart-bar mr-2 text-blue-600" />{" "}
+								Key Performance Metrics
 							</div>
 						}
 						className="shadow-sm"
