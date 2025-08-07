@@ -3,7 +3,6 @@ import {
 	Form,
 	Input,
 	Select,
-	Switch,
 	Checkbox,
 	Button,
 	Upload,
@@ -22,7 +21,6 @@ import {
 import {
 	UploadOutlined,
 	PlusOutlined,
-	CloseOutlined,
 	InfoCircleOutlined,
 	CheckCircleOutlined,
 	EnvironmentOutlined,
@@ -37,14 +35,14 @@ import {
 	CameraOutlined,
 	TagOutlined,
 	FileImageOutlined,
-	MenuOutlined,
 } from "@ant-design/icons";
 import type { UploadFile } from "antd/es/upload/interface";
-import dayjs from "dayjs";
-import logo from "@/assets/logo.png";
+import { FaCopyright, FaFilm, FaTiktok } from "react-icons/fa";
+import { spotTypes } from "@/lib/options";
+import { AuthNav } from "@/components";
+import countries from "@/lib/county";
 
 const { TextArea } = Input;
-const { Option } = Select;
 const { Title, Text, Paragraph } = Typography;
 const { Step } = Steps;
 
@@ -58,35 +56,9 @@ const SpotListing: React.FC = () => {
 	const [tags, setTags] = useState<string[]>([]);
 	const [inputVisible, setInputVisible] = useState(false);
 	const [inputValue, setInputValue] = useState("");
-	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [submitting, setSubmitting] = useState(false);
 	const [submitted, setSubmitted] = useState(false);
-
-	const spotTypes = [
-		"Restaurant",
-		"Café",
-		"Bar",
-		"Pub",
-		"Nightclub",
-		"Spa",
-		"Salon",
-		"Gym",
-		"Church",
-		"Temple",
-		"Mosque",
-		"Museum",
-		"Art Gallery",
-		"Theater",
-		"Cinema",
-		"Park",
-		"Beach",
-		"Shopping Mall",
-		"Boutique",
-		"Hotel",
-		"Event Space",
-		"Coworking Space",
-		"Other",
-	];
+	const [countryCode, setCountryCode] = useState<string>("");
 
 	const predefinedTags = [
 		"Open Now",
@@ -230,7 +202,7 @@ const SpotListing: React.FC = () => {
 						>
 							<Input
 								placeholder="Enter the name of your business or venue"
-								className="h-12 text-base"
+								size="large"
 							/>
 						</Form.Item>
 
@@ -239,17 +211,51 @@ const SpotListing: React.FC = () => {
 							label="Spot Type"
 							rules={[{ required: true, message: "Please select a spot type" }]}
 						>
-							<Select
-								mode="multiple"
-								maxCount={3}
-								placeholder="Select the type of your spot"
-							>
+							<Select placeholder="Select the type of your spot" size="large">
 								{spotTypes.map((type) => (
-									<Select.Option key={type} value={type}>
-										{type}
+									<Select.Option key={type.value} value={type.value}>
+										{type.label}
 									</Select.Option>
 								))}
 							</Select>
+						</Form.Item>
+
+						<Form.Item
+							name="prefered_gender"
+							label="Prefered Gender"
+							rules={[
+								{ required: true, message: "Please specify prefered gender" },
+							]}
+						>
+							<Select placeholder="Select the prefered gender" size="large">
+								<Select.Option key="male" value="male">
+									Male
+								</Select.Option>
+								<Select.Option key="female" value="female">
+									Female
+								</Select.Option>
+								<Select.Option key="any" value="any">
+									Any
+								</Select.Option>
+							</Select>
+						</Form.Item>
+
+						<Form.Item
+							name="min_prefered_age"
+							label={
+								<Space>
+									<span>Minimum Prefered Age</span>
+									<Tooltip title="This is use to show your spot to right user">
+										<InfoCircleOutlined className="text-gray-400" />
+									</Tooltip>
+								</Space>
+							}
+						>
+							<Input
+								type="number"
+								size="large"
+								placeholder="Select your date of birth"
+							/>
 						</Form.Item>
 
 						<Form.Item
@@ -317,7 +323,7 @@ const SpotListing: React.FC = () => {
 						>
 							<Input
 								placeholder="Enter the city where your spot is located"
-								className="h-12 text-base"
+								size="large"
 							/>
 						</Form.Item>
 
@@ -352,7 +358,7 @@ const SpotListing: React.FC = () => {
 				<div className="space-y-8">
 					<div className="space-y-6">
 						<Form.Item
-							name="phoneNumber"
+							name="business_number"
 							label={
 								<Space>
 									<PhoneOutlined />
@@ -361,12 +367,43 @@ const SpotListing: React.FC = () => {
 							}
 							rules={[
 								{ required: true, message: "Please enter your phone number" },
+								{
+									validator: (_, value) => {
+										if (!value) {
+											return Promise.resolve();
+										}
+										if (!countryCode) {
+											return Promise.reject(
+												new Error("Select your country code")
+											);
+										}
+										return Promise.resolve();
+									},
+								},
 							]}
 						>
-							<Input
-								placeholder="Enter your business phone number"
-								className="h-12 text-base"
-							/>
+							<div className="flex gap-2 items-center">
+								<div
+									className={`${window.innerWidth >= 764 ? "w-1/6" : "w-1/4"}`}
+								>
+									<Select
+										onChange={(value) => setCountryCode(value)}
+										size="large"
+										placeholder="+123"
+									>
+										{countries.map((country) => (
+											<Select.Option key={country.label} value={country.code}>
+												{country.code}
+											</Select.Option>
+										))}
+									</Select>
+								</div>
+								<Input
+									type="number"
+									size="large"
+									placeholder="Enter phone number"
+								/>
+							</div>
 						</Form.Item>
 
 						<Form.Item
@@ -563,7 +600,7 @@ const SpotListing: React.FC = () => {
 							name="tiktok"
 							label={
 								<Space>
-									<i className="fab fa-tiktok mr-1"></i>
+									<FaTiktok className="mr-1" />
 									<span>TikTok</span>
 								</Space>
 							}
@@ -577,7 +614,7 @@ const SpotListing: React.FC = () => {
 						>
 							<Input
 								placeholder="TikTok handle or URL"
-								className="h-12 text-base"
+								size="large"
 								prefix="@"
 							/>
 						</Form.Item>
@@ -679,7 +716,7 @@ const SpotListing: React.FC = () => {
 									name="logo"
 									label={
 										<Space>
-											<i className="fas fa-copyright mr-1"></i>
+											<FaCopyright className="mr-1" />
 											<span>Business Logo (Optional)</span>
 										</Space>
 									}
@@ -706,7 +743,7 @@ const SpotListing: React.FC = () => {
 									name="video"
 									label={
 										<Space>
-											<i className="fas fa-film mr-1"></i>
+											<FaFilm className="mr-1" />
 											<span>Promotional Video (Optional)</span>
 										</Space>
 									}
@@ -946,7 +983,8 @@ const SpotListing: React.FC = () => {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50">
+		<div className="min-h-screen md:bg-gray-50">
+			<AuthNav />
 			<main className="max-w-7xl flex-1 mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
 				<div className="mb-8">
 					<Title level={2}>List Your Spot</Title>
@@ -964,7 +1002,56 @@ const SpotListing: React.FC = () => {
 					</Steps>
 				</div>
 
-				<Card className="shadow-md">
+				<div className="block md:hidden">
+					<Form
+						form={form}
+						layout="vertical"
+						onFinish={handleSubmit}
+						initialValues={{
+							termsAgreed: false,
+							openNow: false,
+						}}
+						className="max-w-full mx-auto"
+					>
+						<div className="py-4">{steps[currentStep].content}</div>
+
+						<div className="flex justify-between mt-8">
+							{currentStep > 0 && (
+								<Button
+									onClick={prevStep}
+									className="!rounded-button whitespace-nowrap"
+								>
+									Previous
+								</Button>
+							)}
+
+							<div className="ml-auto">
+								{currentStep < steps.length - 1 && (
+									<Button
+										type="primary"
+										onClick={nextStep}
+										className="!rounded-button whitespace-nowrap"
+									>
+										Next
+									</Button>
+								)}
+
+								{currentStep === steps.length - 1 && (
+									<Button
+										type="primary"
+										htmlType="submit"
+										loading={submitting}
+										className="!rounded-button whitespace-nowrap"
+									>
+										Submit for Review
+									</Button>
+								)}
+							</div>
+						</div>
+					</Form>
+				</div>
+
+				<Card className="shadow-md hidden md:block">
 					<Form
 						form={form}
 						layout="vertical"

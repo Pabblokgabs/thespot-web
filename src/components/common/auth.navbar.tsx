@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Dropdown } from "antd";
 import { MdOutlineLanguage } from "react-icons/md";
 import logo from "@/assets/logo.png";
 
@@ -11,12 +11,18 @@ function AuthNav() {
 						<img src={logo} alt="Logo" className="w-5 h-auto object-cover" />
 						<h1 className="text-xl font-bold text-gray-800">kgabs</h1>
 					</div>
-					<Button
-						type="text"
-						className="cursor-pointer !rounded-button whitespace-nowrap"
+					<Dropdown
+						menu={{ items: [{ key: "english", label: "English" }] }}
+						trigger={["click"]}
 					>
-						<MdOutlineLanguage className="text-neutral-800" size={24} /> English
-					</Button>
+						<Button
+							type="text"
+							className="cursor-pointer !rounded-button whitespace-nowrap"
+						>
+							<MdOutlineLanguage className="text-neutral-800" size={24} />{" "}
+							English
+						</Button>
+					</Dropdown>
 				</div>
 			</div>
 		</div>

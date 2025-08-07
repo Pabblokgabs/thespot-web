@@ -1,4 +1,4 @@
-import { Button, Tooltip, Dropdown } from "antd";
+import { Button, Dropdown } from "antd";
 import {
 	Card,
 	CardContent,
@@ -27,7 +27,6 @@ import {
 	FaArrowRight,
 	FaChartLine,
 	FaEllipsisH,
-	FaEnvelope,
 	FaEye,
 	FaFilter,
 	FaGift,
@@ -36,11 +35,85 @@ import {
 	FaStar,
 } from "react-icons/fa";
 import { ChevronRight } from "lucide-react";
+import type { follower } from "@/lib/types";
+import { FollowersDisplayCard } from "./display.card";
 
 function FollowersComponent() {
+	const statusColor = (value: string) => {
+		const x = value.toLowerCase();
+
+		switch (x) {
+			case "low":
+				return "bg-gray-100 text-gray-800";
+			case "medium":
+				return "bg-yellow-100 text-gray-800";
+			case "high":
+				return "bg-green-100 text-green-800";
+		}
+	};
+
+	const followers: follower[] = [
+		{
+			user: {
+				name: "Jessica Parker",
+				img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20young%20woman%20with%20curly%20hair%2C%20casual%20style%2C%20friendly%20smile%2C%20urban%20background%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower1&orientation=squarish",
+				isInfluencer: true,
+			},
+			following: ["Coastal Retreat", "Urban Lounge"],
+			since: "Mar 15, 2025",
+			status: "Active",
+			engagement: "High",
+		},
+		{
+			user: {
+				name: "Thomas Wright",
+				img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20middle%20aged%20man%20with%20beard%2C%20casual%20attire%2C%20friendly%20expression%2C%20outdoor%20setting%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower2&orientation=squarish",
+				isInfluencer: false,
+			},
+			following: ["Urban Lounge"],
+			since: "Apr 2, 2025",
+			status: "Active",
+			engagement: "Medium",
+		},
+		{
+			user: {
+				name: "Olivia Martinez",
+				img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20latina%20woman%20in%20her%2020s%2C%20stylish%20appearance%2C%20confident%20pose%2C%20city%20background%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower3&orientation=squarish",
+				isInfluencer: true,
+			},
+			following: ["Sunset Restaurant", "Harmony Spa"],
+			since: "Jan 8, 2025",
+			status: "Active",
+			engagement: "High",
+		},
+		{
+			user: {
+				name: "Daniel Lee",
+				img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20young%20asian%20man%2C%20casual%20modern%20style%2C%20smiling%2C%20urban%20setting%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower4&orientation=squarish",
+				isInfluencer: false,
+			},
+			following: ["Event Center"],
+			since: "May 12, 2025",
+			status: "Inactive",
+
+			engagement: "Low",
+		},
+		{
+			user: {
+				name: "Rachel Green",
+				img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20woman%20with%20blonde%20hair%2C%20professional%20appearance%2C%20friendly%20smile%2C%20office%20background%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower5&orientation=squarish",
+				isInfluencer: false,
+			},
+			following: ["Harmony Spa"],
+			since: "Feb 20, 2025",
+			status: "Active",
+			engagement: "Medium",
+		},
+	];
+
 	return (
 		<div className="grid grid-cols-1 xl:grid-cols-3 space-y-6 space-x-0 xl:space-y-0 xl:space-x-6">
-			<Card className="col-span-2 border-none shadow-sm">
+			<Card className="col-span-2 border-none m-0 shadow-none md:shadow-md">
 				<CardHeader>
 					<div className="flex items-center justify-between">
 						<div>
@@ -92,7 +165,7 @@ function FollowersComponent() {
 						</div>
 					</div>
 				</CardHeader>
-				<CardContent>
+				<CardContent className="hidden md:block">
 					<Table>
 						<TableHeader>
 							<TableRow>
@@ -105,68 +178,7 @@ function FollowersComponent() {
 							</TableRow>
 						</TableHeader>
 						<TableBody>
-							{[
-								{
-									user: {
-										name: "Jessica Parker",
-										img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20young%20woman%20with%20curly%20hair%2C%20casual%20style%2C%20friendly%20smile%2C%20urban%20background%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower1&orientation=squarish",
-										isInfluencer: true,
-									},
-									following: ["Coastal Retreat", "Urban Lounge"],
-									since: "Mar 15, 2025",
-									status: "Active",
-									statusColor: "bg-green-100 text-green-800",
-									engagement: "High",
-								},
-								{
-									user: {
-										name: "Thomas Wright",
-										img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20middle%20aged%20man%20with%20beard%2C%20casual%20attire%2C%20friendly%20expression%2C%20outdoor%20setting%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower2&orientation=squarish",
-										isInfluencer: false,
-									},
-									following: ["Urban Lounge"],
-									since: "Apr 2, 2025",
-									status: "Active",
-									statusColor: "bg-green-100 text-green-800",
-									engagement: "Medium",
-								},
-								{
-									user: {
-										name: "Olivia Martinez",
-										img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20latina%20woman%20in%20her%2020s%2C%20stylish%20appearance%2C%20confident%20pose%2C%20city%20background%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower3&orientation=squarish",
-										isInfluencer: true,
-									},
-									following: ["Sunset Restaurant", "Harmony Spa"],
-									since: "Jan 8, 2025",
-									status: "Active",
-									statusColor: "bg-green-100 text-green-800",
-									engagement: "High",
-								},
-								{
-									user: {
-										name: "Daniel Lee",
-										img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20young%20asian%20man%2C%20casual%20modern%20style%2C%20smiling%2C%20urban%20setting%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower4&orientation=squarish",
-										isInfluencer: false,
-									},
-									following: ["Event Center"],
-									since: "May 12, 2025",
-									status: "Inactive",
-									statusColor: "bg-gray-100 text-gray-800",
-									engagement: "Low",
-								},
-								{
-									user: {
-										name: "Rachel Green",
-										img: "https://readdy.ai/api/search-image?query=portrait%20of%20a%20woman%20with%20blonde%20hair%2C%20professional%20appearance%2C%20friendly%20smile%2C%20office%20background%2C%20photorealistic%2C%20high%20quality&width=40&height=40&seq=follower5&orientation=squarish",
-										isInfluencer: false,
-									},
-									following: ["Harmony Spa"],
-									since: "Feb 20, 2025",
-									status: "Active",
-									statusColor: "bg-green-100 text-green-800",
-									engagement: "Medium",
-								},
-							].map((follower, index) => (
+							{followers.map((follower, index) => (
 								<TableRow key={index}>
 									<TableCell>
 										<div className="flex items-center">
@@ -209,7 +221,7 @@ function FollowersComponent() {
 									<TableCell>
 										<Badge
 											variant="outline"
-											className={`${follower.statusColor} border-0`}
+											className={`${statusColor(follower.status)} border-0`}
 										>
 											{follower.status}
 										</Badge>
@@ -232,14 +244,14 @@ function FollowersComponent() {
 									</TableCell>
 									<TableCell className="text-right">
 										<div className="flex justify-end space-x-2">
-											<Button
+											{/* <Button
 												type="default"
 												className="cursor-pointer whitespace-nowrap !rounded-button"
 											>
 												<Tooltip title="Message">
 													<FaEnvelope className="text-gray-600" />
 												</Tooltip>
-											</Button>
+											</Button> */}
 											{/* <Button
 												type="default"
 												className="cursor-pointer whitespace-nowrap !rounded-button"
@@ -290,18 +302,25 @@ function FollowersComponent() {
 						</TableBody>
 					</Table>
 				</CardContent>
-				<CardFooter className="flex justify-center border-t pt-4">
-					<Button
-						type="default"
-						className="cursor-pointer whitespace-nowrap !rounded-button"
-					>
-						<span>View All Followers</span>
-						<FaArrowRight className="ml-2 text-xs" />
-					</Button>
-				</CardFooter>
+				<CardContent className="block md:hidden">
+					{followers.map((follower) => (
+						<FollowersDisplayCard data={follower} />
+					))}
+				</CardContent>
+				{followers.length > 10 && (
+					<CardFooter className="flex justify-center border-t pt-4">
+						<Button
+							type="default"
+							className="cursor-pointer whitespace-nowrap !rounded-button"
+						>
+							<span>View All Followers</span>
+							<FaArrowRight className="ml-2 text-xs" />
+						</Button>
+					</CardFooter>
+				)}
 			</Card>
-			<div className="flex flex-col md:flex-row xl:flex-col gap-y-6 md:gap-x-6 xl:gap-y-6">
-				<Card className="flex-1 border-none shadow-sm">
+			<div className="flex mt-6 ml-0 xl:ml-6 xl:mt-0 flex-col md:flex-row xl:flex-col gap-y-6 md:gap-x-6 xl:gap-y-6">
+				<Card className="flex-1 border-none m-0 shadow-none md:shadow-md">
 					<CardHeader>
 						<CardTitle>Follower Demographics</CardTitle>
 						<CardDescription>Audience insights</CardDescription>
@@ -379,7 +398,7 @@ function FollowersComponent() {
 						</div>
 					</CardContent>
 				</Card>
-				<Card className="flex-1 border-none shadow-sm">
+				<Card className="flex-1 border-none m-0 shadow-none md:shadow-md">
 					<CardHeader>
 						<CardTitle>Recent Campaigns</CardTitle>
 						<CardDescription>Follower engagement initiatives</CardDescription>

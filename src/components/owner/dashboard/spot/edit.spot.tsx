@@ -28,7 +28,7 @@ import type { UploadFile, UploadProps } from "antd";
 import { useOwnerContext } from "@/lib/context/owner";
 import {
 	amenities,
-	recommended,
+	spotTypes,
 	socialMediaIcons,
 	socialPlatforms,
 } from "@/lib/options";
@@ -454,7 +454,7 @@ function EditSpot() {
 										</p>
 									) : (
 										<p className="text-xs text-gray-500 mt-2">
-											Recommended: 1200 x 800px. JPG, PNG or WEBP (max 5MB)
+											spotTypes: 1200 x 800px. JPG, PNG or WEBP (max 5MB)
 										</p>
 									)}
 								</div>
@@ -735,7 +735,7 @@ function EditSpot() {
 									]}
 								>
 									<Select placeholder="Select spot type" className="w-full">
-										{recommended.map((type) => (
+										{spotTypes.map((type) => (
 											<Option key={type.value} value={type.value}>
 												{type.label}
 											</Option>

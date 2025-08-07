@@ -6,7 +6,6 @@ import {
 	Table,
 	Tag,
 	Dropdown,
-	Statistic,
 	List,
 	Space,
 	Typography,
@@ -39,6 +38,8 @@ import {
 	staffTasks,
 	upcomingBookings,
 } from "@/lib/mock";
+import { TopSmallContainerDisplay } from "./display.card";
+import type { tscd } from "@/lib/types";
 const { Title, Text } = Typography;
 
 const DashboardContent = () => {
@@ -70,30 +71,54 @@ const DashboardContent = () => {
 		}
 	};
 
+	const topContReviews: Array<tscd> = [
+		{
+			title: "Total Bookings",
+			value: 81,
+			icon: <CalendarFilled className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+			increaseOrDecreaseBy: "↑ 12%",
+			isIncreased: true,
+			description: "from last month",
+		},
+		{
+			title: "New Messages",
+			value: 14,
+			icon: <MessageFilled className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+			increaseOrDecreaseBy: "↑ 5",
+			isIncreased: true,
+			description: "unread messages",
+		},
+		{
+			title: "Revenue",
+			value: 12850,
+			icon: <DollarOutlined className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+			increaseOrDecreaseBy: "↑ 8%",
+			isIncreased: true,
+			description: "from last month",
+		},
+		{
+			title: "Total Followers",
+			value: 81,
+			icon: <HeartFilled className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+			increaseOrDecreaseBy: "↑ 15%",
+			isIncreased: true,
+			description: "from last month",
+		},
+	];
+
 	return (
-		<div className="p-2 md:p-6">
-			<div className="hidden md:flex justify-between items-center mb-6">
-				<Title level={4} className="m-0">
+		<div className="md:p-6">
+			<div className="flex px-5 md:px-0 justify-between items-center mb-6 mt-4">
+				<Title level={4} className="m-0 hidden md:block">
 					Dashboard Overview
 				</Title>
+				<h4 className="m-0 text-xl block md:hidden">Dashboard</h4>
 				<div className="flex items-center">
-					<Text className="mr-2 text-gray-500">Today is</Text>
-					<Tag color="blue" className="whitespace-nowrap !rounded-button">
-						{new Date().toLocaleDateString("en-US", {
-							weekday: "short",
-							year: "numeric",
-							month: "short",
-							day: "numeric",
-						})}
-					</Tag>
-				</div>
-			</div>
-			<div className="flex md:hidden justify-between items-center mb-6">
-				<Title level={4} className="m-0">
-					Dashboard
-				</Title>
-				<div className="flex items-center">
-					<Text className="mr-2 text-gray-500">Today is</Text>
+					<Text className="mr-2 text-gray-500 hidden md:block">Today is</Text>
 					<Tag color="blue" className="whitespace-nowrap !rounded-button">
 						{new Date().toLocaleDateString("en-US", {
 							weekday: "short",
@@ -106,59 +131,8 @@ const DashboardContent = () => {
 			</div>
 			<Row gutter={[24, 24]}>
 				{/* Stats Cards */}
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="Total Bookings"
-							value={81}
-							prefix={<CalendarFilled className="text-blue-600 mr-1" />}
-							valueStyle={{ color: "#2563EB" }}
-						/>
-						<div className="mt-2 text-xs text-gray-500">
-							<span className="text-green-500">↑ 12%</span> from last month
-						</div>
-					</Card>
-				</Col>
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="New Messages"
-							value={14}
-							prefix={<MessageFilled className="text-blue-600 mr-1" />}
-							valueStyle={{ color: "#2563EB" }}
-						/>
-						<div className="mt-2 text-xs text-gray-500">
-							<span className="text-red-500">↑ 5</span> unread messages
-						</div>
-					</Card>
-				</Col>
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="Revenue"
-							value={12850}
-							prefix={<DollarOutlined className="text-blue-600 mr-1" />}
-							valueStyle={{ color: "#2563EB" }}
-							precision={2}
-						/>
-						<div className="mt-2 text-xs text-gray-500">
-							<span className="text-green-500">↑ 8%</span> from last month
-						</div>
-					</Card>
-				</Col>
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="Total Followers"
-							value={4325}
-							prefix={<HeartFilled className="text-blue-600 mr-1" />}
-							valueStyle={{ color: "#2563EB" }}
-						/>
-						<div className="mt-2 text-xs text-gray-500">
-							<span className="text-green-500">↑ 15%</span> from last month
-						</div>
-					</Card>
-				</Col>
+				<TopSmallContainerDisplay data={topContReviews} />
+
 				{/* Upcoming Bookings */}
 				<Col xs={24} lg={12}>
 					<Card
@@ -176,7 +150,7 @@ const DashboardContent = () => {
 								View All
 							</Button>
 						}
-						className="h-full shadow-sm"
+						className="h-full border-0 m-0 shadow-none md:shadow-md"
 					>
 						<List
 							dataSource={upcomingBookings}
@@ -233,7 +207,7 @@ const DashboardContent = () => {
 								View All
 							</Button>
 						}
-						className="h-full shadow-sm"
+						className="h-full border-none m-0 shadow-none md:shadow-md"
 					>
 						<List
 							dataSource={messages}
@@ -298,7 +272,7 @@ const DashboardContent = () => {
 								</Button>
 							</Space>
 						}
-						className="h-full shadow-sm"
+						className="h-full border-none m-0 shadow-none md:shadow-md"
 					>
 						<div id="revenue-chart" style={{ height: 300 }}></div>
 					</Card>
@@ -312,7 +286,7 @@ const DashboardContent = () => {
 								Spot
 							</div>
 						}
-						className="h-full shadow-sm"
+						className="h-full border-0 m-0 shadow-none md:shadow-md"
 					>
 						<div id="followers-chart" style={{ height: 300 }}></div>
 					</Card>
@@ -334,7 +308,7 @@ const DashboardContent = () => {
 								View All
 							</Button>
 						}
-						className="shadow-sm h-full"
+						className="border-none m-0 shadow-none md:shadow-md h-full"
 					>
 						<List
 							dataSource={followerActivity}
@@ -363,7 +337,7 @@ const DashboardContent = () => {
 				{/* Staff Tasks */}
 				<Col xs={24} lg={12}>
 					<Card
-						className="hidden md:block shadow-sm h-full"
+						className="hidden md:block border-none m-0 shadow-none md:shadow-md h-full"
 						title={
 							<div className="flex items-center">
 								<TeamOutlined className="mr-2 text-blue-600" /> Staff Tasks

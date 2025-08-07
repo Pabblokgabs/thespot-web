@@ -10,7 +10,7 @@ import {
 	FaMapMarkerAlt,
 } from "react-icons/fa";
 import { FaClock, FaUsers } from "react-icons/fa6";
-import { recommended } from "@/lib/options";
+import { spotTypes } from "@/lib/options";
 import { trendingEvents } from "@/lib/mock";
 import { Link } from "react-router-dom";
 
@@ -129,12 +129,12 @@ function Events() {
 											<div className="flex items-center mb-3">
 												<Badge className="bg-purple-400 text-gray-700 border-gray-200 !rounded-button whitespace-nowrap">
 													{
-														recommended.find((c) =>
+														spotTypes.find((c) =>
 															c.value.includes(event.category)
 														)?.icon
 													}
 													{
-														recommended.find((c) =>
+														spotTypes.find((c) =>
 															c.value.includes(event.category)
 														)?.label
 													}
@@ -198,12 +198,12 @@ function Events() {
 											<div className="flex items-center mb-3">
 												<Badge className="bg-purple-400 text-gray-700 border-gray-200 !rounded-button whitespace-nowrap">
 													{
-														recommended.find((c) =>
+														spotTypes.find((c) =>
 															c.value.includes(event.category)
 														)?.icon
 													}
 													{
-														recommended.find((c) =>
+														spotTypes.find((c) =>
 															c.value.includes(event.category)
 														)?.label
 													}
@@ -267,12 +267,12 @@ function Events() {
 											<div className="flex items-center mb-3">
 												<Badge className="bg-purple-400 text-gray-700 border-gray-200 !rounded-button whitespace-nowrap">
 													{
-														recommended.find((c) =>
+														spotTypes.find((c) =>
 															c.value.includes(event.category)
 														)?.icon
 													}
 													{
-														recommended.find((c) =>
+														spotTypes.find((c) =>
 															c.value.includes(event.category)
 														)?.label
 													}

@@ -98,3 +98,28 @@ export type staffMembers = {
 	status: string;
 	lastActive: string;
 };
+
+export type follower = {
+	user: {
+		name: string;
+		img: string;
+		isInfluencer: boolean;
+	};
+	following: Array<string>;
+	since: string;
+	status: string;
+	engagement: string;
+};
+
+
+export type tscd = {
+	title?: string;
+	value?: number;
+	suffix?: string;
+	icon: ReactNode;
+	valueColor?: string | "#2563EB";
+	increaseOrDecreaseBy?: string;
+	description?: string;
+	precision?: number;
+	isIncreased?: boolean;
+};

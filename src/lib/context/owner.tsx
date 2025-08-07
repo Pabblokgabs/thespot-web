@@ -95,7 +95,7 @@ type OwnerContextType = {
 const OwnerContext = createContext<OwnerContextType | null>(null);
 
 const OwnerProvider: FC<{ children: ReactNode }> = ({ children }) => {
-	const [activeTab, setActiveTab] = useState("staff");
+	const [activeTab, setActiveTab] = useState("spots");
 	const [showStaffModal, setShowStaffModal] = useState(false);
 	const [isMobileMessage, setIsMobileMessage] = useState(false);
 	const [showEditSpotModal, setShowEditSpotModal] = useState(false);

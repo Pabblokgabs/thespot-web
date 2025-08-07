@@ -6,7 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import img from "../../../assets/spots/cafe.jpg";
 import noData from "@/assets/noproduct.svg";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { recommended } from "@/lib/options";
+import { spotTypes } from "@/lib/options";
 import { FaMapMarkedAlt, FaStar, FaThLarge } from "react-icons/fa";
 import { MdAllInclusive } from "react-icons/md";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -199,7 +199,7 @@ function Spots() {
 								<MdAllInclusive size={24} className="text-orange-600" />
 								All
 							</Button>
-							{recommended.map((category) => (
+							{spotTypes.map((category) => (
 								<Button
 									key={category.label}
 									onClick={() => setActiveCategory(category.value)}

@@ -921,6 +921,8 @@ const Dashboard: React.FC = () => {
 						onCancel={() => setFollowersModalVisible(false)}
 						footer={null}
 						width={700}
+						height={"100%"}
+						style={{ top: window.innerWidth <= 764 ? 0 : '' }}
 					>
 						<ViewFollowers />
 					</Modal>

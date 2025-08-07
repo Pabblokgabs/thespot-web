@@ -1,5 +1,5 @@
 import { useOverAllContext } from "@/lib/context/useContext";
-import { recommended } from "@/lib/options";
+import { spotTypes } from "@/lib/options";
 import { EnvironmentOutlined } from "@ant-design/icons";
 import { Button, Modal, Input, Select, Switch } from "antd";
 import { useEffect, useState } from "react";
@@ -141,7 +141,7 @@ function SearchModal() {
 							size="large"
 							placeholder="Select the type?"
 						>
-							{recommended.map((item, index) => (
+							{spotTypes.map((item, index) => (
 								<Select.Option key={index + item.value} value={item.value}>
 									{item.label}
 								</Select.Option>

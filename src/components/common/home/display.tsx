@@ -3,7 +3,7 @@ import logo from "../../../assets/just.png";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import PopularSpots from "./popular.spots";
 import PopularEvents from "./events";
-import { recommended } from "@/lib/options";
+import { spotTypes } from "@/lib/options";
 import {
 	Tooltip,
 	TooltipContent,
@@ -19,7 +19,7 @@ const Display = () => {
 					Popular Categories
 				</h2>
 				<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-6 md:min-w-[200px] lg:min-w-[500px] flex-1 py-2.5 gap-4 ">
-					{recommended.map((item) => (
+					{spotTypes.map((item) => (
 						<div
 							key={item.value}
 							className="cursor-pointer rounded-md hover:shadow-[0_0_10px_rgba(0,0,0,0.2)] bg-gray-200"

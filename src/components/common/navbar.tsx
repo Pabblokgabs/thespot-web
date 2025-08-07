@@ -18,7 +18,7 @@ import { EnvironmentOutlined, UserOutlined } from "@ant-design/icons";
 import { useOverAllContext } from "@/lib/context/useContext";
 import SearchModal from "./search.modal";
 import Btn from "./btn";
-import { recommended } from "@/lib/options";
+import { spotTypes } from "@/lib/options";
 
 interface nav {
 	isSticky?: boolean;
@@ -259,7 +259,7 @@ const NavBar: React.FC<nav> = ({ isSticky = true, isSearchBar = true }) => {
 										placeholder="Select the type?"
 										className="w-full"
 									>
-										{recommended.map((item, index) => (
+										{spotTypes.map((item, index) => (
 											<Select.Option
 												key={index + item.value}
 												value={item.value}

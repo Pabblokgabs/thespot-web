@@ -481,6 +481,38 @@ const mySpots = [
 				location: "Los Angeles, CA",
 				followedSince: "April 2025",
 			},
+			{
+				id: 3,
+				name: "Sophia Chen",
+				avatar:
+					"https://readdy.ai/api/search-image?query=professional%20headshot%20of%20an%20asian%20woman%20with%20medium%20length%20black%20hair%2C%20casual%20attire%2C%20neutral%20background%2C%20high%20quality%20portrait%2C%20professional%20lighting%2C%20soft%20focus%2C%20natural%20looking%20headshot&width=40&height=40&seq=24&orientation=squarish",
+				location: "Los Angeles, CA",
+				followedSince: "April 2025",
+			},
+			{
+				id: 3,
+				name: "Sophia Chen",
+				avatar:
+					"https://readdy.ai/api/search-image?query=professional%20headshot%20of%20an%20asian%20woman%20with%20medium%20length%20black%20hair%2C%20casual%20attire%2C%20neutral%20background%2C%20high%20quality%20portrait%2C%20professional%20lighting%2C%20soft%20focus%2C%20natural%20looking%20headshot&width=40&height=40&seq=24&orientation=squarish",
+				location: "Los Angeles, CA",
+				followedSince: "April 2025",
+			},
+			{
+				id: 3,
+				name: "Sophia Chen",
+				avatar:
+					"https://readdy.ai/api/search-image?query=professional%20headshot%20of%20an%20asian%20woman%20with%20medium%20length%20black%20hair%2C%20casual%20attire%2C%20neutral%20background%2C%20high%20quality%20portrait%2C%20professional%20lighting%2C%20soft%20focus%2C%20natural%20looking%20headshot&width=40&height=40&seq=24&orientation=squarish",
+				location: "Los Angeles, CA",
+				followedSince: "April 2025",
+			},
+			{
+				id: 3,
+				name: "Sophia Chen",
+				avatar:
+					"https://readdy.ai/api/search-image?query=professional%20headshot%20of%20an%20asian%20woman%20with%20medium%20length%20black%20hair%2C%20casual%20attire%2C%20neutral%20background%2C%20high%20quality%20portrait%2C%20professional%20lighting%2C%20soft%20focus%2C%20natural%20looking%20headshot&width=40&height=40&seq=24&orientation=squarish",
+				location: "Los Angeles, CA",
+				followedSince: "April 2025",
+			},
 		],
 	},
 	{

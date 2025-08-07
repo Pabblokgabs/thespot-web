@@ -19,7 +19,7 @@ import {
 	InfoCircleOutlined,
 } from "@ant-design/icons";
 import { FaCheck } from "react-icons/fa";
-import { gender, recommended } from "@/lib/options";
+import { gender, spotTypes } from "@/lib/options";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { AuthNav, Btn } from "@/components";
@@ -510,7 +510,7 @@ const PersonalInfo: React.FC = () => {
 						Please select at least 3 preferences.
 					</p>
 					<div className="flex flex-wrap space-x-4 space-y-2">
-						{recommended.map((item) => (
+						{spotTypes.map((item) => (
 							<div
 								key={item.value}
 								className={`flex items-center justify-between gap-4 py-2 px-4 rounded-md cursor-pointer mb-2 ${

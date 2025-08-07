@@ -128,7 +128,7 @@ export const tagColors = (item: string) => {
 	}
 };
 
-export const recommended: RecommendationItem[] = [
+export const spotTypes: RecommendationItem[] = [
 	{
 		label: "Food & Drinks",
 		value: "food_drinks",
@@ -185,8 +185,18 @@ export const recommended: RecommendationItem[] = [
 		icon: <IoFootball />,
 	},
 	{
+		label: "Event Space",
+		value: "event_space",
+		icon: <IoFootball />,
+	},
+	{
 		label: "Fashion",
 		value: "fashion",
+		icon: <IoShirt />,
+	},
+	{
+		label: "Boutique",
+		value: "boutique",
 		icon: <IoShirt />,
 	},
 	{
@@ -205,6 +215,16 @@ export const recommended: RecommendationItem[] = [
 		icon: <MdSpa />,
 	},
 	{
+		label: "Shopping Mall",
+		value: "shopping_mall",
+		icon: <MdSpa />,
+	},
+	{
+		label: "Beach",
+		value: "beach",
+		icon: <MdSpa />,
+	},
+	{
 		label: "Studio",
 		value: "studio",
 		icon: <FaStudiovinari />,
@@ -220,6 +240,11 @@ export const recommended: RecommendationItem[] = [
 		icon: <MdSportsEsports />,
 	},
 	{
+		label: "Cinema",
+		value: "cinema",
+		icon: <MdSportsEsports />,
+	},
+	{
 		label: "Park",
 		value: "park",
 		icon: <MdSportsEsports />,
@@ -227,6 +252,16 @@ export const recommended: RecommendationItem[] = [
 	{
 		label: "Cafe",
 		value: "cafe",
+		icon: <MdSportsEsports />,
+	},
+	{
+		label: "Pub",
+		value: "pub",
+		icon: <MdSportsEsports />,
+	},
+	{
+		label: "Salon",
+		value: "salon",
 		icon: <MdSportsEsports />,
 	},
 	{

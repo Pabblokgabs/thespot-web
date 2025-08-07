@@ -40,7 +40,7 @@ import {
 	NoSpotResultsFoundCard,
 	NoSpotResultsMobile,
 } from "@/components";
-import { recommended } from "@/lib/options";
+import { spotTypes } from "@/lib/options";
 import { useOverAllContext } from "@/lib/context/useContext";
 const { TabPane } = Tabs;
 const { Option } = Select;
@@ -521,7 +521,7 @@ const SearchResults: React.FC = () => {
 									placeholder="Select the type?"
 									className="w-full"
 								>
-									{recommended.map((item, index) => (
+									{spotTypes.map((item, index) => (
 										<Select.Option key={index + item.value} value={item.value}>
 											{item.label}
 										</Select.Option>

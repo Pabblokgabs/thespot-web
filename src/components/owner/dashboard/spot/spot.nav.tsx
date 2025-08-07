@@ -1,26 +1,59 @@
 import { PlusOutlined, SearchOutlined, StarFilled } from "@ant-design/icons";
-import {
-	Button,
-	Card,
-	Col,
-	Dropdown,
-	Input,
-	Row,
-	Statistic,
-	Typography,
-} from "antd";
-import { FaFilter, FaSort } from "react-icons/fa";
+import { Button, Card, Col, Dropdown, Input, Row, Typography } from "antd";
+import { FaFilter, FaSort, FaUsers } from "react-icons/fa";
 import { FaCalendarCheck } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { TopSmallContainerDisplay } from "../display.card";
+import type { tscd } from "@/lib/types";
 const { Title } = Typography;
 
 function SpotNav() {
+	const topContReviews: Array<tscd> = [
+		{
+			title: "Total Spots",
+			value: 4,
+			icon: <FaCalendarCheck className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+		},
+		{
+			title: "Followers",
+			value: 0,
+			icon: <FaUsers className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+			increaseOrDecreaseBy: "↑ 25%",
+			isIncreased: true,
+			description: "unread messages",
+		},
+		{
+			title: "Avarage Ratings",
+			value: 4.5,
+			icon: <StarFilled className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+			precision: 1,
+			suffix: "%",
+			increaseOrDecreaseBy: "↑ 18%",
+			isIncreased: true,
+			description: "from last month",
+		},
+		{
+			title: "Avg. Capacity Filled",
+			value: 82,
+			icon: <FaUsers className="text-blue-600 mr-1" />,
+			valueColor: "#2563EB",
+			increaseOrDecreaseBy: "↑ 5%",
+			suffix: "%",
+			isIncreased: true,
+			description: "from last month",
+		},
+	];
+
 	return (
 		<div className="w-full">
-			<div className="flex justify-between items-center mb-6">
-				<Title level={4} className="m-0">
+			<div className="flex px-5 md:px-0 justify-between items-center mb-6 mt-4">
+				<Title level={4} className="m-0 hidden md:block">
 					Spot Management
 				</Title>
+				<h4 className="m-0 text-xl block md:hidden">Spot Management</h4>
 				<Link to={"/list-spot"}>
 					<Button
 						type="primary"
@@ -33,64 +66,10 @@ function SpotNav() {
 			</div>
 			<Row className="p-0" gutter={[24, 24]}>
 				{/* Stats Cards */}
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="Total Spots"
-							value={4}
-							prefix={
-								<FaCalendarCheck className="fas fa-calendar-star text-blue-600 mr-1" />
-							}
-							valueStyle={{ color: "#2563EB" }}
-						/>
-					</Card>
-				</Col>
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="Followers"
-							value={0}
-							prefix={<i className="fas fa-users text-blue-600 mr-1"></i>}
-							valueStyle={{ color: "#2563EB" }}
-						/>
-						<div className="mt-2 text-xs text-gray-500">
-							<span className="text-green-500">↑ 25%</span> from last month
-						</div>
-					</Card>
-				</Col>
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="Avarage Ratings"
-							value={28750}
-							prefix={
-								<StarFilled className="fas fa-star-alt text-blue-600 mr-1" />
-							}
-							valueStyle={{ color: "#2563EB" }}
-							precision={2}
-						/>
-						<div className="mt-2 text-xs text-gray-500">
-							<span className="text-green-500">↑ 18%</span> from last month
-						</div>
-					</Card>
-				</Col>
-				<Col xs={24} sm={12} md={6}>
-					<Card className="h-full shadow-sm">
-						<Statistic
-							title="Avg. Capacity Filled"
-							value={82}
-							suffix="%"
-							prefix={<i className="fas fa-users text-blue-600 mr-1"></i>}
-							valueStyle={{ color: "#2563EB" }}
-						/>
-						<div className="mt-2 text-xs text-gray-500">
-							<span className="text-green-500">↑ 5%</span> from last month
-						</div>
-					</Card>
-				</Col>
+				<TopSmallContainerDisplay data={topContReviews} />
 				{/* Event Filters */}
 				<Col xs={24}>
-					<Card className="shadow-sm mb-6">
+					<Card className="border-none shadow-none md:border md:shadow-sm mb-6">
 						<div className="flex flex-wrap gap-4 items-center">
 							<Input
 								placeholder="Search events"

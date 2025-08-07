@@ -54,7 +54,7 @@ function SpotsContent() {
 
 	const ShowSpotContent = () => {
 		return (
-			<div className="space-y-6 p-2 md:p-6">
+			<div className="space-y-6 md:p-6">
 				<SpotNav />
 				<Tabs defaultValue="grid" className="w-full hidden md:block">
 					<div className="flex justify-between items-center">
@@ -75,12 +75,12 @@ function SpotsContent() {
 							</TabsTrigger>
 						</TabsList>
 					</div>
-					<TabsContent value="grid" className="mt-6 p-2 md:p-6">
+					<TabsContent value="grid" className="mt-6 p-2 px-5 md:p-6">
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 							{mySpots.map((spot, index) => (
 								<Card
 									key={index}
-									className="overflow-hidden border-none shadow-sm p-0 pb-6"
+									className="overflow-hidden border shadow-sm p-0 pb-6"
 								>
 									<div className="relative h-48 overflow-hidden">
 										<img
@@ -320,11 +320,11 @@ function SpotsContent() {
 						</Card>
 					</TabsContent>
 				</Tabs>
-				<div className="grid md:hidden grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				<div className="grid md:hidden grid-cols-1 px-5 md:grid-cols-2 lg:grid-cols-3 gap-6">
 					{mySpots.map((spot, index) => (
 						<Card
 							key={index}
-							className="overflow-hidden border-none shadow-sm p-0 pb-6"
+							className="overflow-hidden border shadow-sm p-0 pb-6"
 						>
 							<div className="relative h-48 overflow-hidden">
 								<img
@@ -404,9 +404,9 @@ function SpotsContent() {
 										</div>
 										<div className="font-semibold flex items-center">
 											{spot.followers}
-											<span className="text-green-600 text-xs ml-1">
+											{/* <span className="text-green-600 text-xs ml-1">
 												{spot.followerGrowth}
-											</span>
+											</span> */}
 										</div>
 									</div>
 								</div>
