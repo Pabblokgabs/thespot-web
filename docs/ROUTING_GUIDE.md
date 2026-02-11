@@ -58,12 +58,12 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/spot-details/:id" element={<SpotDetails />} />
         <Route path="/event-details/:id" element={<EventDetails />} />
-        
+
         {/* User pages */}
         <Route path="/user/signup" element={<Email />} />
         <Route path="/user/signup/personal-information" element={<PersonalInfo />} />
         <Route path="/user/profile" element={<Profile />} />
-        
+
         {/* Owner pages */}
         <Route path="/owner/signup" element={<OwnerEmail />} />
         <Route path="/owner/signup/personal-information" element={<OwnerPersonalInfo />} />
@@ -80,8 +80,8 @@ function App() {
 **File**: `lib/scrollToTop.tsx`
 
 ```tsx
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function ScrollToTop() {
   const { pathname } = useLocation();
@@ -103,6 +103,7 @@ export default function ScrollToTop() {
 Accessible to all users without authentication.
 
 **Routes**:
+
 - `/` - Home page
 - `/signin` - Login page
 - `/search` - Search interface
@@ -113,12 +114,13 @@ Accessible to all users without authentication.
 - Legal pages (privacy, terms, cookie)
 
 **Component Example**:
+
 ```tsx
 // pages/common/home.tsx
-import { FC } from 'react';
-import { Navbar } from '@/components/common/navbar';
-import { Footer } from '@/components/common/footer';
-import { TrendingNow } from '@/components/home/trending.now';
+import { FC } from "react";
+import { Navbar } from "@/components/common/navbar";
+import { Footer } from "@/components/common/footer";
+import { TrendingNow } from "@/components/home/trending.now";
 
 export const Home: FC = () => {
   return (
@@ -139,6 +141,7 @@ export const Home: FC = () => {
 Routes specific to regular users.
 
 **Authentication Flow**:
+
 ```
 /user/signup
   ↓
@@ -152,16 +155,18 @@ Account created, redirect to /user/profile
 ```
 
 **Routes**:
+
 - `/user/signup` - Email signup
 - `/user/signup/personal-information` - Complete profile
 - `/user/profile` - User dashboard (should be protected)
 
 **Protected Route Pattern**:
+
 ```tsx
 // pages/user/profile.tsx
-import { FC } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useUserContext } from '@/lib/context/useContext';
+import { FC } from "react";
+import { Navigate } from "react-router-dom";
+import { useUserContext } from "@/lib/context/useContext";
 
 export const Profile: FC = () => {
   const { user, isAuthenticated } = useUserContext();
@@ -184,6 +189,7 @@ export const Profile: FC = () => {
 Routes specific to venue owners.
 
 **Authentication Flow**:
+
 ```
 /owner/signup
   ↓
@@ -197,18 +203,20 @@ Account created, redirect to /owner/dashboard
 ```
 
 **Routes**:
+
 - `/owner/signup` - Owner registration
 - `/owner/signup/personal-information` - Business info
 - `/owner/dashboard` - Owner dashboard (should be protected)
 - `/owner/spot-listing` - Manage venues (should be protected)
 
 **Protected Owner Route**:
+
 ```tsx
 // pages/owner/index.tsx
-import { FC } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useOwnerContext } from '@/lib/context/useContext';
-import { OwnerNavbar } from '@/components/common/navbar';
+import { FC } from "react";
+import { Navigate } from "react-router-dom";
+import { useOwnerContext } from "@/lib/context/useContext";
+import { OwnerNavbar } from "@/components/common/navbar";
 
 export const OwnerPage: FC = () => {
   const { owner, isAuthenticated } = useOwnerContext();
@@ -231,15 +239,17 @@ export const OwnerPage: FC = () => {
 ### Routes with Parameters
 
 **Spot/Event Details Routes**:
+
 ```tsx
 <Route path="/spot-details/:id" element={<SpotDetails />} />
 <Route path="/event-details/:id" element={<EventDetails />} />
 ```
 
 **Component Implementation**:
+
 ```tsx
-import { useParams } from 'react-router-dom';
-import { useSpotDetails } from '@/tanstack-hooks/user.auth.tan-h';
+import { useParams } from "react-router-dom";
+import { useSpotDetails } from "@/tanstack-hooks/user.auth.tan-h";
 
 export const SpotDetails: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -262,38 +272,34 @@ export const SpotDetails: FC = () => {
 ### Programmatic Navigation
 
 **Using useNavigate Hook**:
+
 ```tsx
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export function LoginForm() {
   const navigate = useNavigate();
 
   const handleLogin = async (credentials) => {
     await login(credentials);
-    navigate('/user/profile');
+    navigate("/user/profile");
   };
 
-  return (
-    <form onSubmit={handleLogin}>
-      {/* Form fields */}
-    </form>
-  );
+  return <form onSubmit={handleLogin}>{/* Form fields */}</form>;
 }
 ```
 
 ### Link Navigation
 
 **Using Link Component**:
+
 ```tsx
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export function SpotCard({ spot }) {
   return (
     <div>
       <h3>{spot.name}</h3>
-      <Link to={`/spot-details/${spot.id}`}>
-        View Details
-      </Link>
+      <Link to={`/spot-details/${spot.id}`}>View Details</Link>
     </div>
   );
 }
@@ -302,8 +308,9 @@ export function SpotCard({ spot }) {
 ### Redirect Pattern
 
 **Using Navigate Component**:
+
 ```tsx
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
 export function ProtectedRoute({ children, isAuthenticated }) {
   if (!isAuthenticated) {
@@ -313,14 +320,14 @@ export function ProtectedRoute({ children, isAuthenticated }) {
 }
 
 // Usage in routes
-<Route 
-  path="/user/profile" 
+<Route
+  path="/user/profile"
   element={
     <ProtectedRoute isAuthenticated={isAuthenticated}>
       <Profile />
     </ProtectedRoute>
-  } 
-/>
+  }
+/>;
 ```
 
 ## Advanced Routing Patterns
@@ -330,18 +337,18 @@ export function ProtectedRoute({ children, isAuthenticated }) {
 **Pattern**: Check user role and render appropriate route
 
 ```tsx
-import { FC } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useUserContext } from '@/lib/context/useContext';
-import { useOwnerContext } from '@/lib/context/useContext';
+import { FC } from "react";
+import { Navigate } from "react-router-dom";
+import { useUserContext } from "@/lib/context/useContext";
+import { useOwnerContext } from "@/lib/context/useContext";
 
 export function Dashboard() {
   const { user } = useUserContext();
   const { owner } = useOwnerContext();
 
-  if (user?.role === 'admin') {
+  if (user?.role === "admin") {
     return <Navigate to="/user/profile" />;
-  } else if (owner?.role === 'owner') {
+  } else if (owner?.role === "owner") {
     return <Navigate to="/owner/dashboard" />;
   }
 
@@ -352,9 +359,9 @@ export function Dashboard() {
 ### 2. Conditional Navigation on State Change
 
 ```tsx
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useUserContext } from '@/lib/context/useContext';
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "@/lib/context/useContext";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -362,15 +369,11 @@ export function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/user/profile');
+      navigate("/user/profile");
     }
   }, [isAuthenticated, navigate]);
 
-  return (
-    <form>
-      {/* Login form */}
-    </form>
-  );
+  return <form>{/* Login form */}</form>;
 }
 ```
 
@@ -384,11 +387,11 @@ export function LoginPage() {
     <Route path="spots" element={<SpotListing />} />
     <Route path="analytics" element={<Analytics />} />
   </Route>
-</Routes>
+</Routes>;
 
 // pages/owner/layout.tsx
-import { Outlet } from 'react-router-dom';
-import { OwnerSidebar } from '@/components/owner/sidebar';
+import { Outlet } from "react-router-dom";
+import { OwnerSidebar } from "@/components/owner/sidebar";
 
 export function OwnerLayout() {
   return (
@@ -440,23 +443,23 @@ interface RouteConfig {
 
 export const routes: RouteConfig[] = [
   {
-    path: '/',
+    path: "/",
     element: <Home />,
-    title: 'Home',
+    title: "Home",
   },
   {
-    path: '/user/profile',
+    path: "/user/profile",
     element: <Profile />,
-    title: 'User Profile',
+    title: "User Profile",
     requiresAuth: true,
-    roles: ['user'],
+    roles: ["user"],
   },
   {
-    path: '/owner/dashboard',
+    path: "/owner/dashboard",
     element: <Dashboard />,
-    title: 'Owner Dashboard',
+    title: "Owner Dashboard",
     requiresAuth: true,
-    roles: ['owner'],
+    roles: ["owner"],
   },
 ];
 ```
@@ -466,25 +469,28 @@ export const routes: RouteConfig[] = [
 ### Reading Query Parameters
 
 ```tsx
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 
 export function SearchPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  
-  const category = searchParams.get('category');
-  const city = searchParams.get('city');
-  const page = parseInt(searchParams.get('page') || '1');
+
+  const category = searchParams.get("category");
+  const city = searchParams.get("city");
+  const page = parseInt(searchParams.get("page") || "1");
 
   const handleFilterChange = (newCategory: string) => {
-    setSearchParams({ 
-      category: newCategory, 
-      page: '1' 
+    setSearchParams({
+      category: newCategory,
+      page: "1",
     });
   };
 
   return (
     <div>
-      <select value={category || ''} onChange={(e) => handleFilterChange(e.target.value)}>
+      <select
+        value={category || ""}
+        onChange={(e) => handleFilterChange(e.target.value)}
+      >
         <option value="">All Categories</option>
         <option value="restaurant">Restaurants</option>
         <option value="bar">Bars</option>
@@ -499,39 +505,42 @@ export function SearchPage() {
 ## Best Practices
 
 ### 1. **Consistent Route Patterns**
+
 - Use hierarchical paths: `/user/*`, `/owner/*`
 - Use kebab-case for multi-word routes
 - Use IDs in routes for resources: `/spot-details/:id`
 
 ### 2. **Protected Routes**
+
 ```tsx
 // Create a reusable component
 function ProtectedRoute({ children, isProtected = true }) {
   const { isAuthenticated } = useUserContext();
-  
-  return isProtected && !isAuthenticated 
-    ? <Navigate to="/signin" /> 
-    : children;
+
+  return isProtected && !isAuthenticated ? <Navigate to="/signin" /> : children;
 }
 ```
 
 ### 3. **Lazy Load Routes** (Future)
-```tsx
-import { lazy, Suspense } from 'react';
-import { LoadingSpinner } from '@/components/loading.spinner';
 
-const Dashboard = lazy(() => import('@/pages/owner/dashboard').then(m => ({ default: m.Dashboard })));
+```tsx
+import { lazy, Suspense } from "react";
+import { LoadingSpinner } from "@/components/loading.spinner";
+
+const Dashboard = lazy(() =>
+  import("@/pages/owner/dashboard").then((m) => ({ default: m.Dashboard })),
+);
 
 export function App() {
   return (
     <Routes>
-      <Route 
-        path="/owner/dashboard" 
+      <Route
+        path="/owner/dashboard"
         element={
           <Suspense fallback={<LoadingSpinner />}>
             <Dashboard />
           </Suspense>
-        } 
+        }
       />
     </Routes>
   );
@@ -539,40 +548,39 @@ export function App() {
 ```
 
 ### 4. **Handle 404 Routes**
+
 ```tsx
 <Routes>
   {/* All defined routes */}
   <Route path="*" element={<NotFoundPage />} />
-</Routes>
+</Routes>;
 
 // pages/common/not-found.tsx
 export function NotFoundPage() {
   const navigate = useNavigate();
-  
+
   return (
     <div className="text-center p-8">
       <h1 className="text-4xl font-bold">404</h1>
       <p>Page not found</p>
-      <button onClick={() => navigate('/')}>Go Home</button>
+      <button onClick={() => navigate("/")}>Go Home</button>
     </div>
   );
 }
 ```
 
 ### 5. **Route Transition Effects**
+
 ```tsx
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 export function App() {
   const location = useLocation();
 
   return (
     <div className="transition-opacity duration-300">
-      <Routes location={location}>
-        {/* Routes */}
-      </Routes>
+      <Routes location={location}>{/* Routes */}</Routes>
     </div>
   );
 }
 ```
-

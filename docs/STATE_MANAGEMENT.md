@@ -47,12 +47,13 @@ TheSpot Web uses a hybrid state management approach combining React Context API 
 **Purpose**: Application-wide state management
 
 **Key State**:
+
 ```typescript
 interface OverAllContext {
   // Theme
-  theme: 'light' | 'dark';
-  setTheme: (theme: 'light' | 'dark') => void;
-  
+  theme: "light" | "dark";
+  setTheme: (theme: "light" | "dark") => void;
+
   // Global UI state
   isLoading?: boolean;
   // Add other global states as needed
@@ -60,14 +61,15 @@ interface OverAllContext {
 ```
 
 **Usage**:
+
 ```tsx
-import { useOverallContext } from '@/lib/context/useContext';
+import { useOverallContext } from "@/lib/context/useContext";
 
 export function Component() {
   const { theme, setTheme } = useOverallContext();
-  
+
   return (
-    <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+    <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
       Toggle Theme
     </button>
   );
@@ -75,12 +77,11 @@ export function Component() {
 ```
 
 **Provider Structure**:
+
 ```tsx
 // main.tsx
 <QueryClientProvider client={queryClient}>
-  <OverAllProvider>
-    {/* App content */}
-  </OverAllProvider>
+  <OverAllProvider>{/* App content */}</OverAllProvider>
 </QueryClientProvider>
 ```
 
@@ -91,12 +92,13 @@ export function Component() {
 **Purpose**: User authentication and profile state
 
 **Key State**:
+
 ```typescript
 interface UserContext {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  
+
   // Actions
   setUser: (user: User | null) => void;
   login: (credentials: LoginData) => Promise<void>;
@@ -114,16 +116,17 @@ interface User {
 ```
 
 **Usage**:
+
 ```tsx
-import { useUserContext } from '@/lib/context/useContext';
+import { useUserContext } from "@/lib/context/useContext";
 
 export function UserProfile() {
   const { user, isAuthenticated, logout } = useUserContext();
-  
+
   if (!isAuthenticated) {
     return <p>Not logged in</p>;
   }
-  
+
   return (
     <div>
       <h1>{user?.name}</h1>
@@ -135,6 +138,7 @@ export function UserProfile() {
 ```
 
 **Authentication Flow**:
+
 ```tsx
 // Login page
 const { login } = useUserContext();
@@ -162,16 +166,17 @@ if (!isAuthenticated) {
 **Purpose**: Venue owner authentication and dashboard state
 
 **Key State**:
+
 ```typescript
 interface OwnerContext {
   owner: Owner | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  
+
   // Venue data
   venues: Venue[];
   activeVenue: Venue | null;
-  
+
   // Actions
   setOwner: (owner: Owner | null) => void;
   login: (credentials: LoginData) => Promise<void>;
@@ -194,28 +199,31 @@ interface Venue {
   description: string;
   location: Location;
   images: string[];
-  status: 'active' | 'inactive' | 'pending';
+  status: "active" | "inactive" | "pending";
 }
 ```
 
 **Usage**:
+
 ```tsx
-import { useOwnerContext } from '@/lib/context/useContext';
+import { useOwnerContext } from "@/lib/context/useContext";
 
 export function OwnerDashboard() {
   const { owner, venues, activeVenue, setActiveVenue } = useOwnerContext();
-  
+
   return (
     <div>
       <h1>Welcome, {owner?.businessName}</h1>
-      <select 
+      <select
         value={activeVenue?.id}
         onChange={(e) => {
-          const venue = venues.find(v => v.id === e.target.value);
+          const venue = venues.find((v) => v.id === e.target.value);
           setActiveVenue(venue!);
         }}
       >
-        {venues.map(v => <option key={v.id}>{v.name}</option>)}
+        {venues.map((v) => (
+          <option key={v.id}>{v.name}</option>
+        ))}
       </select>
     </div>
   );
@@ -229,13 +237,13 @@ export function OwnerDashboard() {
 **File**: `main.tsx`
 
 ```tsx
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 10,   // 10 minutes (formerly cacheTime)
+      gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
       retry: 1,
       refetchOnWindowFocus: false,
     },
@@ -245,12 +253,12 @@ const queryClient = new QueryClient({
   },
 });
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <OverAllProvider>
       <App />
     </OverAllProvider>
-  </QueryClientProvider>
+  </QueryClientProvider>,
 );
 ```
 
@@ -259,15 +267,15 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 **File**: `tanstack-hooks/user.auth.tan-h.ts`
 
 ```tsx
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Fetch hooks
 export function useUserAuth() {
   return useQuery({
-    queryKey: ['user', 'auth'],
+    queryKey: ["user", "auth"],
     queryFn: async () => {
-      const response = await fetch('/api/user/auth');
-      if (!response.ok) throw new Error('Failed to fetch auth');
+      const response = await fetch("/api/user/auth");
+      if (!response.ok) throw new Error("Failed to fetch auth");
       return response.json();
     },
   });
@@ -275,11 +283,11 @@ export function useUserAuth() {
 
 export function useSpots(filters?: SpotFilters) {
   return useQuery({
-    queryKey: ['spots', filters],
+    queryKey: ["spots", filters],
     queryFn: async () => {
       const params = new URLSearchParams(filters || {});
       const response = await fetch(`/api/spots?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch spots');
+      if (!response.ok) throw new Error("Failed to fetch spots");
       return response.json();
     },
   });
@@ -287,10 +295,10 @@ export function useSpots(filters?: SpotFilters) {
 
 export function useSpotDetails(spotId: string) {
   return useQuery({
-    queryKey: ['spot', spotId],
+    queryKey: ["spot", spotId],
     queryFn: async () => {
       const response = await fetch(`/api/spots/${spotId}`);
-      if (!response.ok) throw new Error('Failed to fetch spot');
+      if (!response.ok) throw new Error("Failed to fetch spot");
       return response.json();
     },
     enabled: !!spotId, // Only run when spotId exists
@@ -300,51 +308,49 @@ export function useSpotDetails(spotId: string) {
 // Mutation hooks
 export function useCreateSpot() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (spotData: CreateSpotData) => {
-      const response = await fetch('/api/spots', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/spots", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(spotData),
       });
-      if (!response.ok) throw new Error('Failed to create spot');
+      if (!response.ok) throw new Error("Failed to create spot");
       return response.json();
     },
     onSuccess: (newSpot) => {
       // Update cache optimistically
-      queryClient.setQueryData(['spots'], (oldSpots: any) => {
+      queryClient.setQueryData(["spots"], (oldSpots: any) => {
         return [...(oldSpots || []), newSpot];
       });
-      
+
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['spots'] });
+      queryClient.invalidateQueries({ queryKey: ["spots"] });
     },
   });
 }
 
 export function useUpdateSpot(spotId: string) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (spotData: UpdateSpotData) => {
       const response = await fetch(`/api/spots/${spotId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(spotData),
       });
-      if (!response.ok) throw new Error('Failed to update spot');
+      if (!response.ok) throw new Error("Failed to update spot");
       return response.json();
     },
     onSuccess: (updatedSpot) => {
       // Update specific spot in cache
-      queryClient.setQueryData(['spot', spotId], updatedSpot);
-      
+      queryClient.setQueryData(["spot", spotId], updatedSpot);
+
       // Update spot in list cache
-      queryClient.setQueryData(['spots'], (oldSpots: any) => {
-        return oldSpots?.map((s: any) => 
-          s.id === spotId ? updatedSpot : s
-        );
+      queryClient.setQueryData(["spots"], (oldSpots: any) => {
+        return oldSpots?.map((s: any) => (s.id === spotId ? updatedSpot : s));
       });
     },
   });
@@ -354,18 +360,19 @@ export function useUpdateSpot(spotId: string) {
 ### Using Query Hooks in Components
 
 **Basic Query**:
+
 ```tsx
-import { useSpots } from '@/tanstack-hooks/user.auth.tan-h';
+import { useSpots } from "@/tanstack-hooks/user.auth.tan-h";
 
 export function SpotsList() {
   const { data: spots, isLoading, error } = useSpots();
-  
+
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
-  
+
   return (
     <ul>
-      {spots?.map(spot => (
+      {spots?.map((spot) => (
         <li key={spot.id}>{spot.name}</li>
       ))}
     </ul>
@@ -374,17 +381,18 @@ export function SpotsList() {
 ```
 
 **Query with Filters**:
+
 ```tsx
-import { useSpots } from '@/tanstack-hooks/user.auth.tan-h';
-import { useState } from 'react';
+import { useSpots } from "@/tanstack-hooks/user.auth.tan-h";
+import { useState } from "react";
 
 export function FilteredSpots() {
-  const [filters, setFilters] = useState({ category: 'restaurant' });
+  const [filters, setFilters] = useState({ category: "restaurant" });
   const { data: spots } = useSpots(filters);
-  
+
   return (
     <div>
-      <select 
+      <select
         value={filters.category}
         onChange={(e) => setFilters({ category: e.target.value })}
       >
@@ -398,34 +406,38 @@ export function FilteredSpots() {
 ```
 
 **Mutation with Loading States**:
+
 ```tsx
-import { useCreateSpot } from '@/tanstack-hooks/user.auth.tan-h';
+import { useCreateSpot } from "@/tanstack-hooks/user.auth.tan-h";
 
 export function CreateSpotForm() {
   const { mutate, isPending, error } = useCreateSpot();
-  
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    
-    mutate({
-      name: formData.get('name') as string,
-      description: formData.get('description') as string,
-      // ... other fields
-    }, {
-      onSuccess: (data) => {
-        console.log('Spot created:', data);
-        // Redirect or show success message
+
+    mutate(
+      {
+        name: formData.get("name") as string,
+        description: formData.get("description") as string,
+        // ... other fields
       },
-    });
+      {
+        onSuccess: (data) => {
+          console.log("Spot created:", data);
+          // Redirect or show success message
+        },
+      },
+    );
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
       <input name="name" placeholder="Spot name" />
       <textarea name="description" placeholder="Description" />
       <button disabled={isPending}>
-        {isPending ? 'Creating...' : 'Create Spot'}
+        {isPending ? "Creating..." : "Create Spot"}
       </button>
       {error && <p className="text-red-500">{error.message}</p>}
     </form>
@@ -436,28 +448,31 @@ export function CreateSpotForm() {
 ### Query Cache Management
 
 **Invalidate Query**:
+
 ```tsx
 const queryClient = useQueryClient();
 
 // Invalidate single query
-queryClient.invalidateQueries({ queryKey: ['spot', spotId] });
+queryClient.invalidateQueries({ queryKey: ["spot", spotId] });
 
 // Invalidate all queries matching pattern
-queryClient.invalidateQueries({ queryKey: ['spots'] });
+queryClient.invalidateQueries({ queryKey: ["spots"] });
 
 // Invalidate all queries
 queryClient.invalidateQueries();
 ```
 
 **Manual Cache Update**:
+
 ```tsx
-queryClient.setQueryData(['spot', spotId], (oldData) => ({
+queryClient.setQueryData(["spot", spotId], (oldData) => ({
   ...oldData,
-  name: 'Updated name',
+  name: "Updated name",
 }));
 ```
 
 **Refetch**:
+
 ```tsx
 const { refetch } = useSpots();
 refetch(); // Manually refetch data
@@ -528,36 +543,41 @@ Component re-renders with filtered spots
 ## Best Practices
 
 ### 1. **Separate Concerns**
+
 - Use Context for client state (auth, theme, UI)
 - Use TanStack Query for server state (API data)
 
 ### 2. **Custom Hooks**
+
 - Create domain-specific hooks in `tanstack-hooks/`
 - Encapsulate query/mutation logic
 - Reuse across components
 
 ### 3. **Cache Keys**
+
 - Use consistent, nested structures
 - Example: `['spot', spotId]` not `['s', spotId]`
 - Include filter parameters in key
 
 ### 4. **Avoid Over-Fetching**
+
 ```tsx
 // Good: Fetch only when needed
 const { data } = useQuery({
-  queryKey: ['spot', spotId],
+  queryKey: ["spot", spotId],
   queryFn: fetchSpot,
   enabled: !!spotId,
 });
 
 // Avoid: Always fetch even if spotId is null
 const { data } = useQuery({
-  queryKey: ['spot', spotId],
+  queryKey: ["spot", spotId],
   queryFn: fetchSpot,
 });
 ```
 
 ### 5. **Handle Loading and Error States**
+
 ```tsx
 const { data, isLoading, error } = useSpots();
 
@@ -569,25 +589,25 @@ return <SpotsList spots={data} />;
 ```
 
 ### 6. **Optimistic Updates**
+
 ```tsx
 const { mutate } = useMutation({
   mutationFn: updateSpot,
   onMutate: async (newData) => {
     // Cancel ongoing queries
-    await queryClient.cancelQueries({ queryKey: ['spot', spotId] });
-    
+    await queryClient.cancelQueries({ queryKey: ["spot", spotId] });
+
     // Save old data
-    const previousData = queryClient.getQueryData(['spot', spotId]);
-    
+    const previousData = queryClient.getQueryData(["spot", spotId]);
+
     // Update UI optimistically
-    queryClient.setQueryData(['spot', spotId], newData);
-    
+    queryClient.setQueryData(["spot", spotId], newData);
+
     return { previousData };
   },
   onError: (error, newData, context) => {
     // Revert on error
-    queryClient.setQueryData(['spot', spotId], context?.previousData);
+    queryClient.setQueryData(["spot", spotId], context?.previousData);
   },
 });
 ```
-

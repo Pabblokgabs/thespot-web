@@ -11,6 +11,7 @@ This guide provides detailed information about the component structure and how t
 Pre-built, unstyled components from shadcn/ui and Radix UI. These are the building blocks for feature components.
 
 **Characteristics**:
+
 - Pure presentational (no business logic)
 - Highly reusable
 - Accessible (WCAG compliant)
@@ -18,6 +19,7 @@ Pre-built, unstyled components from shadcn/ui and Radix UI. These are the buildi
 - Based on Radix UI primitives
 
 **Examples**:
+
 - `button.tsx` - Base button component
 - `input.tsx` - Text input field
 - `card.tsx` - Card container
@@ -27,6 +29,7 @@ Pre-built, unstyled components from shadcn/ui and Radix UI. These are the buildi
 - `select.tsx` - Dropdown select
 
 **Usage**:
+
 ```tsx
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -48,6 +51,7 @@ export function MyComponent() {
 Reusable feature components used across multiple pages.
 
 **Characteristics**:
+
 - Contains business logic
 - Composed of UI components
 - Domain-specific functionality
@@ -56,17 +60,20 @@ Reusable feature components used across multiple pages.
 **Subcategories**:
 
 #### Layout Components
+
 - `navbar.tsx` - Main navigation bar
 - `auth.navbar.tsx` - Navigation for authenticated users
 - `footer.tsx` - Footer component
 
 #### Form Components
+
 - `input.tsx` - Custom input wrapper
 - `password.tsx` - Password input with validation
 - `select.tsx` - Custom select wrapper
 - `comboBox.tsx` - Searchable combo box
 
 #### Specialized Components
+
 - `search.modal.tsx` - Global search modal
 - `popup.tsx` - Generic popup component
 - `pagination.tsx` - Pagination controls
@@ -74,6 +81,7 @@ Reusable feature components used across multiple pages.
 - `toaster.tsx` - Toast notification container
 
 #### Sections/Displays
+
 - `cards/` - Card components for displaying items
 - `home/` - Home page specific sections
   - `display.tsx` - Display section
@@ -85,6 +93,7 @@ Reusable feature components used across multiple pages.
 - `loading.spinner/` - Loading indicators
 
 **Usage**:
+
 ```tsx
 import { Navbar } from "@/components/common/navbar";
 import { SearchModal } from "@/components/common/search.modal";
@@ -105,6 +114,7 @@ export function Page() {
 Venue owner-specific feature components.
 
 **Examples**:
+
 - `echard.tsx` - Event chart component
 - `dashboard/` - Dashboard specific components
   - `dashboard.content.tsx` - Main dashboard layout
@@ -115,6 +125,7 @@ Venue owner-specific feature components.
 - `models/` - Data models or modal components
 
 **Usage**:
+
 ```tsx
 import { Dashboard } from "@/components/owner/dashboard/dashboard.content";
 
@@ -128,6 +139,7 @@ export function OwnerDashboard() {
 Modular sections of the home page.
 
 **Components**:
+
 - `display.tsx` - Hero/display section
 - `event.tsx` - Single event component
 - `events.tsx` - Events listing section
@@ -142,6 +154,7 @@ Modular sections of the home page.
 - `wedo.tsx` - "What we do" section
 
 **Usage**:
+
 ```tsx
 import { TrendingNow } from "@/components/home/trending.now";
 import { PopularCities } from "@/components/home/popular.cities";
@@ -161,9 +174,10 @@ export function HomePage() {
 ### Component Template
 
 **Basic Component** (`components/common/my-component.tsx`):
+
 ```tsx
-import { FC, ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { FC, ReactNode } from "react";
+import { Button } from "@/components/ui/button";
 
 interface MyComponentProps {
   title: string;
@@ -180,23 +194,20 @@ export const MyComponent: FC<MyComponentProps> = ({
     <div className="flex flex-col gap-4">
       <h2 className="text-lg font-semibold">{title}</h2>
       <div>{children}</div>
-      {onAction && (
-        <Button onClick={onAction}>
-          Action
-        </Button>
-      )}
+      {onAction && <Button onClick={onAction}>Action</Button>}
     </div>
   );
 };
 ```
 
 **Component with State & Hooks** (`components/common/interactive-component.tsx`):
+
 ```tsx
-import { FC, useState } from 'react';
-import { useUserContext } from '@/lib/context/useContext';
-import { useQuery } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { FC, useState } from "react";
+import { useUserContext } from "@/lib/context/useContext";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 interface InteractiveComponentProps {
   id: string;
@@ -209,9 +220,9 @@ export const InteractiveComponent: FC<InteractiveComponentProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useUserContext();
-  
+
   const { data, isLoading: queryLoading } = useQuery({
-    queryKey: ['item', id],
+    queryKey: ["item", id],
     queryFn: async () => {
       const response = await fetch(`/api/items/${id}`);
       return response.json();
@@ -236,11 +247,8 @@ export const InteractiveComponent: FC<InteractiveComponentProps> = ({
         {data && (
           <div>
             <p>{data.title}</p>
-            <Button 
-              onClick={handleAction}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Processing...' : 'Submit'}
+            <Button onClick={handleAction} disabled={isLoading}>
+              {isLoading ? "Processing..." : "Submit"}
             </Button>
           </div>
         )}
@@ -253,21 +261,23 @@ export const InteractiveComponent: FC<InteractiveComponentProps> = ({
 ## Component Best Practices
 
 ### 1. **Naming Conventions**
+
 - File name: `kebab-case.tsx` (e.g., `my-component.tsx`)
 - Component name: `PascalCase` (e.g., `MyComponent`)
 - Props interface: `ComponentNameProps` (e.g., `MyComponentProps`)
 
 ### 2. **Props Pattern**
+
 ```tsx
 interface Props {
   // Required props first
   title: string;
   value: number;
-  
+
   // Optional props
   description?: string;
   disabled?: boolean;
-  
+
   // Callbacks last
   onChange?: (value: number) => void;
   onSubmit?: () => void;
@@ -286,6 +296,7 @@ export const Component: FC<Props> = ({
 ```
 
 ### 3. **Composition Over Inheritance**
+
 ```tsx
 // Good - Composition
 export function Layout({ children }) {
@@ -298,15 +309,16 @@ export function Layout({ children }) {
 }
 
 // Avoid - Inheritance
-export class Layout extends React.Component { }
+export class Layout extends React.Component {}
 ```
 
 ### 4. **Custom Hooks for Logic**
+
 ```tsx
 // Extract logic to custom hook
 function useItemData(id: string) {
   return useQuery({
-    queryKey: ['item', id],
+    queryKey: ["item", id],
     queryFn: async () => {
       const response = await fetch(`/api/items/${id}`);
       return response.json();
@@ -322,9 +334,11 @@ export function Item({ id }) {
 ```
 
 ### 5. **Styling Classes**
+
 ```tsx
 // Use consistent class grouping
-<button className="
+<button
+  className="
   px-4 py-2          // Padding
   bg-blue-500        // Background
   text-white         // Text color
@@ -332,22 +346,24 @@ export function Item({ id }) {
   hover:bg-blue-600  // Hover state
   disabled:opacity-50 // Disabled state
   transition-colors  // Animation
-">
+"
+>
   Click me
 </button>
 ```
 
 ### 6. **Component Documentation**
+
 ```tsx
 /**
  * MyComponent
- * 
+ *
  * A reusable component that displays information with an action button.
- * 
+ *
  * @component
  * @example
- * <MyComponent 
- *   title="Example" 
+ * <MyComponent
+ *   title="Example"
  *   onAction={() => console.log('clicked')}
  * >
  *   Content here
@@ -364,12 +380,12 @@ export const MyComponent: FC<MyComponentProps> = ({ ... }) => {
 
 ```tsx
 // pages/common/my-page.tsx
-import { FC, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Navbar } from '@/components/common/navbar';
-import { Footer } from '@/components/common/footer';
-import { Section1 } from '@/components/home/section1';
-import { Section2 } from '@/components/home/section2';
+import { FC, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Navbar } from "@/components/common/navbar";
+import { Footer } from "@/components/common/footer";
+import { Section1 } from "@/components/home/section1";
+import { Section2 } from "@/components/home/section2";
 
 export const MyPage: FC = () => {
   const navigate = useNavigate();
@@ -394,24 +410,26 @@ export const MyPage: FC = () => {
 ## State Management in Components
 
 ### Using Context
+
 ```tsx
-import { useUserContext } from '@/lib/context/useContext';
+import { useUserContext } from "@/lib/context/useContext";
 
 export const MyComponent = () => {
   const { user, setUser } = useUserContext();
-  
+
   return <div>{user?.name}</div>;
 };
 ```
 
 ### Using TanStack Query
+
 ```tsx
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 export const MyComponent = () => {
   // Fetch data
   const { data, isLoading } = useQuery({
-    queryKey: ['items'],
+    queryKey: ["items"],
     queryFn: fetchItems,
   });
 
@@ -420,7 +438,7 @@ export const MyComponent = () => {
     mutationFn: updateItem,
     onSuccess: () => {
       // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['items'] });
+      queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
@@ -431,15 +449,16 @@ export const MyComponent = () => {
 ## Common Patterns
 
 ### Form Component
+
 ```tsx
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: "",
+    email: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -452,17 +471,13 @@ export function ContactForm() {
       <Input
         placeholder="Name"
         value={formData.name}
-        onChange={(e) => 
-          setFormData({ ...formData, name: e.target.value })
-        }
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
       />
       <Input
         type="email"
         placeholder="Email"
         value={formData.email}
-        onChange={(e) => 
-          setFormData({ ...formData, email: e.target.value })
-        }
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
       />
       <Button type="submit">Submit</Button>
     </form>
@@ -471,8 +486,14 @@ export function ContactForm() {
 ```
 
 ### Modal/Dialog Component
+
 ```tsx
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export function MyModal({ isOpen, onClose, onConfirm }) {
   return (
@@ -487,9 +508,7 @@ export function MyModal({ isOpen, onClose, onConfirm }) {
             <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button onClick={onConfirm}>
-              Confirm
-            </Button>
+            <Button onClick={onConfirm}>Confirm</Button>
           </div>
         </div>
       </DialogContent>
@@ -499,13 +518,14 @@ export function MyModal({ isOpen, onClose, onConfirm }) {
 ```
 
 ### List Component with Pagination
+
 ```tsx
-import { useState } from 'react';
-import { Pagination } from '@/components/common/pagination';
+import { useState } from "react";
+import { Pagination } from "@/components/common/pagination";
 
 export function ItemList({ items, itemsPerPage = 10 }) {
   const [currentPage, setCurrentPage] = useState(1);
-  
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedItems = items.slice(startIndex, startIndex + itemsPerPage);
 
@@ -526,4 +546,3 @@ export function ItemList({ items, itemsPerPage = 10 }) {
   );
 }
 ```
-

@@ -1,6 +1,7 @@
 # TheSpot Web - Architecture Documentation
 
 ## Table of Contents
+
 1. [System Overview](#system-overview)
 2. [High-Level Architecture](#high-level-architecture)
 3. [Directory Structure](#directory-structure)
@@ -19,6 +20,7 @@
 TheSpot Web is a dual-role web application that serves both regular users and venue owners. The application is built as a single React SPA (Single Page Application) with role-based routing and feature separation.
 
 ### Core Responsibilities
+
 - **User Discovery**: Browse and search local spots and events
 - **Event Management**: View event details and information
 - **User Profiles**: Manage personal information and preferences
@@ -67,6 +69,7 @@ TheSpot Web is a dual-role web application that serves both regular users and ve
 ## Directory Structure
 
 ### Root Level
+
 ```
 thespot-web/
 ├── public/                 # Static assets
@@ -84,6 +87,7 @@ thespot-web/
 ```
 
 ### Source Code (`src/`)
+
 ```
 src/
 ├── main.tsx               # Application entry point
@@ -221,24 +225,28 @@ App (Root)
 ### Component Types
 
 #### 1. **Page Components** (`pages/`)
+
 - Full-page layouts
 - Manage page-level state
 - Orchestrate feature components
 - Handle route-specific logic
 
 #### 2. **Feature Components** (`components/common/`, `components/owner/`, `components/home/`)
+
 - Domain-specific functionality
 - Reusable across multiple pages
 - Examples: `dashboard.content.tsx`, `event.tsx`, `spots.tsx`
 - Connect to context and TanStack Query
 
 #### 3. **UI Components** (`components/ui/`)
+
 - Presentational/dumb components
 - No business logic
 - Highly reusable and themeable
 - Based on shadcn/ui and Radix UI
 
 #### 4. **Layout Components** (`components/common/`)
+
 - Navigation, footer, sidebars
 - Applied across multiple pages
 - Examples: `navbar.tsx`, `footer.tsx`
@@ -272,17 +280,20 @@ App (Root)
 ### Context Providers
 
 #### 1. **OverAllProvider** (`lib/context/useContext.tsx`)
+
 - Application-wide state
 - Theme management
 - Global UI state
 
 #### 2. **UserProvider** (`lib/context/user.tsx`)
+
 - User authentication state
 - User profile information
 - User preferences
 - User-specific data
 
 #### 3. **OwnerProvider** (`lib/context/owner.tsx`)
+
 - Owner authentication state
 - Owner profile information
 - Owner-specific settings
@@ -293,6 +304,7 @@ App (Root)
 **Purpose**: Manage server state and API data
 
 **Key Features**:
+
 - Automatic caching of API responses
 - Background data synchronization
 - Built-in error handling and retry logic
@@ -300,11 +312,12 @@ App (Root)
 - Custom hooks in `tanstack-hooks/`
 
 **Usage Pattern**:
+
 ```typescript
 // In custom hooks (tanstack-hooks/user.auth.tan-h.ts)
 const useUserAuth = () => {
   return useQuery({
-    queryKey: ['user', 'auth'],
+    queryKey: ["user", "auth"],
     queryFn: fetchUserAuth,
   });
 };
@@ -480,31 +493,37 @@ const { theme, setTheme } = useTheme();
 ### Optimization Strategies
 
 #### 1. **Code Splitting**
+
 - Vite automatic chunk splitting
 - Routes load code on-demand
 - Component lazy loading support
 
 #### 2. **Caching**
+
 - TanStack Query manages API cache
 - Stale-while-revalidate pattern
 - Configurable cache time
 
 #### 3. **Image Optimization**
+
 - Static assets in `public/` and `assets/`
 - Consider image lazy loading for large lists
 - Responsive images via CSS
 
 #### 4. **Bundle Size**
+
 - Tree-shaking removes unused code
 - Tailwind CSS purges unused styles
 - Dynamic imports for heavy libraries (ECharts)
 
 #### 5. **Rendering Performance**
+
 - React 19 with automatic batching
 - Context splitting by domain (User, Owner)
 - Memoization for expensive components
 
 ### Performance Monitoring
+
 - Use React DevTools Profiler
 - Monitor TanStack Query request count
 - Check bundle size with `npm run build`
@@ -520,6 +539,7 @@ npm run build
 ```
 
 **Steps**:
+
 1. TypeScript type checking (`tsc -b`)
 2. Vite build with Tailwind CSS compilation
 3. Code minification and optimization
@@ -536,18 +556,20 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-})
+});
 ```
 
 ### Environment Variables
 
 **Not currently configured** - Add `.env` support for:
+
 - API base URL
 - Authentication keys
 - Feature flags
 - Analytics tokens
 
 **Recommended Setup**:
+
 ```env
 VITE_API_BASE_URL=https://api.example.com
 VITE_APP_NAME=TheSpot
@@ -564,24 +586,29 @@ VITE_APP_NAME=TheSpot
 ## Design Patterns Used
 
 ### 1. **Provider Pattern**
+
 - Context providers wrap the app
 - Consumers access state throughout tree
 
 ### 2. **Custom Hooks Pattern**
+
 - `useContext()` for context consumption
 - `useQuery()` from TanStack Query for data
 - Domain-specific hooks in `tanstack-hooks/`
 
 ### 3. **Component Composition**
+
 - Small, focused components
 - Reusable UI primitives
 - Feature composition for pages
 
 ### 4. **Container/Presentational Pattern**
+
 - Container: components with logic and data
 - Presentational: UI components (shadcn/ui)
 
 ### 5. **Factory/Builder Pattern**
+
 - Options objects for component props
 - Configuration objects in `lib/options.tsx`
 
@@ -599,4 +626,3 @@ VITE_APP_NAME=TheSpot
 8. **Analytics**: Integrate analytics tracking
 9. **Offline Support**: Consider offline-first approach with service workers
 10. **Accessibility Audit**: Regular a11y testing and improvements
-

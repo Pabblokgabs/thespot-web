@@ -3,6 +3,7 @@
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18.0 or higher
 - npm or yarn
 - Git
@@ -11,12 +12,14 @@
 ### Initial Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Pabblokgabs/thespot-web.git
    cd thespot-web
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
@@ -37,6 +40,7 @@ npm run dev
 ```
 
 **Features**:
+
 - Hot Module Replacement (HMR) - changes reflect instantly
 - Fast refresh via Vite
 - Accessible at `http://localhost:5173`
@@ -49,6 +53,7 @@ npm run build
 ```
 
 **Process**:
+
 1. TypeScript type checking (`tsc -b`)
 2. Vite build compilation
 3. Code minification and optimization
@@ -71,6 +76,7 @@ npm run lint
 Runs ESLint to check code quality and consistency.
 
 **Fix linting issues automatically**:
+
 ```bash
 npm run lint -- --fix
 ```
@@ -80,6 +86,7 @@ npm run lint -- --fix
 ### TypeScript Configuration
 
 **Main Config**: `tsconfig.json`
+
 ```json
 {
   "compilerOptions": {
@@ -96,19 +103,22 @@ npm run lint -- --fix
 ```
 
 **App Config**: `tsconfig.app.json`
+
 - Handles source code compilation
 - Generates declaration files for types
 
 **Node Config**: `tsconfig.node.json`
+
 - Handles build tool configuration files
 - For Vite and other tools
 
 ### Path Aliases
 
 Use `@/` to reference src directory:
+
 ```tsx
 // Instead of: import { Button } from '../../../components/ui/button';
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 ```
 
 ### Vite Configuration
@@ -116,10 +126,10 @@ import { Button } from '@/components/ui/button';
 **File**: `vite.config.ts`
 
 ```typescript
-import path from "path"
-import tailwindcss from "@tailwindcss/vite"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
+import path from "path";
+import tailwindcss from "@tailwindcss/vite";
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -128,7 +138,7 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-})
+});
 ```
 
 ### Tailwind CSS Configuration
@@ -179,6 +189,7 @@ export default {
 **File**: `eslint.config.js`
 
 Configured for:
+
 - TypeScript files
 - React code
 - React hooks best practices
@@ -243,26 +254,29 @@ export const MyComponent: FC<MyComponentProps> = ({
 ### TypeScript Best Practices
 
 **Use explicit types**:
+
 ```tsx
 // Good
 const items: string[] = [];
-const user: User = { name: 'John' };
+const user: User = { name: "John" };
 
 // Avoid
 const items = [];
-const user = { name: 'John' };
+const user = { name: "John" };
 ```
 
 **Use interfaces for props**:
+
 ```tsx
 interface ButtonProps {
-  variant?: 'primary' | 'secondary';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
   disabled?: boolean;
 }
 ```
 
 **Export types from file**:
+
 ```tsx
 // myComponent.tsx
 export interface MyComponentProps { ... }
@@ -275,8 +289,10 @@ import type { MyComponentProps } from '@/components/my-component';
 ### CSS/Tailwind Practices
 
 **Use consistent class organization**:
+
 ```tsx
-<button className="
+<button
+  className="
   px-4 py-2          // Padding
   bg-blue-500        // Background
   text-white         // Text color
@@ -284,12 +300,14 @@ import type { MyComponentProps } from '@/components/my-component';
   hover:bg-blue-600  // Hover state
   disabled:opacity-50 // Disabled state
   transition-colors  // Animation
-">
+"
+>
   Click
 </button>
 ```
 
 **Avoid magic numbers**:
+
 ```tsx
 // Good - Use Tailwind scales
 <div className="p-4 gap-2">
@@ -299,10 +317,14 @@ import type { MyComponentProps } from '@/components/my-component';
 ```
 
 **Extract repeated styles**:
+
 ```tsx
 // Extract to component
 const ButtonPrimary: FC<ButtonProps> = (props) => (
-  <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" {...props}>
+  <button
+    className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+    {...props}
+  >
     {props.children}
   </button>
 );
@@ -315,6 +337,7 @@ const ButtonPrimary: FC<ButtonProps> = (props) => (
 shadcn/ui components can be added via CLI (when available) or manually copy the component file from their repository.
 
 **Manual approach**:
+
 1. Find component in `components/ui/` folder
 2. Check `components.json` for aliases
 3. Import and use in your component
@@ -340,15 +363,16 @@ shadcn/ui components can be added via CLI (when available) or manually copy the 
 ### Fetching Data
 
 **Using TanStack Query**:
+
 ```tsx
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 export function MyComponent() {
   const { data, isLoading, error } = useQuery({
-    queryKey: ['items'],
+    queryKey: ["items"],
     queryFn: async () => {
-      const response = await fetch('/api/items');
-      if (!response.ok) throw new Error('Failed');
+      const response = await fetch("/api/items");
+      if (!response.ok) throw new Error("Failed");
       return response.json();
     },
   });
@@ -356,35 +380,41 @@ export function MyComponent() {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
-  return <ul>{data?.map(item => <li key={item.id}>{item.name}</li>)}</ul>;
+  return (
+    <ul>
+      {data?.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
 }
 ```
 
 ### Mutating Data
 
 ```tsx
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function CreateItemForm() {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: async (item: NewItem) => {
-      const response = await fetch('/api/items', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/items", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(item),
       });
       return response.json();
     },
     onSuccess: () => {
       // Refetch items
-      queryClient.invalidateQueries({ queryKey: ['items'] });
+      queryClient.invalidateQueries({ queryKey: ["items"] });
     },
   });
 
   return (
-    <button onClick={() => mutate({ name: 'New' })} disabled={isPending}>
-      {isPending ? 'Creating...' : 'Create'}
+    <button onClick={() => mutate({ name: "New" })} disabled={isPending}>
+      {isPending ? "Creating..." : "Create"}
     </button>
   );
 }
@@ -395,14 +425,16 @@ export function CreateItemForm() {
 ### Adding a New Route
 
 1. **Create page component**:
+
    ```tsx
    // pages/common/my-page.tsx
    export const MyPage: FC = () => <div>My Page</div>;
    ```
 
 2. **Export from pages/index.tsx**:
+
    ```tsx
-   export { MyPage } from './common/my-page';
+   export { MyPage } from "./common/my-page";
    ```
 
 3. **Add route to App.tsx**:
@@ -413,13 +445,14 @@ export function CreateItemForm() {
 ### Adding a New API Call
 
 1. **Create custom hook** (if doesn't exist):
+
    ```tsx
    // tanstack-hooks/my-data.ts
    export function useMyData() {
      return useQuery({
-       queryKey: ['myData'],
+       queryKey: ["myData"],
        queryFn: async () => {
-         const response = await fetch('/api/my-data');
+         const response = await fetch("/api/my-data");
          return response.json();
        },
      });
@@ -427,9 +460,10 @@ export function CreateItemForm() {
    ```
 
 2. **Use in component**:
+
    ```tsx
-   import { useMyData } from '@/tanstack-hooks/my-data';
-   
+   import { useMyData } from "@/tanstack-hooks/my-data";
+
    export function MyComponent() {
      const { data } = useMyData();
      return <div>{data?.title}</div>;
@@ -439,32 +473,31 @@ export function CreateItemForm() {
 ### Styling a Component
 
 1. **Use Tailwind utilities**:
+
    ```tsx
    <div className="flex gap-4 p-4 bg-white rounded-lg shadow">
    ```
 
 2. **For complex styles, use component variants**:
+
    ```tsx
-   import { cva } from 'class-variance-authority';
-   
-   const buttonVariants = cva(
-     'px-4 py-2 rounded-md font-semibold',
-     {
-       variants: {
-         variant: {
-           primary: 'bg-blue-500 text-white hover:bg-blue-600',
-           secondary: 'bg-gray-200 text-black hover:bg-gray-300',
-         },
+   import { cva } from "class-variance-authority";
+
+   const buttonVariants = cva("px-4 py-2 rounded-md font-semibold", {
+     variants: {
+       variant: {
+         primary: "bg-blue-500 text-white hover:bg-blue-600",
+         secondary: "bg-gray-200 text-black hover:bg-gray-300",
        },
-     }
-   );
+     },
+   });
    ```
 
 ### Creating a Reusable Hook
 
 ```tsx
 // lib/hooks/useLocalStorage.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export function useLocalStorage<T>(key: string, initialValue: T) {
   const [value, setValue] = useState<T>(() => {
@@ -482,7 +515,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       setValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {
-      console.error('Error saving to localStorage:', error);
+      console.error("Error saving to localStorage:", error);
     }
   };
 
@@ -491,10 +524,10 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
 
 // Usage
 export function MyComponent() {
-  const [theme, setTheme] = useLocalStorage('theme', 'light');
-  
+  const [theme, setTheme] = useLocalStorage("theme", "light");
+
   return (
-    <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+    <button onClick={() => setTheme(theme === "light" ? "dark" : "light")}>
       Toggle Theme: {theme}
     </button>
   );
@@ -518,6 +551,7 @@ export function MyComponent() {
 ### Debug in VS Code
 
 Add to `.vscode/launch.json`:
+
 ```json
 {
   "version": "0.2.0",
@@ -539,15 +573,18 @@ Add to `.vscode/launch.json`:
 ### Common Issues
 
 **Hot reload not working**:
+
 - Check if dev server is running
 - Clear browser cache
 - Restart dev server
 
 **Import errors with @/**:
+
 - Verify `tsconfig.json` has correct paths
 - Check if file exists at referenced location
 
 **Styling not applying**:
+
 - Clear Tailwind cache: delete `.next/` if exists
 - Verify class names are in content config
 - Check for CSS specificity conflicts
@@ -559,10 +596,10 @@ Add to `.vscode/launch.json`:
 Vite automatically chunks code. To optimize further:
 
 ```tsx
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from "react";
 
-const HeavyComponent = lazy(() => 
-  import('@/pages/heavy-page').then(m => ({ default: m.HeavyPage }))
+const HeavyComponent = lazy(() =>
+  import("@/pages/heavy-page").then((m) => ({ default: m.HeavyPage })),
 );
 
 export function App() {
@@ -577,7 +614,7 @@ export function App() {
 ### Memoization
 
 ```tsx
-import { memo } from 'react';
+import { memo } from "react";
 
 export const ListItem = memo(({ item, onSelect }: Props) => {
   return <li onClick={() => onSelect(item)}>{item.name}</li>;
@@ -590,7 +627,7 @@ Use `enabled` to avoid unnecessary queries:
 
 ```tsx
 const { data } = useQuery({
-  queryKey: ['item', itemId],
+  queryKey: ["item", itemId],
   queryFn: fetchItem,
   enabled: !!itemId, // Don't fetch if itemId is null
 });
@@ -612,6 +649,7 @@ git commit -m "feat: add new component"
 ```
 
 **Commit message conventions**:
+
 - `feat:` - New feature
 - `fix:` - Bug fix
 - `docs:` - Documentation
@@ -633,6 +671,7 @@ git commit -m "feat: add new component"
 ### Preparing for Deployment
 
 1. **Run all checks**:
+
    ```bash
    npm run lint
    npm run build
@@ -640,6 +679,7 @@ git commit -m "feat: add new component"
    ```
 
 2. **Check bundle size**:
+
    ```bash
    npm run build
    # Check dist/ folder size
@@ -654,12 +694,14 @@ git commit -m "feat: add new component"
 ### Environment Variables
 
 Create `.env` file in root:
+
 ```
 VITE_API_BASE_URL=https://api.example.com
 VITE_APP_ENV=production
 ```
 
 Access in code:
+
 ```tsx
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 ```
@@ -667,17 +709,20 @@ const apiUrl = import.meta.env.VITE_API_BASE_URL;
 ### Deployment Platforms
 
 **Netlify**:
+
 ```bash
 npm run build
 # Deploy dist/ folder
 ```
 
 **Vercel**:
+
 ```bash
 # Connect repository, auto-deploys on push
 ```
 
 **Docker**:
+
 ```dockerfile
 FROM node:18-alpine as build
 WORKDIR /app
@@ -692,4 +737,3 @@ RUN npm install -g serve
 COPY --from=build /app/dist ./dist
 CMD ["serve", "-s", "dist"]
 ```
-
